@@ -1,5 +1,5 @@
 {
-  "name": "@my-better-t-app/env",
+  "name": "@arxio/env",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -14,7 +14,7 @@
     "zod": "^4.1.13"
   },
   "devDependencies": {
-    "@my-better-t-app/config": "*",
+    "@arxio/config": "*",
     "@types/node": "^22.13.14",
     "typescript": "^6"
   }

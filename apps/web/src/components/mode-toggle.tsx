@@ -1,12 +1,12 @@
 "use client";
 
-import { Button } from "@my-better-t-app/ui/components/button";
+import { Button } from "@arxio/ui/components/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@my-better-t-app/ui/components/dropdown-menu";
+} from "@arxio/ui/components/dropdown-menu";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import * as React from "react";

@@ -1,5 +1,5 @@
 {
-  "name": "my-better-t-app",
+  "name": "arxio",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -12,10 +12,10 @@
     "check-types": "turbo check-types",
     "dev:web": "turbo -F web dev",
     "dev:server": "turbo -F server dev",
-    "db:push": "turbo -F @my-better-t-app/db db:push",
-    "db:studio": "turbo -F @my-better-t-app/db db:studio",
-    "db:generate": "turbo -F @my-better-t-app/db db:generate",
-    "db:migrate": "turbo -F @my-better-t-app/db db:migrate",
+    "db:push": "turbo -F @arxio/db db:push",
+    "db:studio": "turbo -F @arxio/db db:studio",
+    "db:generate": "turbo -F @arxio/db db:generate",
+    "db:migrate": "turbo -F @arxio/db db:migrate",
     "db:start": "docker compose up -d postgres",
     "db:watch": "docker compose up postgres",
     "db:stop": "docker compose stop postgres",
@@ -27,13 +27,13 @@
     "check": "biome check --write ."
   },
   "dependencies": {
-    "@my-better-t-app/env": "*",
+    "@arxio/env": "*",
     "dotenv": "^17.2.2",
     "zod": "^4.1.13"
   },
   "devDependencies": {
+    "@arxio/config": "*",
     "@biomejs/biome": "^2.4.16",
-    "@my-better-t-app/config": "*",
     "@types/node": "^22.13.14",
     "turbo": "^2.9.16",
     "typescript": "^6"
