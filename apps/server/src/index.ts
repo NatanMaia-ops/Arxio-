@@ -1,4 +1,4 @@
-import { env } from "@my-better-t-app/env/server";
+import { env } from "@arxio/env/server";
 import cors from "cors";
 import express from "express";
 

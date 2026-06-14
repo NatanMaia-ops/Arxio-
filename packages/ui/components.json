@@ -12,11 +12,11 @@
   },
   "iconLibrary": "lucide",
   "aliases": {
-    "components": "@my-better-t-app/ui/components",
-    "utils": "@my-better-t-app/ui/lib/utils",
-    "hooks": "@my-better-t-app/ui/hooks",
-    "lib": "@my-better-t-app/ui/lib",
-    "ui": "@my-better-t-app/ui/components"
+    "components": "@arxio/ui/components",
+    "utils": "@arxio/ui/lib/utils",
+    "hooks": "@arxio/ui/hooks",
+    "lib": "@arxio/ui/lib",
+    "ui": "@arxio/ui/components"
   },
   "menuColor": "default",
   "menuAccent": "subtle",

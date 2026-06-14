@@ -1,6 +1,6 @@
 "use client";
 
-import { Toaster } from "@my-better-t-app/ui/components/sonner";
+import { Toaster } from "@arxio/ui/components/sonner";
 
 import { ThemeProvider } from "./theme-provider";
 

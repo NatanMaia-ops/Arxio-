@@ -8,8 +8,8 @@
     "start": "next start"
   },
   "dependencies": {
-    "@my-better-t-app/env": "*",
-    "@my-better-t-app/ui": "*",
+    "@arxio/env": "*",
+    "@arxio/ui": "*",
     "babel-plugin-react-compiler": "^1.0.0",
     "dotenv": "^17.2.2",
     "lucide-react": "^0.546.0",
@@ -21,7 +21,7 @@
     "zod": "^4.1.13"
   },
   "devDependencies": {
-    "@my-better-t-app/config": "*",
+    "@arxio/config": "*",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/node": "^20",
     "@types/react": "^19.2.15",
