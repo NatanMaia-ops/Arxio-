@@ -5,7 +5,7 @@ ENV SKIP_ENV_VALIDATION=1
 COPY . .
 RUN --mount=type=cache,target=/root/.npm npm install
 
-ARG NEXT_PUBLIC_SERVER_URL
+ARG NEXT_PUBLIC_SERVER_URL=http://localhost:3000
 ENV NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}
 ENV NODE_ENV=production
 RUN cd apps/web && npm run build
