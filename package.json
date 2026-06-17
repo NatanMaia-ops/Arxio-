@@ -1,42 +1,44 @@
 {
-  "name": "arxio",
-  "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
-  "type": "module",
-  "scripts": {
-    "dev": "turbo dev",
-    "build": "turbo build",
-    "check-types": "turbo check-types",
-    "dev:web": "turbo -F web dev",
-    "dev:server": "turbo -F server dev",
-    "db:push": "turbo -F @arxio/db db:push",
-    "db:studio": "turbo -F @arxio/db db:studio",
-    "db:generate": "turbo -F @arxio/db db:generate",
-    "db:migrate": "turbo -F @arxio/db db:migrate",
-    "db:start": "docker compose up -d postgres",
-    "db:watch": "docker compose up postgres",
-    "db:stop": "docker compose stop postgres",
-    "db:down": "docker compose down postgres",
-    "docker:build": "docker compose build",
-    "docker:up": "docker compose up -d --build",
-    "docker:down": "docker compose down",
-    "docker:logs": "docker compose logs -f",
-    "check": "biome check ."
-  },
-  "dependencies": {
-    "@arxio/env": "*",
-    "dotenv": "^17.2.2",
-    "zod": "^4.1.13"
-  },
-  "devDependencies": {
-    "@arxio/config": "*",
-    "@biomejs/biome": "^2.4.16",
-    "@types/node": "^22.13.14",
-    "turbo": "^2.9.16",
-    "typescript": "^6"
-  },
-  "packageManager": "npm@11.13.0"
+	"name": "arxio",
+	"private": true,
+	"workspaces": [
+		"apps/*",
+		"packages/*"
+	],
+	"type": "module",
+	"scripts": {
+		"dev": "turbo dev",
+		"build": "turbo build",
+		"check-types": "turbo check-types",
+		"dev:web": "turbo -F web dev",
+		"dev:server": "turbo -F server dev",
+		"db:push": "turbo -F @arxio/db db:push",
+		"db:studio": "turbo -F @arxio/db db:studio",
+		"db:generate": "turbo -F @arxio/db db:generate",
+		"db:migrate": "turbo -F @arxio/db db:migrate",
+		"db:start": "docker compose up -d postgres",
+		"db:watch": "docker compose up postgres",
+		"db:stop": "docker compose stop postgres",
+		"db:down": "docker compose down postgres",
+		"docker:build": "docker compose build",
+		"docker:up": "docker compose up -d --build",
+		"docker:down": "docker compose down",
+		"docker:logs": "docker compose logs -f",
+		"check": "biome check .",
+		"format": "biome format --write",
+		"prepare": "husky"
+	},
+	"dependencies": {
+		"@arxio/env": "*",
+		"dotenv": "^17.2.2",
+		"zod": "^4.1.13"
+	},
+	"devDependencies": {
+		"@arxio/config": "*",
+		"@biomejs/biome": "^2.4.16",
+		"@types/node": "^22.13.14",
+		"turbo": "^2.9.16",
+		"typescript": "^6"
+	},
+	"packageManager": "npm@11.13.0"
 }
