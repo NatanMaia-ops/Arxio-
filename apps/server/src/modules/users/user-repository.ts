@@ -1,4 +1,4 @@
-import type { User, UserWithPasswordHash } from "../entities/user";
+import type { User, UserWithPasswordHash } from "./user.entity";
 
 export type CreateUserInput = {
   name: string;
