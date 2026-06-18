@@ -1,4 +1,4 @@
-name: my-better-t-app
+name: arxio
 
 services:
   web:
@@ -14,7 +14,7 @@ services:
       - path: apps/web/.env
         required: false
     environment:
-      NEXT_PUBLIC_SERVER_URL: http://server:3000
+      NEXT_PUBLIC_SERVER_URL: http://localhost:3000
     depends_on:
       server:
         condition: service_healthy
@@ -32,7 +32,7 @@ services:
         required: false
     environment:
       CORS_ORIGIN: http://localhost:3001
-      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-password}@postgres:5432/my-better-t-app
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-password}@postgres:5432/arxio
     healthcheck:
       test:
         [
@@ -52,15 +52,15 @@ services:
 
   postgres:
     image: postgres
-    container_name: my-better-t-app-postgres
+    container_name: arxio-postgres
     environment:
-      POSTGRES_DB: my-better-t-app
+      POSTGRES_DB: arxio
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
     ports:
       - "5433:5432"
     volumes:
-      - my-better-t-app_postgres_data:/var/lib/postgresql
+      - arxio_postgres_data:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -69,4 +69,4 @@ services:
     restart: unless-stopped
 
 volumes:
-  my-better-t-app_postgres_data:
+  arxio_postgres_data:

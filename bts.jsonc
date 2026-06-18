@@ -12,8 +12,8 @@
 {
   "$schema": "https://r2.better-t-stack.dev/schema.json",
   "version": "3.33.0",
-  "createdAt": "2026-06-13T18:28:48.594Z",
-  "reproducibleCommand": "npx create-better-t-stack@latest my-better-t-app --frontend next --backend express --runtime node --database postgres --orm drizzle --api none --auth none --payments none --addons biome fumadocs turborepo --examples none --db-setup docker --web-deploy docker --server-deploy docker --git --package-manager npm --install",
+  "createdAt": "2026-06-14T13:50:27.433Z",
+  "reproducibleCommand": "npx create-better-t-stack@latest arxio --frontend next --backend express --runtime node --database postgres --orm drizzle --api none --auth none --payments none --addons biome fumadocs turborepo --examples none --db-setup docker --web-deploy docker --server-deploy docker --git --package-manager npm --install",
   "database": "postgres",
   "orm": "drizzle",
   "backend": "express",
