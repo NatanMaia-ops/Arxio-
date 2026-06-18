@@ -1,118 +1,70 @@
-# arxio
+<p align="center">
+  <img src="docs/banner-readme.png" alt="Arxio - rede acadêmica para estudantes da UEPB" width="100%" />
+</p>
 
-This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines Next.js, Express, and more.
+<p align="center">
+  <strong>Uma rede acadêmica para compartilhar estudos, projetos e conhecimento.</strong>
+</p>
 
-## Features
+<p align="center">
+  Projeto acadêmico independente desenvolvido por estudantes do curso de Ciência da Computação da UEPB, campus Patos, no contexto da disciplina de Engenharia de Software.
+</p>
 
-- **TypeScript** - For type safety and improved developer experience
-- **Next.js** - Full-stack React framework
-- **TailwindCSS** - Utility-first CSS for rapid UI development
-- **Shared UI package** - shadcn/ui primitives live in `packages/ui`
-- **Express** - Fast, unopinionated web framework
-- **Node.js** - Runtime environment
-- **Drizzle** - TypeScript-first ORM
-- **PostgreSQL** - Database engine
-- **Biome** - Linting and formatting
-- **Turborepo** - Optimized monorepo build system
+## Sobre a Plataforma
 
-## Getting Started
+A Arxio é uma plataforma acadêmica em desenvolvimento voltada para a comunidade do curso de Ciência da Computação da Universidade Estadual da Paraíba (UEPB), campus Patos. A proposta é criar um ambiente digital onde estudantes, professores e demais interessados possam compartilhar estudos, projetos, pesquisas, ideias e aprendizados construídos ao longo da trajetória acadêmica.
 
-First, install the dependencies:
+A plataforma nasce da percepção de que muitos estudantes enfrentam dificuldades para organizar ideias, desenvolver textos acadêmicos e publicar seus conhecimentos de forma clara. Ao incentivar publicações frequentes, interações e feedbacks, a Arxio busca contribuir para o desenvolvimento da escrita, da comunicação acadêmica e da produção de conhecimento dentro da comunidade universitária.
 
-```bash
-npm install
-```
+## Objetivos
 
-## Database Setup
+- Fortalecer a colaboração acadêmica entre estudantes, professores e participantes da comunidade.
+- Estimular o compartilhamento de conhecimento produzido no cotidiano universitário.
+- Incentivar a prática da escrita acadêmica por meio de publicações, artigos e relatos de estudo.
+- Valorizar projetos, pesquisas e produções desenvolvidas por estudantes.
+- Criar um espaço de interação para troca de ideias, referências, feedbacks e experiências.
+- Apoiar a preparação dos estudantes para produções mais formais, como artigos, trabalhos científicos e TCCs.
 
-This project uses PostgreSQL with Drizzle ORM.
+## Público-Alvo
 
-1. Make sure you have a PostgreSQL database set up.
-2. Update your `apps/server/.env` file with your PostgreSQL connection details.
+A Arxio tem como público inicial estudantes, professores e pessoas interessadas na comunidade do curso de Ciência da Computação da UEPB, campus Patos. O projeto parte desse contexto acadêmico específico para construir uma experiência alinhada às necessidades reais da comunidade universitária local.
 
-3. Apply the schema to your database:
+## O Que a Arxio Propõe
 
-```bash
-npm run db:push
-```
+- Criação de perfis acadêmicos.
+- Publicação de conteúdos, estudos, artigos e projetos.
+- Interação por meio de comentários, curtidas e salvamentos.
+- Acompanhamento de estudantes, professores e autores.
+- Organização e descoberta de conteúdos por categorias e tags.
+- Compartilhamento de feedbacks entre participantes da comunidade acadêmica.
 
-Then, run the development server:
+## Tipos de Conteúdo
 
-```bash
-npm run dev
-```
+A plataforma busca incentivar diferentes formatos de produção acadêmica, desde registros mais simples do processo de aprendizagem até conteúdos mais estruturados:
 
-Open [http://localhost:3001](http://localhost:3001) in your browser to see the web application.
-The API is running at [http://localhost:3000](http://localhost:3000).
+- Resumos de estudo.
+- Artigos acadêmicos.
+- Relatos de aprendizado.
+- Projetos desenvolvidos em disciplinas.
+- Trabalhos de iniciação científica.
+- TCCs em andamento.
+- Tutoriais técnicos.
+- Experimentos, datasets e materiais complementares.
 
-## UI Customization
+## Princípios do Projeto
 
-React web apps in this stack share shadcn/ui primitives through `packages/ui`.
+A Arxio é orientada por três princípios centrais:
 
-- Change design tokens and global styles in `packages/ui/src/styles/globals.css`
-- Update shared primitives in `packages/ui/src/components/*`
-- Adjust shadcn aliases or style config in `packages/ui/components.json` and `apps/web/components.json`
+- Colaboração acadêmica.
+- Compartilhamento de conhecimento.
+- Incentivo à escrita.
 
-### Add more shared components
+Esses princípios guiam a construção da plataforma e reforçam o objetivo de transformar a produção estudantil em uma prática mais visível, acessível e colaborativa.
 
-Run this from the project root to add more primitives to the shared UI package:
+## Status
 
-```bash
-npx shadcn@latest add accordion dialog popover sheet table -c packages/ui
-```
+A Arxio está em fase de MVP em desenvolvimento. As funcionalidades, fluxos e decisões de produto ainda estão em evolução conforme o projeto avança no contexto da disciplina de Engenharia de Software.
 
-Import shared components like this:
+## Contexto Acadêmico
 
-```tsx
-import { Button } from "@arxio/ui/components/button";
-```
-
-### Add app-specific blocks
-
-If you want to add app-specific blocks instead of shared primitives, run the shadcn CLI from `apps/web`.
-
-## Deployment
-
-### Docker Compose
-
-- Target: web + server
-- Config: `docker-compose.yml` (app Dockerfiles live in `apps/*/Dockerfile`)
-- Build images: npm run docker:build
-- Start: npm run docker:up
-- Logs: npm run docker:logs
-- Stop: npm run docker:down
-
-Environment variables are read from each app's `.env` file (baked into web builds for public variables) and overridden in `docker-compose.yml` for container networking.
-
-## Git Hooks and Formatting
-
-- Run checks: `npm run check`
-
-## Project Structure
-
-```
-arxio/
-├── apps/
-│   ├── web/         # Frontend application (Next.js)
-│   └── server/      # Backend API (Express)
-├── packages/
-│   ├── ui/          # Shared shadcn/ui components and styles
-│   └── db/          # Database schema & queries
-```
-
-## Available Scripts
-
-- `npm run dev`: Start all applications in development mode
-- `npm run build`: Build all applications
-- `npm run dev:web`: Start only the web application
-- `npm run dev:server`: Start only the server
-- `npm run check-types`: Check TypeScript types across all apps
-- `npm run db:push`: Push schema changes to database
-- `npm run db:generate`: Generate database client/types
-- `npm run db:migrate`: Run database migrations
-- `npm run db:studio`: Open database studio UI
-- `npm run check`: Run Biome formatting and linting
-- `npm run docker:build`: Build the Docker Compose images
-- `npm run docker:up`: Build and start the Docker Compose stack
-- `npm run docker:logs`: Tail logs from the Docker Compose stack
-- `npm run docker:down`: Stop the Docker Compose stack
+Este é um projeto acadêmico independente, desenvolvido por estudantes da UEPB. A iniciativa não representa uma plataforma oficial da universidade, mas nasce dentro do ambiente universitário com o propósito de contribuir para a prática acadêmica, a troca de conhecimento e o desenvolvimento dos participantes envolvidos.
