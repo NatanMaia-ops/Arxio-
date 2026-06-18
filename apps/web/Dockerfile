@@ -3,7 +3,7 @@ WORKDIR /app
 ENV SKIP_ENV_VALIDATION=1
 
 COPY . .
-RUN --mount=type=cache,target=/root/.npm npm install
+RUN --mount=type=cache,target=/root/.npm npm install --ignore-scripts
 
 ARG NEXT_PUBLIC_SERVER_URL=http://localhost:3000
 ENV NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}
@@ -16,6 +16,7 @@ ENV NODE_ENV=production
 
 COPY --from=builder /app/apps/web/.next/standalone ./
 COPY --from=builder /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=builder /app/apps/web/public ./apps/web/public
 
 ENV HOSTNAME=0.0.0.0
 ENV PORT=3001

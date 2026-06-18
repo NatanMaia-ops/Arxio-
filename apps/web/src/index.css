@@ -1,1 +1,6 @@
 @import "@arxio/ui/globals.css";
+
+@theme inline {
+	--font-home-display: var(--font-source-serif);
+	--font-home-interface: var(--font-plus-jakarta-sans);
+}
