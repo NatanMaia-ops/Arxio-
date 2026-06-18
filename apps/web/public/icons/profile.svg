@@ -1,0 +1,6 @@
+<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="button-profile-user">
+<circle id="div-button-profile-user" cx="10" cy="10" r="10" fill="var(--fill-0, #3B6B4A)"/>
+<path id="icon-profile-user" d="M10.0008 10.5884C11.6252 10.5884 12.942 9.2716 12.942 7.64723C12.942 6.02286 11.6252 4.70605 10.0008 4.70605C8.37644 4.70605 7.05963 6.02286 7.05963 7.64723C7.05963 9.2716 8.37644 10.5884 10.0008 10.5884ZM10.0008 10.5884C11.2489 10.5884 12.4458 11.0842 13.3284 11.9667C14.2109 12.8493 14.7067 14.0462 14.7067 15.2943M10.0008 10.5884C8.75273 10.5884 7.55577 11.0842 6.67324 11.9667C5.79072 12.8493 5.29492 14.0462 5.29492 15.2943" stroke="var(--stroke-0, white)" stroke-width="1.17647" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</svg>
