@@ -2,12 +2,12 @@ import { db } from "@arxio/db";
 import { users } from "@arxio/db/schema/user";
 import { eq } from "drizzle-orm";
 
-import type { User, UserWithPasswordHash } from "./user.entity";
+import type { User, UserWithPasswordHash } from "../../entities/user.entity";
 import type {
 	CreateUserInput,
 	UpdateUserInput,
 	UserRepository,
-} from "./user-repository";
+} from "../../repositories/user-repository";
 
 function toUser(row: typeof users.$inferSelect): User {
 	return {
