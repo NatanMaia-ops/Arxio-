@@ -3,29 +3,29 @@
 	"type": "module",
 	"main": "src/index.ts",
 	"scripts": {
-	  "build": "tsdown",
-	  "check-types": "tsc -b",
-	  "compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server",
-	  "dev": "tsx watch src/index.ts",
-	  "start": "node dist/index.mjs"
+		"build": "tsdown",
+		"check-types": "tsc -b",
+		"compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server",
+		"dev": "tsx watch src/index.ts",
+		"start": "node dist/index.mjs"
 	},
 	"dependencies": {
-	  "@arxio/db": "*",
-	  "@arxio/env": "*",
-	  "bcryptjs": "^3.0.3",
-	  "cors": "^2.8.5",
-	  "dotenv": "^17.2.2",
-	  "express": "^5.1.0",
-	  "zod": "^4.1.13"
+		"@arxio/db": "*",
+		"@arxio/env": "*",
+		"bcryptjs": "^3.0.3",
+		"cors": "^2.8.5",
+		"dotenv": "^17.2.2",
+		"express": "^5.1.0",
+		"zod": "^4.1.13"
 	},
 	"devDependencies": {
-	  "@arxio/config": "*",
-	  "@types/bcryptjs": "^2.4.6",
-	  "@types/cors": "^2.8.17",
-	  "@types/express": "^5.0.1",
-	  "@types/node": "^22.13.14",
-	  "tsdown": "^0.21.9",
-	  "tsx": "^4.19.2",
-	  "typescript": "^6"
+		"@arxio/config": "*",
+		"@types/bcryptjs": "^2.4.6",
+		"@types/cors": "^2.8.17",
+		"@types/express": "^5.0.1",
+		"@types/node": "^22.13.14",
+		"tsdown": "^0.21.9",
+		"tsx": "^4.19.2",
+		"typescript": "^6"
 	}
-  }
+}
