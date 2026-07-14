@@ -1,13 +1,13 @@
-import { Plus_Jakarta_Sans, Source_Serif_4 } from "next/font/google";
+import { Inter, Newsreader } from "next/font/google";
 
-export const interfaceFont = Plus_Jakarta_Sans({
-	variable: "--font-plus-jakarta-sans",
+export const interfaceFont = Inter({
+	variable: "--font-inter",
 	subsets: ["latin"],
-	weight: ["500", "700", "800"],
+	weight: ["400", "500"],
 });
 
-export const displayFont = Source_Serif_4({
-	variable: "--font-source-serif",
+export const displayFont = Newsreader({
+	variable: "--font-newsreader",
 	subsets: ["latin"],
-	weight: ["300", "400", "500", "600"],
+	weight: ["600", "700"],
 });
