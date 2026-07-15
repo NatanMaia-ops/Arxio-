@@ -15,6 +15,13 @@
 			"when": 1781728603355,
 			"tag": "0001_create_student_profiles_roles_user_roles",
 			"breakpoints": true
+		},
+		{
+			"idx": 2,
+			"version": "7",
+			"when": 1784155940730,
+			"tag": "0002_create_auth_tables",
+			"breakpoints": true
 		}
 	]
 }

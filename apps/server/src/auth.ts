@@ -1,4 +1,8 @@
+import { db } from "@arxio/db";
+import { accounts, sessions, verificationTokens } from "@arxio/db/schema/auth";
+import { users } from "@arxio/db/schema/user";
 import { env } from "@arxio/env/server";
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { ExpressAuth, type ExpressAuthConfig } from "@auth/express";
 import Google, { type GoogleProfile } from "@auth/express/providers/google";
 
@@ -36,6 +40,12 @@ function isAllowedDomain(domain: string | null): boolean {
 }
 
 export const authConfig = {
+	adapter: DrizzleAdapter(db, {
+		usersTable: users,
+		accountsTable: accounts,
+		sessionsTable: sessions,
+		verificationTokensTable: verificationTokens,
+	}),
 	providers: [
 		Google({
 			clientId: env.AUTH_GOOGLE_ID,

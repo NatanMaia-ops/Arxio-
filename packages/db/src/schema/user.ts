@@ -1,12 +1,12 @@
 import {
+	index,
+	integer,
 	pgTable,
-	uuid,
-	varchar,
+	primaryKey,
 	text,
 	timestamp,
-	integer,
-	index,
-	primaryKey,
+	uuid,
+	varchar,
 } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
@@ -14,12 +14,12 @@ export const users = pgTable("users", {
 
 	name: varchar("name", { length: 150 }).notNull(),
 	email: varchar("email", { length: 150 }).notNull().unique(),
-	passwordHash: varchar("password_hash", { length: 255 }).notNull(),
+	passwordHash: varchar("password_hash", { length: 255 }),
 
 	bio: text("bio"),
-	avatarUrl: varchar("avatar_url", { length: 500 }),
+	image: varchar("avatar_url", { length: 500 }),
 
-	emailVerifiedAt: timestamp("email_verified_at"),
+	emailVerified: timestamp("email_verified_at"),
 	lastLoginAt: timestamp("last_login_at"),
 
 	disabledAt: timestamp("disabled_at"),
