@@ -1,6 +1,7 @@
 import { env } from "@arxio/env/server";
 import cors from "cors";
 import express from "express";
+import { authHandler } from "./auth";
 
 const app = express();
 
@@ -8,8 +9,11 @@ app.use(
 	cors({
 		origin: env.CORS_ORIGIN,
 		methods: ["GET", "POST", "OPTIONS"],
+		credentials: true,
 	}),
 );
+
+app.use("/auth", authHandler);
 
 app.use(express.json());
 
