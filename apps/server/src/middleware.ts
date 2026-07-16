@@ -1,10 +1,12 @@
-import { getSession, type Session } from "@auth/express";
+import type { Session } from "@auth/express";
 import type { RequestHandler } from "express";
 
-import { authConfig } from "./auth";
+import { authService } from "./auth";
 
 export type AuthenticatedSession = Session & {
-	user: NonNullable<Session["user"]>;
+	user: NonNullable<Session["user"]> & {
+		id: string;
+	};
 };
 
 export type AuthenticatedLocals = {
@@ -14,9 +16,10 @@ export type AuthenticatedLocals = {
 export function auth(): RequestHandler {
 	return async (req, res, next) => {
 		try {
-			const session = await getSession(req, authConfig);
+			const session = await authService.getSession(req);
+			const sessionUser = session?.user;
 
-			if (!session?.user) {
+			if (!sessionUser || typeof sessionUser.id !== "string") {
 				res.status(401).json({
 					code: "UNAUTHORIZED",
 					message: "Authentication required",
@@ -26,7 +29,10 @@ export function auth(): RequestHandler {
 
 			res.locals.session = {
 				...session,
-				user: session.user,
+				user: {
+					...sessionUser,
+					id: sessionUser.id,
+				},
 			} satisfies AuthenticatedSession;
 
 			next();
