@@ -1,7 +1,8 @@
 import { env } from "@arxio/env/server";
 import cors from "cors";
-import express from "express";
+import express, { type Response } from "express";
 import { authHandler } from "./auth";
+import { type AuthenticatedLocals, auth } from "./middleware";
 
 const app = express();
 
@@ -16,6 +17,14 @@ app.use(
 app.use("/auth", authHandler);
 
 app.use(express.json());
+
+app.get(
+	"/api/protected",
+	auth(),
+	(_req, res: Response<unknown, AuthenticatedLocals>) => {
+		res.status(200).json(res.locals.session);
+	},
+);
 
 app.get("/", (_req, res) => {
 	res.status(200).send("OK");
