@@ -1,24 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { Logo } from "@/components/layout/logo";
+
 export function SiteHeader() {
 	return (
 		<header className="sticky top-0 z-10 border-[#e3e3e3] border-b bg-white">
 			<div className="mx-auto flex h-18 max-w-360 items-center gap-6 px-20">
-				<Link
-					href="/"
-					aria-label="Arxio"
-					className="flex h-[27px] w-20 shrink-0 items-center justify-center rounded-[10px] bg-black px-2.5 py-1.5"
-				>
-					<Image
-						src="/icons/logo-arxio-mark.png"
-						alt="Arxio"
-						width={753}
-						height={256}
-						className="h-full w-full object-contain"
-						priority
-					/>
-				</Link>
+				<Logo />
 
 				<SearchField />
 
