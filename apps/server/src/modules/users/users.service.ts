@@ -7,8 +7,8 @@ import type {
 	UpdateUserInput,
 } from "./repositories/user-repository";
 import type { User, UserWithPasswordHash } from "./entities/user.entity";
-import type { CreateUserInput as CreateUserDtoInput } from "./infra/dtos/create_user.dto";
-import type { UserResponse } from "./infra/dtos/user_response.dto";
+import type { CreateUserInput as CreateUserDtoInput } from "./http/dtos/create_user.dto";
+import type { UserResponse } from "./http/dtos/user_response.dto";
 
 export class UsersService {
 	constructor(private readonly users: UserRepository) {}

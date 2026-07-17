@@ -4,6 +4,10 @@ import express, { type Response } from "express";
 import { authHandler } from "./auth";
 import { type AuthenticatedLocals, auth } from "./middleware";
 
+import { createUsersController } from "./modules/users/http/users.controller";
+import { usersService } from "./modules/users/users.module";
+import { errorHandler } from "./shared/http/error-handler";
+
 const app = express();
 
 app.use(
@@ -29,6 +33,10 @@ app.get(
 app.get("/", (_req, res) => {
 	res.status(200).send("OK");
 });
+
+app.use("/users", createUsersController(usersService));
+
+app.use(errorHandler);
 
 app.listen(3000, () => {
 	console.log("Server is running on http://localhost:3000");
