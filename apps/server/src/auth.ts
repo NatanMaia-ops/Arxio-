@@ -7,39 +7,7 @@ import { ExpressAuth, type ExpressAuthConfig, getSession } from "@auth/express";
 import Google, { type GoogleProfile } from "@auth/express/providers/google";
 
 import { type AuthPersistence, AuthService } from "./modules/auth/auth.service";
-
-const allowedDomains = ["aluno.uepb.edu.br", "uepb.edu.br"] as const;
-
-function normalizeDomain(value: unknown): string | null {
-	if (typeof value !== "string") return null;
-
-	const domain = value.trim().toLowerCase();
-	return domain || null;
-}
-
-function getEmailDomain(value: unknown): string | null {
-	if (typeof value !== "string") return null;
-
-	const email = value.trim().toLowerCase();
-	const separator = email.lastIndexOf("@");
-
-	if (
-		separator <= 0 ||
-		separator !== email.indexOf("@") ||
-		separator === email.length - 1
-	) {
-		return null;
-	}
-
-	return email.slice(separator + 1);
-}
-
-function isAllowedDomain(domain: string | null): boolean {
-	return (
-		domain !== null &&
-		allowedDomains.some((allowedDomain) => allowedDomain === domain)
-	);
-}
+import { canSignInWithGoogle } from "./modules/auth/google-auth-policy";
 
 const drizzleAuthAdapter = DrizzleAdapter(db, {
 	usersTable: users,
@@ -91,13 +59,7 @@ export const authConfig: ExpressAuthConfig = {
 	],
 	callbacks: {
 		signIn({ account, profile }) {
-			if (account?.provider !== "google" || !profile) return false;
-
-			return (
-				profile.email_verified === true &&
-				isAllowedDomain(getEmailDomain(profile.email)) &&
-				isAllowedDomain(normalizeDomain(profile.hd))
-			);
+			return canSignInWithGoogle(account, profile);
 		},
 		session({ session, token }) {
 			if (!session.user || !token.sub) return session;

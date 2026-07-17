@@ -16,7 +16,7 @@ import {
 const oauthProfile: AdapterUser = {
 	id: "google-profile-id",
 	name: "Lucas",
-	email: "Lucas@Aluno.UEPB.edu.br ",
+	email: "Lucas@Gmail.com ",
 	emailVerified: null,
 	image: null,
 };
@@ -24,7 +24,7 @@ const oauthProfile: AdapterUser = {
 const persistedUser: AdapterUser = {
 	...oauthProfile,
 	id: "45d0b82d-36b6-4df8-82ba-26f8eec1636f",
-	email: "lucas@aluno.uepb.edu.br",
+	email: "lucas@gmail.com",
 };
 
 const googleAccount: AdapterAccount = {
@@ -77,7 +77,7 @@ describe("AuthService", () => {
 
 		const user = await service.createUserFromOAuth(oauthProfile);
 
-		assert.equal(searchedEmail, "lucas@aluno.uepb.edu.br");
+		assert.equal(searchedEmail, "lucas@gmail.com");
 		assert.equal(user, persistedUser);
 		assert.equal(createCalled, false);
 	});
@@ -94,7 +94,7 @@ describe("AuthService", () => {
 
 		const user = await service.createUserFromOAuth(oauthProfile);
 
-		assert.equal(createdUsers[0]?.email, "lucas@aluno.uepb.edu.br");
+		assert.equal(createdUsers[0]?.email, "lucas@gmail.com");
 		assert.equal(user, persistedUser);
 	});
 

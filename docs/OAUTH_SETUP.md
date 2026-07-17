@@ -1,9 +1,6 @@
-# Configuracao do OAuth com Google Workspace
+# Configuracao do OAuth com Google
 
-Este guia descreve como configurar o login da Arxio com Google OAuth 2.0. A aplicacao aceita somente contas verificadas dos dominios academicos:
-
-- `aluno.uepb.edu.br`
-- `uepb.edu.br`
+Este guia descreve como configurar o login da Arxio com Google OAuth 2.0. A aplicacao aceita qualquer conta autenticada cujo email tenha sido verificado pelo Google, independentemente do dominio.
 
 A Arxio e um projeto academico independente e nao representa uma plataforma oficial da UEPB. O uso de um projeto ou organizacao Google Cloud institucional depende de autorizacao da universidade.
 
@@ -17,12 +14,10 @@ A Arxio e um projeto academico independente e nao representa uma plataforma ofic
 
 1. Acesse o [Google Auth Platform](https://console.cloud.google.com/auth/overview) e selecione o projeto.
 2. Em **Branding**, informe o nome da aplicacao, email de suporte e dados de contato do desenvolvedor.
-3. Em **Audience**, escolha o tipo de audiencia:
-   - Use **Internal** somente se o projeto pertencer a uma organizacao Google Workspace da UEPB e houver autorizacao administrativa.
-   - Caso contrario, use **External**. Durante os testes, cadastre as contas academicas da equipe como test users.
+3. Em **Audience**, escolha **External** para permitir contas Google de qualquer dominio. Enquanto a aplicacao estiver em modo de testes, cadastre as contas da equipe como test users.
 4. Em **Data Access**, mantenha apenas os scopes necessarios para autenticacao: `openid`, `email` e `profile`.
 
-Os **Authorized domains** da tela de branding representam os dominios onde a aplicacao esta hospedada. Eles nao substituem a validacao de email academico feita pelo server.
+Os **Authorized domains** da tela de branding representam os dominios onde a aplicacao esta hospedada. Eles nao restringem o dominio do email usado no login.
 
 ## 2. Criar o cliente OAuth
 
@@ -68,23 +63,23 @@ openssl rand -hex 32
 
 Gere um valor diferente para cada segredo. Nunca versione `.env`, Client Secrets ou arquivos de credenciais baixados do Google Cloud.
 
-## 4. Validacao das contas academicas
+## 4. Validacao das contas Google
 
-O server autoriza o login somente quando o perfil retornado pelo Google atende a todos os criterios:
+O server autoriza o login quando:
 
+- O provider utilizado e o Google.
 - O email foi verificado pelo Google (`email_verified`).
-- O dominio do email e exatamente `aluno.uepb.edu.br` ou `uepb.edu.br`.
-- O claim `hd` identifica a conta como pertencente a um dos dominios permitidos do Google Workspace.
 
-Contas publicas, como Gmail ou Outlook, e contas de outros dominios sao recusadas. O parametro `hd` enviado na tela de login seria apenas uma sugestao visual; por isso, a autorizacao e validada novamente no server.
+Contas Gmail, contas Google Workspace e contas Google associadas a outros dominios sao aceitas quando o Google confirma a propriedade do email. O claim `hd` nao faz parte da politica de autorizacao.
 
 ## 5. Testar a configuracao
 
 1. Inicie o server.
 2. Confirme que o Google aparece em `http://localhost:3000/auth/providers`.
-3. Abra `http://localhost:3000/auth/signin/google` no navegador.
-4. Teste uma conta de cada dominio permitido.
-5. Confirme que uma conta publica ou de outro dominio e recusada.
+3. Abra `http://localhost:3000/auth/signin` no navegador.
+4. Clique em **Sign in with Google** para enviar o formulario `POST` com o token CSRF.
+5. Teste uma conta Gmail e uma conta Google Workspace.
+6. Confirme que ambas conseguem concluir o login.
 
 ## Problemas comuns
 
@@ -94,12 +89,12 @@ Confirme que a URI cadastrada no Google Cloud corresponde exatamente a `${AUTH_U
 
 ### `AccessDenied`
 
-O perfil nao passou pela politica academica. Verifique se o email esta confirmado e se os valores de dominio do email e do claim `hd` pertencem a lista permitida.
+O perfil nao passou pela politica de autenticacao. Verifique se o login foi realizado pelo provider Google e se o email da conta esta confirmado.
 
 ### `org_internal`
 
 O cliente foi configurado como interno em uma organizacao que nao inclui a conta utilizada. Ajuste a audiencia ou use um projeto autorizado pela organizacao correta.
 
-### Dominio `hd` diferente
+### `AdapterError`
 
-O Google Workspace pode retornar o dominio principal da organizacao no claim `hd`, inclusive para contas de um dominio secundario. Se a infraestrutura da UEPB retornar outro dominio, confirme o valor com a administracao antes de adiciona-lo explicitamente a lista permitida. Nao remova essa verificacao nem aceite dominios por correspondencia parcial.
+O Auth.js nao conseguiu consultar ou atualizar as tabelas de autenticacao. Confirme que o PostgreSQL esta em execucao, que `DATABASE_URL` usa a porta correta e que as migrations foram aplicadas.

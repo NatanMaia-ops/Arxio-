@@ -1,8 +1,8 @@
 # Implementacao de Autenticacao
 
-Este documento consolida o que foi implementado nos quatro primeiros commits de autenticacao da branch `feature/Oauth-login` e na etapa posterior de account linking.
+Este documento consolida o que foi implementado nos quatro primeiros commits de autenticacao da branch `feature/Oauth-login` e nas etapas posteriores de account linking e abertura do login para qualquer conta Google verificada.
 
-O objetivo desta etapa foi preparar o server Express para autenticar contas academicas pelo Google Workspace, persistir usuarios e contas OAuth no PostgreSQL e disponibilizar um middleware para proteger rotas da API.
+O objetivo desta etapa foi preparar o server Express para autenticar contas verificadas pelo Google, persistir usuarios e contas OAuth no PostgreSQL e disponibilizar um middleware para proteger rotas da API.
 
 ## Commits contemplados
 
@@ -13,6 +13,8 @@ O objetivo desta etapa foi preparar o server Express para autenticar contas acad
 | `22028c9` | Criar o schema de persistencia do Auth.js com Drizzle |
 | `5703432` | Criar middleware de autenticacao e rota protegida |
 
+A restricao de dominios introduzida em `a1fa851` faz parte do historico da branch, mas foi removida da politica atual. O login agora aceita contas Google verificadas de qualquer dominio.
+
 ## Visao geral da arquitetura
 
 O fluxo atual envolve quatro partes principais:
@@ -22,7 +24,7 @@ Browser / frontend
        |
        | /auth/*
        v
-ExpressAuth + Google Workspace
+ExpressAuth + Google
        |
        | callback e politica academica
        v
@@ -133,7 +135,7 @@ cors({
 
 Isso permite que o frontend envie e receba o cookie de sessao em requisicoes para o server. No cliente HTTP, as chamadas tambem precisam usar credenciais, por exemplo `credentials: "include"` no `fetch`.
 
-## 5. Provider Google Workspace
+## 5. Provider Google
 
 O unico provider configurado atualmente e o Google:
 
@@ -154,31 +156,18 @@ Google({
 
 O callback `profile` normaliza o email e mapeia os dados basicos retornados pelo Google. O `sub` identifica a conta no provider. O usuario da Arxio continua recebendo um UUID interno gerado pelo PostgreSQL.
 
-O `allowDangerousEmailAccountLinking` permite que o Auth.js vincule a conta Google a um usuario local com o mesmo email. A opcao foi habilitada somente para esse provider porque o callback `signIn` exige email verificado e valida tanto o dominio do email quanto o claim `hd` do Google Workspace antes de qualquer criacao ou vinculo.
+O `allowDangerousEmailAccountLinking` permite que o Auth.js vincule a conta Google a um usuario local com o mesmo email. A opcao foi habilitada somente para esse provider porque o callback `signIn` exige que o Google tenha verificado a propriedade do email antes de qualquer criacao ou vinculo.
 
 As opcoes `allowedDomains`, `allowPublicEmails` e `mapAccount` citadas inicialmente na task nao existem em `@auth/express`. O comportamento equivalente foi implementado pelos hooks suportados `profile` e `callbacks.signIn`.
 
-## 6. Politica de email academico
+## 6. Politica de contas Google
 
-Os dominios permitidos sao:
-
-```text
-aluno.uepb.edu.br
-uepb.edu.br
-```
-
-O callback `signIn` autoriza a conta somente quando todos os criterios sao verdadeiros:
+O callback `signIn` autoriza a conta somente quando os dois criterios sao verdadeiros:
 
 1. O provider e o Google.
 2. O Google informou `email_verified === true`.
-3. O dominio extraido do email corresponde exatamente a um dominio permitido.
-4. O claim `hd` do Google Workspace tambem corresponde a um dominio permitido.
 
-A comparacao do dominio e feita sobre o texto localizado depois do unico caractere `@`. Isso evita aceitar sufixos maliciosos como `usuario@eviluepb.edu.br` ou `usuario@naouepeb.edu.br`.
-
-O claim `hd` confirma que a identidade pertence a um dominio hospedado no Google Workspace. Ele nao e substituido por um simples parametro visual na tela de login, pois esse parametro funcionaria apenas como sugestao de conta.
-
-Contas Gmail, Outlook, emails nao verificados, perfis sem `hd` e dominios desconhecidos sao rejeitados.
+O dominio do email e o claim `hd` nao restringem o acesso. Contas Gmail, contas Google Workspace e contas Google associadas a outros dominios sao aceitas. Emails que o Google nao marcou como verificados continuam sendo rejeitados.
 
 ## 7. Persistencia com DrizzleAdapter
 
@@ -305,6 +294,8 @@ Criacao e atualizacao tambem mapeiam `avatarUrl` para `image` antes de acessar o
 
 `findByEmailWithPasswordHash` passou a retornar `null` quando encontra um usuario OAuth sem senha local. Isso preserva o tipo `UserWithPasswordHash` apenas para usuarios que realmente possuem credenciais por senha.
 
+O DTO de cadastro manual tambem aceita qualquer email sintaticamente valido. O limite de 150 caracteres acompanha a coluna `users.email`.
+
 ## 11. Middleware de autenticacao
 
 A versao instalada de `@auth/express` nao exporta uma funcao `auth()`. Ela exporta `ExpressAuth` e `getSession`.
@@ -384,7 +375,7 @@ O fluxo implementado funciona assim:
 2. O frontend inicia o login pelo endpoint do Google.
 3. O Auth.js redireciona o usuario ao Google.
 4. O Google autentica o usuario e chama `/auth/callback/google`.
-5. O callback `signIn` valida `email_verified`, dominio do email e `hd`.
+5. O callback `signIn` confirma que o provider e o Google e valida `email_verified`.
 6. O adapter procura uma conta por `provider` e `provider_account_id`.
 7. Se nao houver conta vinculada, o Auth.js procura um usuario pelo email normalizado.
 8. Se o usuario ja existir, inclusive por cadastro manual, a conta Google e vinculada ao UUID existente.
@@ -399,19 +390,18 @@ O fluxo implementado funciona assim:
 As seguintes decisoes foram aplicadas:
 
 - Emails sao normalizados para lowercase.
-- Dominios sao comparados por igualdade exata.
 - O email precisa estar verificado pelo Google.
-- O claim Workspace `hd` tambem precisa ser permitido.
+- O login aceita contas Google de qualquer dominio.
 - CORS aceita apenas a origem configurada.
 - Cookies exigem `credentials: true` no server e no cliente.
 - Segredos possuem validacao minima de tamanho.
 - Client Secrets nao sao versionados.
 - O account linking automatico esta habilitado apenas para o Google.
-- O vinculo por email acontece somente depois da validacao de `email_verified`, dominio academico e claim `hd`.
+- O vinculo por email acontece somente depois da validacao de `email_verified` pelo Google.
 - Uma conta social ja vinculada a outro UUID nao pode ser transferida pelo servico.
 - O objeto completo da conta e persistido para nao descartar tokens ou metadados do provider.
 
-O nome `allowDangerousEmailAccountLinking` sinaliza que essa opcao nao deve ser habilitada indiscriminadamente. Novos providers so devem recebe-la se oferecerem garantias equivalentes de verificacao do email e se passarem por uma politica explicita de confianca.
+O nome `allowDangerousEmailAccountLinking` sinaliza que essa opcao nao deve ser habilitada indiscriminadamente. Ela permanece limitada ao Google, cuja confirmacao de `email_verified` e tratada como garantia de propriedade do endereco. Novos providers so devem recebe-la se oferecerem garantias equivalentes e passarem por uma politica explicita de confianca.
 
 ## 15. Validacoes executadas
 
@@ -426,7 +416,7 @@ Durante a implementacao foram executados:
 - Aplicacao das migrations no PostgreSQL Docker.
 - Verificacao das tabelas, constraints e nullabilidade de `password_hash`.
 - Smoke test do adapter para users, accounts, sessions e verification tokens.
-- Testes de sete cenarios da politica de dominio academico.
+- Testes da politica Google para contas Gmail, Google Workspace, emails nao verificados e outros providers.
 - Smoke test de `/auth/providers` e `/auth/session`.
 - Teste de `/api/protected` sem cookie, esperando `401`.
 - Teste de `/api/protected` com JWT Auth.js valido, esperando `200`.
