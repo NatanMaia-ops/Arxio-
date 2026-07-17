@@ -2,19 +2,23 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { signInWithGoogle } from "@/features/auth/services/sign-in";
 
 export function LoginCard() {
-	const router = useRouter();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	async function handleGoogleSignIn() {
 		setIsSubmitting(true);
-		await signInWithGoogle();
-		router.push("/");
+
+		try {
+			await signInWithGoogle(`${window.location.origin}/`);
+		} catch {
+			setIsSubmitting(false);
+			toast.error("Não foi possível iniciar o login. Tente novamente.");
+		}
 	}
 
 	return (
