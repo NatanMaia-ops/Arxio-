@@ -58,6 +58,16 @@ export const authConfig: ExpressAuthConfig = {
 		}),
 	],
 	callbacks: {
+		redirect({ url, baseUrl }) {
+			const webOrigin = env.CORS_ORIGIN;
+
+			if (url.startsWith(webOrigin) || url.startsWith(baseUrl)) return url;
+
+			if (url.startsWith("/")) return `${webOrigin}${url}`;
+
+			return webOrigin;
+		},
+
 		signIn({ account, profile }) {
 			return canSignInWithGoogle(account, profile);
 		},
