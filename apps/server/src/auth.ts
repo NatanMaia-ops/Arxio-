@@ -21,7 +21,11 @@ if (
 	!drizzleAuthAdapter.getUser ||
 	!drizzleAuthAdapter.getUserByAccount ||
 	!drizzleAuthAdapter.getUserByEmail ||
-	!drizzleAuthAdapter.linkAccount
+	!drizzleAuthAdapter.linkAccount ||
+	!drizzleAuthAdapter.createSession ||
+	!drizzleAuthAdapter.getSessionAndUser ||
+	!drizzleAuthAdapter.updateSession ||
+	!drizzleAuthAdapter.deleteSession
 ) {
 	throw new Error("Auth adapter is missing required methods");
 }
@@ -71,20 +75,22 @@ export const authConfig: ExpressAuthConfig = {
 		signIn({ account, profile }) {
 			return canSignInWithGoogle(account, profile);
 		},
-		session({ session, token }) {
-			if (!session.user || !token.sub) return session;
+		session({ session, user }) {
+			if (!session.user) return session;
 
 			return {
 				...session,
 				user: {
 					...session.user,
-					id: token.sub,
+					id: user.id,
 				},
 			};
 		},
 	},
 	session: {
-		strategy: "jwt",
+		strategy: "database",
+		maxAge: 30 * 24 * 60 * 60,
+		updateAge: 24 * 60 * 60,
 	},
 	secret: env.AUTH_SECRET,
 };

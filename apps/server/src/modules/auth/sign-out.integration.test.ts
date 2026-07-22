@@ -2,12 +2,13 @@ import assert from "node:assert/strict";
 import type { Server } from "node:http";
 import { after, before, describe, it } from "node:test";
 
-import { encode } from "@auth/core/jwt";
+import type { Adapter, AdapterSession, AdapterUser } from "@auth/core/adapters";
+import { ExpressAuth, type ExpressAuthConfig, getSession } from "@auth/express";
 import express from "express";
 
 const authSecret = "test-auth-secret-with-at-least-32-characters";
 const sessionCookieName = "authjs.session-token";
-const webOrigin = "http://localhost:3101";
+const webOrigin = "http://localhost:3001";
 
 process.env.DATABASE_URL =
 	"postgresql://postgres:password@localhost:5432/arxio_test";
@@ -20,6 +21,61 @@ process.env.AUTH_GOOGLE_SECRET = "test-google-client-secret";
 process.env.NODE_ENV = "test";
 
 type CookieJar = Map<string, string>;
+type StoredSession = {
+	session: AdapterSession;
+	user: AdapterUser;
+};
+
+const storedSessions = new Map<string, StoredSession>();
+const deletedSessionTokens: string[] = [];
+
+function createSessionAdapter(baseAdapter: Adapter): Adapter {
+	return {
+		...baseAdapter,
+		async createSession(session) {
+			const storedSession = { ...session };
+			const user = Array.from(storedSessions.values()).find(
+				(entry) => entry.user.id === session.userId,
+			)?.user;
+
+			if (!user) throw new Error("Test session user not found");
+
+			storedSessions.set(session.sessionToken, {
+				session: storedSession,
+				user,
+			});
+
+			return storedSession;
+		},
+		async getSessionAndUser(sessionToken) {
+			return storedSessions.get(sessionToken) ?? null;
+		},
+		async updateSession(sessionUpdate) {
+			const stored = storedSessions.get(sessionUpdate.sessionToken);
+
+			if (!stored) return null;
+
+			const updatedSession = {
+				...stored.session,
+				...sessionUpdate,
+			};
+
+			storedSessions.set(sessionUpdate.sessionToken, {
+				...stored,
+				session: updatedSession,
+			});
+
+			return updatedSession;
+		},
+		async deleteSession(sessionToken) {
+			const stored = storedSessions.get(sessionToken);
+			storedSessions.delete(sessionToken);
+			deletedSessionTokens.push(sessionToken);
+
+			return stored?.session ?? null;
+		},
+	};
+}
 
 function storeResponseCookies(response: Response, jar: CookieJar): void {
 	for (const header of response.headers.getSetCookie()) {
@@ -50,18 +106,28 @@ function cookieHeader(jar: CookieJar): string {
 describe("Auth sign-out flow", () => {
 	let origin = "";
 	let server: Server;
+	let testAuthConfig: ExpressAuthConfig;
 
 	before(async () => {
-		const [{ authHandler }, { auth }] = await Promise.all([
+		const [{ authConfig }, { auth }] = await Promise.all([
 			import("../../auth"),
 			import("../../middleware"),
 		]);
+		assert.ok(authConfig.adapter);
+		testAuthConfig = {
+			...authConfig,
+			adapter: createSessionAdapter(authConfig.adapter),
+		};
 		const app = express();
 
-		app.use("/auth", authHandler);
-		app.get("/api/protected", auth(), (_request, response) => {
-			response.status(200).json(response.locals.session);
-		});
+		app.use("/auth", ExpressAuth(testAuthConfig));
+		app.get(
+			"/api/protected",
+			auth((request) => getSession(request, testAuthConfig)),
+			(_request, response) => {
+				response.status(200).json(response.locals.session);
+			},
+		);
 
 		server = await new Promise<Server>((resolve, reject) => {
 			const listener = app.listen(0, "127.0.0.1", () => resolve(listener));
@@ -80,15 +146,21 @@ describe("Auth sign-out flow", () => {
 			}),
 	);
 
-	it("clears an authenticated JWT session and rejects protected access", async () => {
+	it("deletes an authenticated database session and rejects protected access", async () => {
 		const userId = "45d0b82d-36b6-4df8-82ba-26f8eec1636f";
-		const sessionToken = await encode({
-			secret: authSecret,
-			salt: sessionCookieName,
-			token: {
-				sub: userId,
+		const sessionToken = "database-session-token";
+		storedSessions.set(sessionToken, {
+			session: {
+				sessionToken,
+				userId,
+				expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+			},
+			user: {
+				id: userId,
 				name: "Lucas",
 				email: "lucas@example.com",
+				emailVerified: null,
+				image: null,
 			},
 		});
 		const jar: CookieJar = new Map([[sessionCookieName, sessionToken]]);
@@ -127,6 +199,8 @@ describe("Auth sign-out flow", () => {
 
 		assert.equal(signOutResponse.status, 200);
 		assert.deepEqual(await signOutResponse.json(), { url: callbackUrl });
+		assert.deepEqual(deletedSessionTokens, [sessionToken]);
+		assert.equal(storedSessions.has(sessionToken), false);
 		assert.ok(
 			signOutCookies.some(
 				(cookie) =>
