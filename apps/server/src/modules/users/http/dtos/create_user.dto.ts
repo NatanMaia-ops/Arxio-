@@ -11,15 +11,12 @@ export const createUserSchema = z.object({
 		.email("Informe um e-mail válido")
 		.trim()
 		.toLowerCase()
-		.max(255, "O e-mail deve ter no máximo 255 caracteres")
-		.refine((email) => email.endsWith("@aluno.uepb.edu.br"), {
-			message: "Use o seu e-mail institucional (@aluno.uepb.edu.br)",
-		}),
+		.max(255, "O e-mail deve ter no máximo 255 caracteres"),
 
 	password: z
 		.string()
 		.min(8, "A senha deve ter no mínimo 8 caracteres")
-		.max(72, "A senha deve ter no máximo 72 caracteres") // limite comum do bcrypt
+		.max(72, "A senha deve ter no máximo 72 caracteres")
 		.regex(/[a-z]/, "A senha deve conter ao menos uma letra minúscula")
 		.regex(/[A-Z]/, "A senha deve conter ao menos uma letra maiúscula")
 		.regex(/[0-9]/, "A senha deve conter ao menos um número"),
@@ -27,8 +24,8 @@ export const createUserSchema = z.object({
 	enrollmentNumber: z
 		.string()
 		.trim()
-		.min(1, "A matrícula é obrigatória")
-		.max(50, "A matrícula deve ter no máximo 50 caracteres"),
+		.max(50, "A matrícula deve ter no máximo 50 caracteres")
+		.optional(),
 
 	course: z
 		.string()

@@ -7,11 +7,16 @@
 		"check-types": "tsc -b",
 		"compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server",
 		"dev": "tsx watch src/index.ts",
-		"start": "node dist/index.mjs"
+		"start": "node dist/index.mjs",
+		"test": "tsx --test src/modules/auth/*.test.ts src/modules/users/infra/dtos/*.test.ts"
 	},
 	"dependencies": {
 		"@arxio/db": "*",
 		"@arxio/env": "*",
+		"@auth/core": "^0.41.2",
+		"@auth/drizzle-adapter": "^1.11.2",
+		"@auth/express": "^0.12.2",
+		"bcryptjs": "^3.0.3",
 		"cors": "^2.8.5",
 		"dotenv": "^17.2.2",
 		"express": "^5.1.0",
@@ -19,6 +24,7 @@
 	},
 	"devDependencies": {
 		"@arxio/config": "*",
+		"@types/bcryptjs": "^2.4.6",
 		"@types/cors": "^2.8.17",
 		"@types/express": "^5.0.1",
 		"@types/node": "^22.13.14",

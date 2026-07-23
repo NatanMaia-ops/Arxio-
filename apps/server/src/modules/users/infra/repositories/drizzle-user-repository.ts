@@ -15,8 +15,8 @@ function toUser(row: typeof users.$inferSelect): User {
 		name: row.name,
 		email: row.email,
 		bio: row.bio,
-		avatarUrl: row.avatarUrl,
-		emailVerifiedAt: row.emailVerifiedAt,
+		avatarUrl: row.image,
+		emailVerifiedAt: row.emailVerified,
 		lastLoginAt: row.lastLoginAt,
 		disabledAt: row.disabledAt,
 		createdAt: row.createdAt,
@@ -26,7 +26,9 @@ function toUser(row: typeof users.$inferSelect): User {
 
 function toUserWithPasswordHash(
 	row: typeof users.$inferSelect,
-): UserWithPasswordHash {
+): UserWithPasswordHash | null {
+	if (row.passwordHash === null) return null;
+
 	return {
 		...toUser(row),
 		passwordHash: row.passwordHash,
@@ -35,7 +37,16 @@ function toUserWithPasswordHash(
 
 export const drizzleUserRepository: UserRepository = {
 	async create(input: CreateUserInput) {
-		const [user] = await db.insert(users).values(input).returning();
+		const [user] = await db
+			.insert(users)
+			.values({
+				name: input.name,
+				email: input.email,
+				passwordHash: input.passwordHash,
+				bio: input.bio,
+				image: input.avatarUrl,
+			})
+			.returning();
 
 		if (!user) {
 			throw new Error("Failed to create user");
@@ -66,7 +77,9 @@ export const drizzleUserRepository: UserRepository = {
 		const [user] = await db
 			.update(users)
 			.set({
-				...input,
+				name: input.name,
+				bio: input.bio,
+				image: input.avatarUrl,
 				updatedAt: new Date(),
 			})
 			.where(eq(users.id, id))
@@ -89,7 +102,7 @@ export const drizzleUserRepository: UserRepository = {
 		await db
 			.update(users)
 			.set({
-				emailVerifiedAt: new Date(),
+				emailVerified: new Date(),
 				updatedAt: new Date(),
 			})
 			.where(eq(users.id, id));

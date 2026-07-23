@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/banner-readme.png" alt="Arxio - rede acadêmica para estudantes da UEPB" width="100%" />
+  <img src="docs/banner-readme.png" alt="Arxio - rede acadêmica para estudantes e comunidade acadêmica" width="100%" />
 </p>
 
 <p align="center">
@@ -12,7 +12,7 @@
 
 ## Sobre a Plataforma
 
-A Arxio é uma plataforma acadêmica em desenvolvimento voltada para a comunidade do curso de Ciência da Computação da Universidade Estadual da Paraíba (UEPB), campus Patos. A proposta é criar um ambiente digital onde estudantes, professores e demais interessados possam compartilhar estudos, projetos, pesquisas, ideias e aprendizados construídos ao longo da trajetória acadêmica.
+A Arxio é uma plataforma acadêmica em desenvolvimento voltada para estudantes, professores e demais integrantes da comunidade acadêmica, independentemente da área de conhecimento ou instituição. A proposta é criar um ambiente digital onde diferentes pessoas possam compartilhar estudos, projetos, pesquisas, ideias e aprendizados construídos ao longo da trajetória acadêmica.
 
 A plataforma nasce da percepção de que muitos estudantes enfrentam dificuldades para organizar ideias, desenvolver textos acadêmicos e publicar seus conhecimentos de forma clara. Ao incentivar publicações frequentes, interações e feedbacks, a Arxio busca contribuir para o desenvolvimento da escrita, da comunicação acadêmica e da produção de conhecimento dentro da comunidade universitária.
 
@@ -27,7 +27,7 @@ A plataforma nasce da percepção de que muitos estudantes enfrentam dificuldade
 
 ## Público-Alvo
 
-A Arxio tem como público inicial estudantes, professores e pessoas interessadas na comunidade do curso de Ciência da Computação da UEPB, campus Patos. O projeto parte desse contexto acadêmico específico para construir uma experiência alinhada às necessidades reais da comunidade universitária local.
+A Arxio tem como público estudantes, professores e pessoas interessadas na comunidade acadêmica em geral, de qualquer área de conhecimento. O projeto nasceu no contexto do curso de Ciência da Computação da UEPB, campus Patos, mas busca construir uma experiência relevante para diferentes comunidades universitárias.
 
 ## O Que a Arxio Propõe
 
