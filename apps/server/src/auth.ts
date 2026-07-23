@@ -76,13 +76,13 @@ export const authConfig: ExpressAuthConfig = {
 			return canSignInWithGoogle(account, profile);
 		},
 		session({ session, user }) {
-			if (!session.user) return session;
-
 			return {
-				...session,
+				expires: session.expires,
 				user: {
-					...session.user,
 					id: user.id,
+					name: user.name,
+					email: user.email,
+					image: user.image,
 				},
 			};
 		},

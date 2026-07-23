@@ -149,11 +149,12 @@ describe("Auth sign-out flow", () => {
 	it("deletes an authenticated database session and rejects protected access", async () => {
 		const userId = "45d0b82d-36b6-4df8-82ba-26f8eec1636f";
 		const sessionToken = "database-session-token";
+		const sessionExpires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 		storedSessions.set(sessionToken, {
 			session: {
 				sessionToken,
 				userId,
-				expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+				expires: sessionExpires,
 			},
 			user: {
 				id: userId,
@@ -170,7 +171,15 @@ describe("Auth sign-out flow", () => {
 		});
 		storeResponseCookies(authenticatedSessionResponse, jar);
 		assert.equal(authenticatedSessionResponse.status, 200);
-		assert.equal((await authenticatedSessionResponse.json()).user.id, userId);
+		assert.deepEqual(await authenticatedSessionResponse.json(), {
+			expires: sessionExpires.toISOString(),
+			user: {
+				id: userId,
+				name: "Lucas",
+				email: "lucas@example.com",
+				image: null,
+			},
+		});
 
 		const protectedResponse = await fetch(`${origin}/api/protected`, {
 			headers: { Cookie: cookieHeader(jar) },
