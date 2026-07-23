@@ -3,9 +3,10 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "next dev --port 3101",
+		"dev": "next dev --port 3001",
 		"build": "next build",
-		"start": "next start"
+		"start": "next start",
+		"test": "tsx --test src/features/auth/**/*.test.ts"
 	},
 	"dependencies": {
 		"@arxio/env": "*",
@@ -27,6 +28,7 @@
 		"@types/react": "^19.2.15",
 		"@types/react-dom": "^19.2.3",
 		"tailwindcss": "^4.1.18",
+		"tsx": "^4.19.2",
 		"typescript": "^6"
 	}
 }

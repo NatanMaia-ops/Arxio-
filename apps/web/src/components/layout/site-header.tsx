@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Logo } from "@/components/layout/logo";
+import { HeaderAuth } from "@/features/auth/components/header-auth";
 
 export function SiteHeader() {
 	return (
@@ -28,11 +29,7 @@ export function SiteHeader() {
 					Escrever
 				</button>
 
-				<Link
-					href={{ pathname: "/perfil" }}
-					aria-label="Perfil do usuário"
-					className="size-10 shrink-0 rounded-full bg-[#d1d1d1]"
-				/>
+				<HeaderAuth />
 			</div>
 		</header>
 	);
