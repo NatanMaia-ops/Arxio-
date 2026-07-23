@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { fetchCsrfToken, requestSignOut } from "./auth-api";
+import { fetchCsrfToken, fetchSession, requestSignOut } from "./auth-api";
 
 type RecordedRequest = {
 	input: RequestInfo | URL;
@@ -9,6 +9,55 @@ type RecordedRequest = {
 };
 
 describe("Auth API", () => {
+	it("fetches the authenticated session with credentials and no cache", async () => {
+		const requests: RecordedRequest[] = [];
+		const session = {
+			expires: "2026-08-22T12:00:00.000Z",
+			user: {
+				id: "user-id",
+				name: "Lucas",
+				email: "lucas@example.com",
+				image: null,
+			},
+		};
+		const fetcher = async (input: RequestInfo | URL, init?: RequestInit) => {
+			requests.push({ input, init });
+			return Response.json(session);
+		};
+
+		assert.deepEqual(
+			await fetchSession("http://localhost:3000/", fetcher),
+			session,
+		);
+		assert.equal(requests[0]?.input, "http://localhost:3000/auth/session");
+		assert.equal(requests[0]?.init?.credentials, "include");
+		assert.equal(requests[0]?.init?.cache, "no-store");
+	});
+
+	it("returns null when there is no authenticated session", async () => {
+		const fetcher = async () => Response.json(null);
+
+		assert.equal(await fetchSession("http://localhost:3000", fetcher), null);
+	});
+
+	it("rejects an invalid session response", async () => {
+		const fetcher = async () => Response.json({ user: {} });
+
+		await assert.rejects(
+			fetchSession("http://localhost:3000", fetcher),
+			/Error: Invalid session response/,
+		);
+	});
+
+	it("reports a failed session request", async () => {
+		const fetcher = async () => new Response(null, { status: 503 });
+
+		await assert.rejects(
+			fetchSession("http://localhost:3000", fetcher),
+			/Error: Failed to fetch session/,
+		);
+	});
+
 	it("fetches a CSRF token with credentials", async () => {
 		const requests: RecordedRequest[] = [];
 		const fetcher = async (input: RequestInfo | URL, init?: RequestInit) => {

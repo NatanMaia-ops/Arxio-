@@ -3,8 +3,64 @@ type AuthFetch = (
 	init?: RequestInit,
 ) => Promise<Response>;
 
+export type AuthSession = {
+	expires: string;
+	user: {
+		id: string;
+		name: string | null;
+		email: string | null;
+		image: string | null;
+	};
+};
+
 function authUrl(serverUrl: string, path: string): string {
 	return `${serverUrl.replace(/\/$/, "")}/auth/${path}`;
+}
+
+function isNullableString(value: unknown): value is string | null {
+	return typeof value === "string" || value === null;
+}
+
+function isAuthSession(value: unknown): value is AuthSession {
+	if (typeof value !== "object" || value === null) return false;
+	if (!("expires" in value) || typeof value.expires !== "string") return false;
+	if (!("user" in value) || typeof value.user !== "object" || !value.user) {
+		return false;
+	}
+
+	const { user } = value;
+
+	return (
+		"id" in user &&
+		typeof user.id === "string" &&
+		"name" in user &&
+		isNullableString(user.name) &&
+		"email" in user &&
+		isNullableString(user.email) &&
+		"image" in user &&
+		isNullableString(user.image)
+	);
+}
+
+export async function fetchSession(
+	serverUrl: string,
+	fetcher: AuthFetch = fetch,
+): Promise<AuthSession | null> {
+	const response = await fetcher(authUrl(serverUrl, "session"), {
+		credentials: "include",
+		cache: "no-store",
+	});
+
+	if (!response.ok) {
+		throw new Error("Failed to fetch session");
+	}
+
+	const data: unknown = await response.json();
+
+	if (data === null) return null;
+	if (!isAuthSession(data)) throw new Error("Invalid session response");
+
+	return data;
 }
 
 export async function fetchCsrfToken(

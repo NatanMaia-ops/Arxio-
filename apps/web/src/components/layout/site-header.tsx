@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Logo } from "@/components/layout/logo";
-import { UserMenu } from "@/features/auth/components/user-menu";
+import { HeaderAuth } from "@/features/auth/components/header-auth";
 
 export function SiteHeader() {
 	return (
@@ -29,7 +29,7 @@ export function SiteHeader() {
 					Escrever
 				</button>
 
-				<UserMenu />
+				<HeaderAuth />
 			</div>
 		</header>
 	);
