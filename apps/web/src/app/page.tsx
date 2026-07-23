@@ -1,16 +1,25 @@
-import { FeedDiscoverPanel } from "@/components/feed/feed-discover-panel";
-import { FeedRecommendations } from "@/components/feed/feed-recommendations";
-import { SiteHeader } from "@/components/layout/site-header";
+import { CommunityRanking } from "@/components/landing/community-ranking";
+import { FeaturedArticles } from "@/components/landing/featured-articles";
+import { FinalCta } from "@/components/landing/final-cta";
+import { HowItWorks } from "@/components/landing/how-it-works";
+import { LandingFooter } from "@/components/landing/landing-footer";
+import { LandingHeader } from "@/components/landing/landing-header";
+import { LandingHero } from "@/components/landing/landing-hero";
+import { RevealController } from "@/components/landing/reveal-controller";
 
 export default function FeedPage() {
 	return (
-		<div className="min-h-dvh bg-white">
-			<SiteHeader />
-
-			<main className="mx-auto flex max-w-360 gap-12 px-20 pt-13.5 pb-16">
-				<FeedRecommendations />
-				<FeedDiscoverPanel />
+		<div className="min-h-dvh overflow-x-hidden bg-white font-home-display text-ax-ink">
+			<RevealController />
+			<LandingHeader />
+			<main>
+				<LandingHero />
+				<HowItWorks />
+				<FeaturedArticles />
+				<CommunityRanking />
+				<FinalCta />
 			</main>
+			<LandingFooter />
 		</div>
 	);
 }

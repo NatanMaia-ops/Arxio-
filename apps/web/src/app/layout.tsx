@@ -18,7 +18,7 @@ export default function RootLayout({
 	return (
 		<html lang="pt-BR" suppressHydrationWarning>
 			<body
-				className={`${interfaceFont.variable} ${displayFont.variable} ${interfaceFont.className} min-h-dvh antialiased`}
+				className={`${interfaceFont.variable} ${displayFont.variable} min-h-dvh antialiased`}
 			>
 				<Providers>{children}</Providers>
 			</body>
