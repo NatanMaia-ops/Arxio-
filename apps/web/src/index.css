@@ -1,6 +1,65 @@
 @import "@arxio/ui/globals.css";
 
 @theme inline {
-	--font-home-display: var(--font-source-serif);
-	--font-home-interface: var(--font-plus-jakarta-sans);
+	--font-home-display: var(--font-newsreader);
+	--font-home-interface: var(--font-instrument-sans);
+}
+
+@theme {
+	--color-ax-ink: #111110;
+	--color-ax-ink-soft: #51565c;
+	--color-ax-ink-hover: #33383c;
+	--color-ax-body: #6a7076;
+	--color-ax-meta: #82888e;
+	--color-ax-mute: #9aa1a8;
+	--color-ax-faint: #aeb5bd;
+	--color-ax-faint-2: #c6ccd3;
+	--color-ax-rank: #b7bec6;
+	--color-ax-line: #e4e8ec;
+	--color-ax-line-2: #dfe4e9;
+	--color-ax-line-3: #d3d9df;
+	--color-ax-fill: #eceff2;
+	--color-ax-fill-hover: #dfe3e8;
+	--color-ax-cta: #0f0f0e;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+::selection {
+	background: #111110;
+	color: #ffffff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	[data-reveal] {
+		opacity: 0;
+		transform: translateY(22px);
+		transition:
+			opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+			transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+	}
+
+	[data-reveal].is-visible {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@keyframes ax-blink {
+	0%,
+	55% {
+		opacity: 1;
+	}
+	60%,
+	100% {
+		opacity: 0;
+	}
 }
