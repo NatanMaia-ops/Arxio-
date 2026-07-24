@@ -1,42 +1,26 @@
-import type { Adapter, AdapterAccount, AdapterUser } from "@auth/core/adapters";
-import type { Session } from "@auth/express";
-import type { Request } from "express";
+import type { AdapterAccount, AdapterUser } from "@auth/core/adapters";
 
 import { ConflictError, NotFoundError } from "../../shared/errors";
 
-export type AuthPersistence = Required<
-	Pick<
-		Adapter,
-		| "createUser"
-		| "getUser"
-		| "getUserByAccount"
-		| "getUserByEmail"
-		| "linkAccount"
-	>
->;
-
-export type SessionReader = (request: Request) => Promise<Session | null>;
+import type { AuthRepository } from "./repositories/auth-repository";
 
 export class AuthService {
-	constructor(
-		private readonly persistence: AuthPersistence,
-		private readonly sessionReader: SessionReader,
-	) {}
+	constructor(private readonly repository: AuthRepository) {}
 
 	async createUserFromOAuth(profile: AdapterUser): Promise<AdapterUser> {
 		const email = profile.email.trim().toLowerCase();
-		const existingUser = await this.persistence.getUserByEmail(email);
+		const existingUser = await this.repository.getUserByEmail(email);
 
 		if (existingUser) return existingUser;
 
-		return this.persistence.createUser({
+		return this.repository.createUser({
 			...profile,
 			email,
 		});
 	}
 
 	async linkAccount(account: AdapterAccount): Promise<void> {
-		const linkedUser = await this.persistence.getUserByAccount({
+		const linkedUser = await this.repository.getUserByAccount({
 			provider: account.provider,
 			providerAccountId: account.providerAccountId,
 		});
@@ -47,16 +31,12 @@ export class AuthService {
 			throw new ConflictError("Conta social ja vinculada a outro usuario");
 		}
 
-		const user = await this.persistence.getUser(account.userId);
+		const user = await this.repository.getUser(account.userId);
 
 		if (!user) {
 			throw new NotFoundError("Usuario nao encontrado");
 		}
 
-		await this.persistence.linkAccount(account);
-	}
-
-	async getSession(request: Request): Promise<Session | null> {
-		return this.sessionReader(request);
+		await this.repository.linkAccount(account);
 	}
 }

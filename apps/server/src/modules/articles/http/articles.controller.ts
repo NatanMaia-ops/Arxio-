@@ -1,9 +1,8 @@
-import { type Response, Router } from "express";
+import { type RequestHandler, type Response, Router } from "express";
 import { z } from "zod";
 
 import { ForbiddenError, NotFoundError } from "../../../shared/errors";
-import { type AuthenticatedLocals, auth } from "../../../middleware";
-import type { SessionReader } from "../../auth/auth.service";
+import type { AuthenticatedLocals } from "../../auth/http/auth.middleware";
 import type { ArticleService } from "../services/articles.service";
 
 import { articleResponseSchema } from "./dtos/article_response.dto";
@@ -16,14 +15,13 @@ const paramsWithIdSchema = z.object({
 
 export function createArticlesController(
 	articlesService: ArticleService,
-	readSession?: SessionReader,
+	requireAuth: RequestHandler,
 ) {
-	const protect = readSession ? auth(readSession) : auth();
 	const router = Router();
 
 	router.post(
 		"/",
-		protect,
+		requireAuth,
 		async (req, res: Response<unknown, AuthenticatedLocals>, next) => {
 			try {
 				const input = createArticleSchema.parse(req.body);
@@ -66,7 +64,7 @@ export function createArticlesController(
 
 	router.patch(
 		"/:id",
-		protect,
+		requireAuth,
 		async (req, res: Response<unknown, AuthenticatedLocals>, next) => {
 			try {
 				const { id } = paramsWithIdSchema.parse(req.params);
@@ -98,7 +96,7 @@ export function createArticlesController(
 
 	router.delete(
 		"/:id",
-		protect,
+		requireAuth,
 		async (req, res: Response<unknown, AuthenticatedLocals>, next) => {
 			try {
 				const { id } = paramsWithIdSchema.parse(req.params);

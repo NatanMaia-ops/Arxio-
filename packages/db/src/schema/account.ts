@@ -4,7 +4,6 @@ import {
 	pgTable,
 	primaryKey,
 	text,
-	timestamp,
 	uuid,
 } from "drizzle-orm/pg-core";
 
@@ -35,31 +34,3 @@ export const accounts = pgTable(
 
 export type Account = typeof accounts.$inferSelect;
 export type NewAccount = typeof accounts.$inferInsert;
-
-export const sessions = pgTable(
-	"sessions",
-	{
-		sessionToken: text("session_token").primaryKey(),
-		userId: uuid("user_id")
-			.notNull()
-			.references(() => users.id, { onDelete: "cascade" }),
-		expires: timestamp("expires").notNull(),
-	},
-	(table) => [index("sessions_user_id_idx").on(table.userId)],
-);
-
-export type Session = typeof sessions.$inferSelect;
-export type NewSession = typeof sessions.$inferInsert;
-
-export const verificationTokens = pgTable(
-	"verification_tokens",
-	{
-		identifier: text("identifier").notNull(),
-		token: text("token").notNull(),
-		expires: timestamp("expires").notNull(),
-	},
-	(table) => [primaryKey({ columns: [table.identifier, table.token] })],
-);
-
-export type VerificationToken = typeof verificationTokens.$inferSelect;
-export type NewVerificationToken = typeof verificationTokens.$inferInsert;

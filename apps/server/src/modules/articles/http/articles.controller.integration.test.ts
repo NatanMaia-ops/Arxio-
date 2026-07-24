@@ -6,6 +6,7 @@ import { after, before, describe, it } from "node:test";
 import express from "express";
 
 import { errorHandler } from "../../../shared/http/error-handler";
+import { createRequireAuth } from "../../auth/http/auth.middleware";
 import type { Article } from "../entities/article.entity";
 import type { ArticleRepository } from "../repositories/article-repository";
 import { ArticleService } from "../services/articles.service";
@@ -74,23 +75,32 @@ describe("Articles HTTP API", () => {
 
 		app.use(
 			"/articles",
-			createArticlesController(articlesService, async () => ({
-				user: { id: fakeUserId },
-				expires: new Date(Date.now() + 3600_000).toISOString(),
-			})),
+			createArticlesController(
+				articlesService,
+				createRequireAuth(async () => ({
+					user: { id: fakeUserId },
+					expires: new Date(Date.now() + 3600_000).toISOString(),
+				})),
+			),
 		);
 
 		app.use(
 			"/articles-other",
-			createArticlesController(articlesService, async () => ({
-				user: { id: otherUserId },
-				expires: new Date(Date.now() + 3600_000).toISOString(),
-			})),
+			createArticlesController(
+				articlesService,
+				createRequireAuth(async () => ({
+					user: { id: otherUserId },
+					expires: new Date(Date.now() + 3600_000).toISOString(),
+				})),
+			),
 		);
 
 		app.use(
 			"/articles-noauth",
-			createArticlesController(articlesService, async () => null),
+			createArticlesController(
+				articlesService,
+				createRequireAuth(async () => null),
+			),
 		);
 
 		app.use(errorHandler);
@@ -294,10 +304,13 @@ describe("Articles HTTP API", () => {
 		app.use(express.json());
 		app.use(
 			"/articles-race",
-			createArticlesController(raceService, async () => ({
-				user: { id: fakeUserId },
-				expires: new Date(Date.now() + 3600_000).toISOString(),
-			})),
+			createArticlesController(
+				raceService,
+				createRequireAuth(async () => ({
+					user: { id: fakeUserId },
+					expires: new Date(Date.now() + 3600_000).toISOString(),
+				})),
+			),
 		);
 		app.use(errorHandler);
 
