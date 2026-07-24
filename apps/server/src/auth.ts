@@ -1,6 +1,8 @@
 import { db } from "@arxio/db";
-import { accounts, sessions, verificationTokens } from "@arxio/db/schema/auth";
+import { accounts } from "@arxio/db/schema/account";
+import { sessions } from "@arxio/db/schema/session";
 import { users } from "@arxio/db/schema/user";
+import { verificationTokens } from "@arxio/db/schema/verification-token";
 import { env } from "@arxio/env/server";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { ExpressAuth, type ExpressAuthConfig, getSession } from "@auth/express";

@@ -38,11 +38,16 @@ Principais tecnologias:
 
 ## Banco de Dados
 
-O banco usa Drizzle. O schema principal de usuários fica em:
+O banco usa Drizzle. As tabelas ficam em:
 
 ```text
-packages/db/src/schema/user.ts
+packages/db/src/schema/
 ```
+
+Cada arquivo de schema deve declarar uma única tabela e manter junto dela os
+tipos inferidos de leitura e inserção. Os arquivos usam nomes no singular e
+kebab-case quando o nome é composto. O `index.ts` é apenas o agregador de
+exports e não declara tabelas.
 
 Tabelas já trabalhadas:
 
