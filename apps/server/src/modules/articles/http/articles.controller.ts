@@ -85,6 +85,10 @@ export function createArticlesController(
 
 				const updated = await articlesService.updateArticle(id, input);
 
+				if (!updated) {
+					throw new NotFoundError("Artigo nao encontrado");
+				}
+
 				res.status(200).json(articleResponseSchema.parse(updated));
 			} catch (error) {
 				next(error);

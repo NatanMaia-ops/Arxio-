@@ -263,6 +263,77 @@ describe("Articles HTTP API", () => {
 		);
 	});
 
+	it("returns 404 on PATCH when update finds no article", async () => {
+		const raceArticleId = "11111111-1111-4111-8111-111111111111";
+		const article: Article = {
+			id: raceArticleId,
+			authorId: fakeUserId,
+			title: "Artigo sumiu",
+			content: "Conteudo",
+			createdAt: new Date(),
+			updatedAt: new Date(),
+		};
+		const repository: ArticleRepository = {
+			async create() {
+				return article;
+			},
+			async findById(id) {
+				return id === raceArticleId ? article : null;
+			},
+			async findAll() {
+				return [article];
+			},
+			async update() {
+				return null;
+			},
+			async delete() {},
+		};
+		const raceService = new ArticleService(repository);
+		const app = express();
+
+		app.use(express.json());
+		app.use(
+			"/articles-race",
+			createArticlesController(raceService, async () => ({
+				user: { id: fakeUserId },
+				expires: new Date(Date.now() + 3600_000).toISOString(),
+			})),
+		);
+		app.use(errorHandler);
+
+		const raceServer = await new Promise<Server>((resolve, reject) => {
+			const listener = app.listen(0, "127.0.0.1", () => resolve(listener));
+			listener.once("error", reject);
+		});
+
+		try {
+			const address = raceServer.address();
+
+			assert.ok(address && typeof address === "object");
+
+			const raceOrigin = `http://127.0.0.1:${address.port}`;
+			const response = await fetch(
+				`${raceOrigin}/articles-race/${raceArticleId}`,
+				{
+					method: "PATCH",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ title: "Novo titulo" }),
+				},
+			);
+
+			assert.equal(response.status, 404);
+
+			const body = (await response.json()) as { code: string; message: string };
+
+			assert.equal(body.code, "NOT_FOUND");
+			assert.equal(body.message, "Artigo nao encontrado");
+		} finally {
+			await new Promise<void>((resolve, reject) => {
+				raceServer.close((error) => (error ? reject(error) : resolve()));
+			});
+		}
+	});
+
 	it("returns 403 on DELETE /:id when caller is not the author", async () => {
 		const createResponse = await fetch(`${origin}/articles`, {
 			method: "POST",
