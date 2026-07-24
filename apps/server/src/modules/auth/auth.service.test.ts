@@ -2,16 +2,11 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import type { AdapterAccount, AdapterUser } from "@auth/core/adapters";
-import type { Session } from "@auth/express";
-import type { Request } from "express";
 
 import { ConflictError, NotFoundError } from "../../shared/errors";
 
-import {
-	type AuthPersistence,
-	AuthService,
-	type SessionReader,
-} from "./auth.service";
+import { AuthService } from "./auth.service";
+import type { AuthRepository } from "./repositories/auth-repository";
 
 const oauthProfile: AdapterUser = {
 	id: "google-profile-id",
@@ -36,9 +31,9 @@ const googleAccount: AdapterAccount = {
 	refresh_token: "refresh-token",
 };
 
-function createPersistence(
-	overrides: Partial<AuthPersistence> = {},
-): AuthPersistence {
+function createRepository(
+	overrides: Partial<AuthRepository> = {},
+): AuthRepository {
 	return {
 		async createUser(user) {
 			return user;
@@ -57,13 +52,11 @@ function createPersistence(
 	};
 }
 
-const emptySessionReader: SessionReader = async () => null;
-
 describe("AuthService", () => {
 	it("returns the existing user found by normalized OAuth email", async () => {
 		let searchedEmail = "";
 		let createCalled = false;
-		const persistence = createPersistence({
+		const repository = createRepository({
 			async createUser(user) {
 				createCalled = true;
 				return user;
@@ -73,7 +66,7 @@ describe("AuthService", () => {
 				return persistedUser;
 			},
 		});
-		const service = new AuthService(persistence, emptySessionReader);
+		const service = new AuthService(repository);
 
 		const user = await service.createUserFromOAuth(oauthProfile);
 
@@ -84,13 +77,13 @@ describe("AuthService", () => {
 
 	it("creates an OAuth user with a normalized email", async () => {
 		const createdUsers: AdapterUser[] = [];
-		const persistence = createPersistence({
+		const repository = createRepository({
 			async createUser(user) {
 				createdUsers.push(user);
 				return persistedUser;
 			},
 		});
-		const service = new AuthService(persistence, emptySessionReader);
+		const service = new AuthService(repository);
 
 		const user = await service.createUserFromOAuth(oauthProfile);
 
@@ -100,12 +93,12 @@ describe("AuthService", () => {
 
 	it("links the complete provider account to an existing user", async () => {
 		const linkedAccounts: AdapterAccount[] = [];
-		const persistence = createPersistence({
+		const repository = createRepository({
 			async linkAccount(account) {
 				linkedAccounts.push(account);
 			},
 		});
-		const service = new AuthService(persistence, emptySessionReader);
+		const service = new AuthService(repository);
 
 		await service.linkAccount(googleAccount);
 
@@ -115,7 +108,7 @@ describe("AuthService", () => {
 
 	it("does not insert an account already linked to the same user", async () => {
 		let linkCalled = false;
-		const persistence = createPersistence({
+		const repository = createRepository({
 			async getUserByAccount() {
 				return persistedUser;
 			},
@@ -123,7 +116,7 @@ describe("AuthService", () => {
 				linkCalled = true;
 			},
 		});
-		const service = new AuthService(persistence, emptySessionReader);
+		const service = new AuthService(repository);
 
 		await service.linkAccount(googleAccount);
 
@@ -131,7 +124,7 @@ describe("AuthService", () => {
 	});
 
 	it("rejects an account linked to another user", async () => {
-		const persistence = createPersistence({
+		const repository = createRepository({
 			async getUserByAccount() {
 				return {
 					...persistedUser,
@@ -139,41 +132,19 @@ describe("AuthService", () => {
 				};
 			},
 		});
-		const service = new AuthService(persistence, emptySessionReader);
+		const service = new AuthService(repository);
 
 		await assert.rejects(service.linkAccount(googleAccount), ConflictError);
 	});
 
 	it("rejects an account link for an unknown user", async () => {
-		const persistence = createPersistence({
+		const repository = createRepository({
 			async getUser() {
 				return null;
 			},
 		});
-		const service = new AuthService(persistence, emptySessionReader);
+		const service = new AuthService(repository);
 
 		await assert.rejects(service.linkAccount(googleAccount), NotFoundError);
-	});
-
-	it("reads the session from the current request", async () => {
-		const request = {} as Request;
-		const session: Session = {
-			expires: new Date(Date.now() + 60_000).toISOString(),
-			user: {
-				name: persistedUser.name,
-				email: persistedUser.email,
-			},
-		};
-		let receivedRequest: Request | null = null;
-		const sessionReader: SessionReader = async (currentRequest) => {
-			receivedRequest = currentRequest;
-			return session;
-		};
-		const service = new AuthService(createPersistence(), sessionReader);
-
-		const currentSession = await service.getSession(request);
-
-		assert.equal(receivedRequest, request);
-		assert.equal(currentSession, session);
 	});
 });

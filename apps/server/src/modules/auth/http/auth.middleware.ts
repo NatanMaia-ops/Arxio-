@@ -1,8 +1,7 @@
 import type { Session } from "@auth/express";
-import type { RequestHandler } from "express";
+import type { Request, RequestHandler } from "express";
 
-import { authService } from "./auth";
-import type { SessionReader } from "./modules/auth/auth.service";
+export type SessionReader = (request: Request) => Promise<Session | null>;
 
 export type AuthenticatedSession = Session & {
 	user: NonNullable<Session["user"]> & {
@@ -14,9 +13,7 @@ export type AuthenticatedLocals = {
 	session: AuthenticatedSession;
 };
 
-export function auth(
-	readSession: SessionReader = (request) => authService.getSession(request),
-): RequestHandler {
+export function createRequireAuth(readSession: SessionReader): RequestHandler {
 	return async (req, res, next) => {
 		try {
 			const session = await readSession(req);

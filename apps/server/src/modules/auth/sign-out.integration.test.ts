@@ -109,9 +109,9 @@ describe("Auth sign-out flow", () => {
 	let testAuthConfig: ExpressAuthConfig;
 
 	before(async () => {
-		const [{ authConfig }, { auth }] = await Promise.all([
-			import("../../auth"),
-			import("../../middleware"),
+		const [{ authConfig }, { createRequireAuth }] = await Promise.all([
+			import("./auth.module"),
+			import("./http/auth.middleware"),
 		]);
 		assert.ok(authConfig.adapter);
 		testAuthConfig = {
@@ -123,7 +123,7 @@ describe("Auth sign-out flow", () => {
 		app.use("/auth", ExpressAuth(testAuthConfig));
 		app.get(
 			"/api/protected",
-			auth((request) => getSession(request, testAuthConfig)),
+			createRequireAuth((request) => getSession(request, testAuthConfig)),
 			(_request, response) => {
 				response.status(200).json(response.locals.session);
 			},
