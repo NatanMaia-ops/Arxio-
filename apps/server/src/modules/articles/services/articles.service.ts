@@ -1,9 +1,9 @@
-import type { Article } from "../articles/entities/article.entity.ts";
+import type { Article } from "../entities/article.entity";
 import {
 	type ArticleRepository,
 	type CreateArticleInput,
 	type UpdateArticleInput,
-} from "./repositories/article-repository";
+} from "../repositories/article-repository";
 
 export class ArticleService {
 	constructor(private readonly articles: ArticleRepository) {}
