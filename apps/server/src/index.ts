@@ -4,6 +4,8 @@ import express, { type Response } from "express";
 import { authHandler } from "./auth";
 import { type AuthenticatedLocals, auth } from "./middleware";
 
+import { createArticlesController } from "./modules/articles/http/articles.controller";
+import { articlesService } from "./modules/articles/articles.module";
 import { createUsersController } from "./modules/users/http/users.controller";
 import { usersService } from "./modules/users/users.module";
 import { errorHandler } from "./shared/http/error-handler";
@@ -13,7 +15,7 @@ const app = express();
 app.use(
 	cors({
 		origin: env.CORS_ORIGIN,
-		methods: ["GET", "POST", "OPTIONS"],
+		methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
 		credentials: true,
 	}),
 );
@@ -35,6 +37,8 @@ app.get("/", (_req, res) => {
 });
 
 app.use("/users", createUsersController(usersService));
+
+app.use("/articles", createArticlesController(articlesService));
 
 app.use(errorHandler);
 
