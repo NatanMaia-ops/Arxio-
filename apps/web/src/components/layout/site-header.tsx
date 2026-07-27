@@ -8,12 +8,12 @@ import { HeaderAuth } from "@/features/auth/components/header-auth";
 export function SiteHeader() {
 	return (
 		<header className="sticky top-0 z-10 border-ax-line border-b bg-ax-surface">
-			<div className="mx-auto flex h-18 max-w-360 items-center gap-6 px-20">
+			<div className="mx-auto flex h-16 max-w-360 items-center gap-3 px-5 sm:h-18 sm:gap-6 sm:px-8 lg:px-12 xl:px-20">
 				<Logo />
 
 				<SiteNav />
 
-				<div className="flex flex-1 items-center justify-end gap-3">
+				<div className="flex flex-1 items-center justify-end gap-1 sm:gap-3">
 					<ThemeToggle />
 
 					<Link

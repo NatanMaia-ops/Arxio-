@@ -141,7 +141,7 @@ export function ArticleEditor({
 			<div
 				role="toolbar"
 				aria-label="Formatação do texto"
-				className="sticky top-18 z-1 flex items-center gap-1 border-ax-line border-b bg-ax-surface py-3"
+				className="sticky top-16 z-1 flex flex-wrap items-center gap-0.5 border-ax-line border-b bg-ax-surface py-2 sm:top-18 sm:gap-1 sm:py-3"
 			>
 				{TOOLBAR_ACTIONS.map((action) => {
 					const Icon = action.icon;
@@ -156,7 +156,7 @@ export function ArticleEditor({
 							onMouseDown={(event) => event.preventDefault()}
 							onClick={() => action.run(editor)}
 							className={cn(
-								"flex size-9 items-center justify-center rounded-full text-ax-ink-soft transition-colors hover:bg-ax-fill focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface",
+								"flex size-11 items-center justify-center rounded-full text-ax-ink-soft transition-colors hover:bg-ax-fill focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface",
 								isActive && "bg-ax-ink text-ax-on-ink hover:bg-ax-ink",
 							)}
 						>

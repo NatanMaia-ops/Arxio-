@@ -96,7 +96,7 @@ export function ArticleForm({
 	return (
 		<div className="min-h-dvh bg-ax-surface">
 			<header className="sticky top-0 z-10 border-ax-line border-b bg-ax-surface">
-				<div className="mx-auto flex h-18 max-w-360 items-center justify-between gap-6 px-20">
+				<div className="mx-auto flex h-16 max-w-360 items-center justify-between gap-3 px-5 sm:h-18 sm:gap-6 sm:px-8 lg:px-12 xl:px-20">
 					<Logo />
 
 					<div className="flex items-center gap-3">
@@ -123,7 +123,7 @@ export function ArticleForm({
 				</div>
 			</header>
 
-			<main className="mx-auto max-w-180 px-6 pt-13.5 pb-24">
+			<main className="mx-auto max-w-180 px-5 pt-8 pb-24 sm:px-6 sm:pt-13.5">
 				<label className="sr-only" htmlFor="article-title">
 					Título do artigo
 				</label>
@@ -134,7 +134,7 @@ export function ArticleForm({
 					onChange={(event) => setTitle(event.target.value)}
 					placeholder="Título"
 					maxLength={TITLE_MAX_LENGTH}
-					className="w-full font-bold font-home-display text-[40px] text-ax-ink leading-12 placeholder:text-ax-placeholder focus:outline-none"
+					className="w-full font-bold font-home-display text-[28px] text-ax-ink leading-9 placeholder:text-ax-placeholder focus:outline-none sm:text-[40px] sm:leading-12"
 				/>
 
 				<div className="mt-6">

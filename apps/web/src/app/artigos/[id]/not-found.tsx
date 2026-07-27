@@ -7,8 +7,8 @@ export default function ArticleNotFound() {
 		<div className="min-h-dvh bg-ax-surface">
 			<SiteHeader />
 
-			<main className="mx-auto flex max-w-180 flex-col items-start gap-4 px-6 pt-30 pb-24">
-				<h1 className="font-bold font-home-display text-[40px] text-ax-ink leading-11">
+			<main className="mx-auto flex max-w-180 flex-col items-start gap-4 px-5 pt-20 pb-24 sm:px-6 sm:pt-30">
+				<h1 className="font-bold font-home-display text-[28px] text-ax-ink leading-9 sm:text-[40px] sm:leading-11">
 					Artigo não encontrado
 				</h1>
 				<p className="text-ax-ink-soft text-base leading-6">

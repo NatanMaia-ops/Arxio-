@@ -29,9 +29,9 @@ export default async function ArticlesPage() {
 		<div className="min-h-dvh bg-ax-surface">
 			<SiteHeader />
 
-			<main className="mx-auto max-w-220 px-20 pt-13.5 pb-16">
+			<main className="mx-auto max-w-220 px-5 pt-8 pb-16 sm:px-8 sm:pt-13.5 lg:px-12 xl:px-20">
 				<section className="flex flex-col gap-5">
-					<h1 className="font-bold font-home-display text-[40px] text-ax-ink leading-11">
+					<h1 className="font-bold font-home-display text-[32px] text-ax-ink leading-9 sm:text-[40px] sm:leading-11">
 						Artigos
 					</h1>
 
