@@ -19,15 +19,16 @@ export function SiteHeader() {
 					<Link href="/feed" aria-current="page">
 						Feed
 					</Link>
+					<Link href={{ pathname: "/artigos" }}>Artigos</Link>
 					<Link href={{ pathname: "/buscar" }}>Buscar</Link>
 				</nav>
 
-				<button
-					type="button"
-					className="shrink-0 rounded-full bg-black px-4.5 py-2.5 font-medium text-sm text-white"
+				<Link
+					href={{ pathname: "/escrever" }}
+					className="shrink-0 rounded-full bg-black px-4.5 py-2.5 font-medium text-sm text-white transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
 				>
 					Escrever
-				</button>
+				</Link>
 
 				<HeaderAuth />
 			</div>
