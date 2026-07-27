@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import { reveal } from "./data";
 
@@ -30,18 +31,18 @@ export function LandingHero() {
 						{...reveal(3)}
 						className="mt-2 flex flex-wrap items-center gap-[14px]"
 					>
-						<a
-							href="#comecar"
+						<Link
+							href="/login"
 							className="rounded-xl bg-ax-ink px-[26px] py-[14px] font-home-interface font-medium text-[16px] text-white transition-colors hover:bg-ax-ink-hover"
 						>
 							Começar a escrever
-						</a>
-						<a
-							href="#artigos"
+						</Link>
+						<Link
+							href="/feed"
 							className="rounded-xl border border-ax-line-3 px-[26px] py-[14px] font-home-interface font-medium text-[16px] text-ax-ink transition-colors hover:bg-ax-fill"
 						>
 							Explorar artigos
-						</a>
+						</Link>
 					</div>
 				</div>
 				<Image
