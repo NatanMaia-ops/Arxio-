@@ -4,7 +4,6 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ArticleCard } from "@/features/articles/components/article-card";
 import { ArticlesUnavailable } from "@/features/articles/components/articles-unavailable";
-import { DiscoverPanel } from "@/features/articles/components/discover-panel";
 import {
 	type ArticleWithAuthor,
 	listArticlesWithAuthors,
@@ -30,8 +29,8 @@ export default async function ArticlesPage() {
 		<div className="min-h-dvh bg-white">
 			<SiteHeader />
 
-			<main className="mx-auto flex max-w-360 gap-12 px-20 pt-13.5 pb-16">
-				<section className="flex w-220 flex-col gap-5">
+			<main className="mx-auto max-w-220 px-20 pt-13.5 pb-16">
+				<section className="flex flex-col gap-5">
 					<h1 className="font-bold font-home-display text-[#111111] text-[40px] leading-11">
 						Artigos
 					</h1>
@@ -48,8 +47,6 @@ export default async function ArticlesPage() {
 						/>
 					))}
 				</section>
-
-				<DiscoverPanel />
 			</main>
 		</div>
 	);
