@@ -19,26 +19,15 @@ export const studentProfiles = pgTable(
 			.unique()
 			.references(() => users.id),
 
-		enrollmentNumber: varchar("enrollment_number", { length: 50 })
-			.notNull()
-			.unique(),
-
 		course: varchar("course", { length: 150 }),
 		semester: integer("semester"),
-
-		enrollmentVerifiedAt: timestamp("enrollment_verified_at"),
-		verificationMethod: varchar("verification_method", { length: 30 }),
-
-		verifiedBy: uuid("verified_by").references(() => users.id),
+		institution: varchar("institution", { length: 150 }),
 
 		createdAt: timestamp("created_at").notNull().defaultNow(),
 		updatedAt: timestamp("updated_at").notNull().defaultNow(),
 	},
 
-	(table) => [
-		index("student_profiles_user_id_idx").on(table.userId),
-		index("student_profiles_enrollment_number_idx").on(table.enrollmentNumber),
-	],
+	(table) => [index("student_profiles_user_id_idx").on(table.userId)],
 );
 
 export type StudentProfile = typeof studentProfiles.$inferSelect;
