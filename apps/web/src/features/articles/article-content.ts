@@ -1,9 +1,16 @@
 const WORDS_PER_MINUTE = 200;
 const EXCERPT_MAX_LENGTH = 180;
 
+export type EditorMark = {
+	type?: string;
+	attrs?: Record<string, unknown>;
+};
+
 export type EditorNode = {
 	type?: string;
 	text?: string;
+	attrs?: Record<string, unknown>;
+	marks?: EditorMark[];
 	content?: EditorNode[];
 };
 

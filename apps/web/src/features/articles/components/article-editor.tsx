@@ -3,6 +3,7 @@
 import { cn } from "@arxio/ui/lib/utils";
 import { Placeholder } from "@tiptap/extensions";
 import {
+	type Content,
 	type Editor,
 	EditorContent,
 	useEditor,
@@ -104,9 +105,9 @@ export function ArticleEditor({
 			StarterKit.configure({ heading: { levels: [2, 3] } }),
 			Placeholder.configure({ placeholder }),
 		],
-		content: initialContent
+		content: (initialContent
 			? (parseEditorDocument(initialContent) ?? initialContent)
-			: EMPTY_DOCUMENT,
+			: EMPTY_DOCUMENT) as Content,
 		editorProps: {
 			attributes: {
 				class: cn(
