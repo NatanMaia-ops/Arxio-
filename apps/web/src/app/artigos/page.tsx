@@ -4,7 +4,11 @@ import Link from "next/link";
 import { FeedDiscoverPanel } from "@/components/feed/feed-discover-panel";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ArticleCard } from "@/features/articles/components/article-card";
-import { listArticlesWithAuthors } from "@/features/articles/services/article-listing";
+import { ArticlesUnavailable } from "@/features/articles/components/articles-unavailable";
+import {
+	type ArticleWithAuthor,
+	listArticlesWithAuthors,
+} from "@/features/articles/services/article-listing";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +18,13 @@ export const metadata: Metadata = {
 };
 
 export default async function ArticlesPage() {
-	const articles = await listArticlesWithAuthors();
+	let articles: ArticleWithAuthor[] | null = null;
+
+	try {
+		articles = await listArticlesWithAuthors();
+	} catch {
+		articles = null;
+	}
 
 	return (
 		<div className="min-h-dvh bg-white">
@@ -26,17 +36,17 @@ export default async function ArticlesPage() {
 						Artigos
 					</h1>
 
-					{articles.length === 0 ? (
-						<EmptyState />
-					) : (
-						articles.map(({ article, authorName }) => (
-							<ArticleCard
-								key={article.id}
-								article={article}
-								authorName={authorName}
-							/>
-						))
-					)}
+					{articles === null && <ArticlesUnavailable />}
+
+					{articles?.length === 0 && <EmptyState />}
+
+					{articles?.map(({ article, authorName }) => (
+						<ArticleCard
+							key={article.id}
+							article={article}
+							authorName={authorName}
+						/>
+					))}
 				</section>
 
 				<FeedDiscoverPanel />

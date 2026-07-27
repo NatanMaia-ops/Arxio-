@@ -8,6 +8,7 @@ import {
 } from "@/features/articles/article-content";
 import { ArticleOwnerActions } from "@/features/articles/components/article-owner-actions";
 import { ArticleViewer } from "@/features/articles/components/article-viewer";
+import { ArticlesUnavailable } from "@/features/articles/components/articles-unavailable";
 import { resolveAuthorName } from "@/features/articles/services/article-listing";
 import { getArticleById } from "@/features/articles/services/articles";
 
@@ -21,13 +22,21 @@ const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
 	year: "numeric",
 });
 
+async function findArticle(id: string) {
+	try {
+		return { article: await getArticleById(id), isAvailable: true };
+	} catch {
+		return { article: null, isAvailable: false };
+	}
+}
+
 export async function generateMetadata({
 	params,
 }: ArticlePageProps): Promise<Metadata> {
 	const { id } = await params;
-	const article = await getArticleById(id);
+	const { article } = await findArticle(id);
 
-	if (!article) return { title: "Artigo não encontrado | Arxio" };
+	if (!article) return { title: "Artigo | Arxio" };
 
 	return {
 		title: `${article.title} | Arxio`,
@@ -37,7 +46,21 @@ export async function generateMetadata({
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
 	const { id } = await params;
-	const article = await getArticleById(id);
+	const { article, isAvailable } = await findArticle(id);
+
+	if (!isAvailable) {
+		return (
+			<div className="min-h-dvh bg-white">
+				<SiteHeader />
+				<main className="mx-auto max-w-180 px-6 pt-13.5 pb-24">
+					<ArticlesUnavailable
+						title="Não foi possível carregar o artigo"
+						description="O serviço de artigos não respondeu. Tente novamente em instantes."
+					/>
+				</main>
+			</div>
+		);
+	}
 
 	if (!article) notFound();
 
