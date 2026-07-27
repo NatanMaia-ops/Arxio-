@@ -34,7 +34,7 @@ export function UserMenu() {
 		<DropdownMenu>
 			<DropdownMenuTrigger
 				aria-label="Abrir menu do usuário"
-				className="size-10 shrink-0 rounded-full bg-[#d1d1d1] outline-none transition-shadow focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2"
+				className="size-10 shrink-0 rounded-full bg-ax-fill-hover outline-none transition-shadow focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2"
 			/>
 
 			<DropdownMenuContent

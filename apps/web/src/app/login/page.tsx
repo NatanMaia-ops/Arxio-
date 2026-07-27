@@ -32,7 +32,7 @@ export default function LoginPage() {
 									aquilo que você aprendeu.
 								</p>
 
-								<p className="max-w-md text-[#8c877e] text-sm leading-relaxed">
+								<p className="max-w-md text-ax-meta text-sm leading-relaxed">
 									Leituras sem pressa, feitas para durar — um espaço acadêmico
 									onde estudos, ensaios e descobertas encontram seus leitores.
 								</p>

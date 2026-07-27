@@ -5,7 +5,10 @@
 	--font-home-interface: var(--font-instrument-sans);
 }
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
+	--color-ax-brand: #111111;
 	--color-ax-surface: #ffffff;
 	--color-ax-on-ink: #ffffff;
 	--color-ax-ink: #111111;
@@ -24,13 +27,39 @@
 	--color-ax-cta: #111111;
 }
 
+.dark {
+	--color-ax-brand: #262626;
+	--color-ax-surface: #141414;
+	--color-ax-on-ink: #141414;
+	--color-ax-ink: #d1d1d1;
+	--color-ax-ink-soft: #a0a0a0;
+	--color-ax-ink-hover: #ededed;
+	--color-ax-body: #b6b6b6;
+	--color-ax-meta: #8d8d8d;
+	--color-ax-placeholder: #7e7e7e;
+	--color-ax-mute: #7e7e7e;
+	--color-ax-rank: #7e7e7e;
+	--color-ax-line: #2e2e2e;
+	--color-ax-line-2: #2e2e2e;
+	--color-ax-line-3: #3a3a3a;
+	--color-ax-fill: #1e1e1e;
+	--color-ax-fill-hover: #282828;
+	--color-ax-cta: #d1d1d1;
+}
+
 html {
 	scroll-behavior: smooth;
+	background-color: var(--color-ax-surface);
+	color-scheme: light;
+}
+
+html.dark {
+	color-scheme: dark;
 }
 
 ::selection {
-	background: #111110;
-	color: #ffffff;
+	background: var(--color-ax-ink);
+	color: var(--color-ax-on-ink);
 }
 
 @media (prefers-reduced-motion: reduce) {

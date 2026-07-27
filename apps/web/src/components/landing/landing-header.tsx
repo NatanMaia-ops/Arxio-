@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { ThemeToggle } from "@/components/layout/theme-toggle";
+
 import { navLinks } from "./data";
 
 export function LandingHeader() {
@@ -17,12 +19,16 @@ export function LandingHeader() {
 						</a>
 					))}
 				</nav>
-				<Link
-					href="/login"
-					className="rounded-[10px] bg-ax-ink px-[18px] py-[9px] font-home-interface font-medium text-[14px] text-ax-on-ink transition-colors hover:bg-ax-ink-hover"
-				>
-					Começar a escrever
-				</Link>
+				<div className="flex items-center gap-2">
+					<ThemeToggle />
+
+					<Link
+						href="/login"
+						className="rounded-[10px] bg-ax-ink px-[18px] py-[9px] font-home-interface font-medium text-[14px] text-ax-on-ink transition-colors hover:bg-ax-ink-hover"
+					>
+						Começar a escrever
+					</Link>
+				</div>
 			</div>
 		</header>
 	);

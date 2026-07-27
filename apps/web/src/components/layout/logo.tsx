@@ -6,7 +6,7 @@ export function Logo() {
 		<Link
 			href={{ pathname: "/artigos" }}
 			aria-label="Arxio — ir para os artigos"
-			className="flex h-6.75 w-20 shrink-0 items-center justify-center rounded-[10px] bg-ax-ink px-2.5 py-1.5"
+			className="flex h-6.75 w-20 shrink-0 items-center justify-center rounded-[10px] bg-ax-brand px-2.5 py-1.5"
 		>
 			<Image
 				src="/icons/logo-arxio-mark.png"
