@@ -17,7 +17,7 @@ export function LoginGuard({ children }: { children: ReactNode }) {
 				if (!isActive) return;
 
 				if (session) {
-					router.replace("/");
+					router.replace("/feed");
 					return;
 				}
 
