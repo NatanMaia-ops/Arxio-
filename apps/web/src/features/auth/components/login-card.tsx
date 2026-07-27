@@ -39,7 +39,7 @@ export function LoginCard() {
 				onClick={handleGoogleSignIn}
 				disabled={isSubmitting}
 				aria-busy={isSubmitting}
-				className="mt-7 flex h-12 w-full items-center justify-center gap-2.5 rounded-xl bg-ax-ink font-medium text-[15px] text-ax-on-ink transition-colors hover:bg-ax-ink-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-60"
+				className="mt-7 flex h-12 w-full items-center justify-center gap-2.5 rounded-xl bg-ax-ink font-medium text-[15px] text-ax-on-ink transition-colors hover:bg-ax-ink-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface focus-visible:ring-offset-white disabled:opacity-60"
 			>
 				<Image
 					src="/icons/google-g-white.svg"

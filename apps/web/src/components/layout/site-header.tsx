@@ -18,7 +18,7 @@ export function SiteHeader() {
 
 					<Link
 						href={{ pathname: "/escrever" }}
-						className="flex min-h-11 shrink-0 items-center rounded-full bg-ax-ink px-4.5 font-medium text-ax-on-ink text-sm transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2"
+						className="flex min-h-11 shrink-0 items-center rounded-full bg-ax-ink px-4.5 font-medium text-ax-on-ink text-sm transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
 					>
 						Escrever
 					</Link>

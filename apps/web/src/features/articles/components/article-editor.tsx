@@ -156,7 +156,7 @@ export function ArticleEditor({
 							onMouseDown={(event) => event.preventDefault()}
 							onClick={() => action.run(editor)}
 							className={cn(
-								"flex size-9 items-center justify-center rounded-full text-ax-ink-soft transition-colors hover:bg-ax-fill focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2",
+								"flex size-9 items-center justify-center rounded-full text-ax-ink-soft transition-colors hover:bg-ax-fill focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface",
 								isActive && "bg-ax-ink text-ax-on-ink hover:bg-ax-ink",
 							)}
 						>

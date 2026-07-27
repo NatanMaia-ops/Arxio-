@@ -19,7 +19,7 @@ export function ArticleCard({
 	return (
 		<Link
 			href={`/artigos/${article.id}` as Route}
-			className="flex min-h-62 items-center gap-6 rounded-2xl border border-ax-line bg-ax-surface p-6 transition-colors hover:border-ax-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2"
+			className="flex min-h-62 items-center gap-6 rounded-2xl border border-ax-line bg-ax-surface p-6 transition-colors hover:border-ax-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
 		>
 			<div className="flex flex-1 flex-col gap-2">
 				<h3 className="font-home-display font-semibold text-[28px] text-ax-ink leading-8.5">
