@@ -38,7 +38,7 @@ export function LandingHero() {
 							Começar a escrever
 						</Link>
 						<Link
-							href="/feed"
+							href={{ pathname: "/artigos" }}
 							className="rounded-xl border border-ax-line-3 px-[26px] py-[14px] font-home-interface font-medium text-[16px] text-ax-ink transition-colors hover:bg-ax-fill"
 						>
 							Explorar artigos

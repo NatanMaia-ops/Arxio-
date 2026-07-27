@@ -16,9 +16,6 @@ export function SiteHeader() {
 					aria-label="Navegação principal"
 					className="flex shrink-0 items-center gap-6 font-medium text-[#111111] text-sm"
 				>
-					<Link href="/feed" aria-current="page">
-						Feed
-					</Link>
 					<Link href={{ pathname: "/artigos" }}>Artigos</Link>
 					<Link href={{ pathname: "/buscar" }}>Buscar</Link>
 				</nav>

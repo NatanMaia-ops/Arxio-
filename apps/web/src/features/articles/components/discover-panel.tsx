@@ -1,7 +1,5 @@
 import Link from "next/link";
 
-import { displayFont } from "@/app/fonts";
-
 const CATEGORIES = [
 	"Tecnologia",
 	"Design",
@@ -11,16 +9,14 @@ const CATEGORIES = [
 	"Produtividade",
 ];
 
-export function FeedDiscoverPanel() {
+export function DiscoverPanel() {
 	return (
 		<aside className="flex w-88 flex-col gap-4 self-start rounded-2xl border border-[#e3e3e3] bg-white p-7">
-			<h2
-				className={`${displayFont.className} font-semibold text-[#111111] text-[28px] leading-8.5`}
-			>
+			<h2 className="font-bold font-home-display text-[#111111] text-[28px] leading-8.5">
 				Descubra mais
 			</h2>
 
-			<ul>
+			<ul className="flex flex-col gap-1">
 				{CATEGORIES.map((category) => (
 					<li key={category}>
 						<Link

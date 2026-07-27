@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { FeedDiscoverPanel } from "@/components/feed/feed-discover-panel";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ArticleCard } from "@/features/articles/components/article-card";
 import { ArticlesUnavailable } from "@/features/articles/components/articles-unavailable";
+import { DiscoverPanel } from "@/features/articles/components/discover-panel";
 import {
 	type ArticleWithAuthor,
 	listArticlesWithAuthors,
@@ -49,7 +49,7 @@ export default async function ArticlesPage() {
 					))}
 				</section>
 
-				<FeedDiscoverPanel />
+				<DiscoverPanel />
 			</main>
 		</div>
 	);
