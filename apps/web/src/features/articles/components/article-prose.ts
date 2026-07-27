@@ -6,7 +6,7 @@ export const articleProseClassName = [
 	"[&_h3]:mt-8 [&_h3]:mb-2 [&_h3]:font-semibold [&_h3]:text-[22px] [&_h3]:leading-7",
 	"[&_ul]:my-5 [&_ul]:list-disc [&_ul]:pl-6",
 	"[&_ol]:my-5 [&_ol]:list-decimal [&_ol]:pl-6",
-	"[&_li]:my-1.5",
+	"[&_li]:my-1.5 [&_li_p]:my-0",
 	"[&_blockquote]:my-6 [&_blockquote]:border-[#e3e3e3] [&_blockquote]:border-l-2 [&_blockquote]:pl-5 [&_blockquote]:text-[#616161] [&_blockquote]:italic",
 	"[&_strong]:font-semibold",
 	"[&_a]:underline [&_a]:underline-offset-2",

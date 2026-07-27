@@ -153,6 +153,7 @@ export function ArticleEditor({
 							type="button"
 							aria-label={action.label}
 							aria-pressed={isActive}
+							onMouseDown={(event) => event.preventDefault()}
 							onClick={() => action.run(editor)}
 							className={cn(
 								"flex size-9 items-center justify-center rounded-full text-[#616161] transition-colors hover:bg-[#f2f2f2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2",
