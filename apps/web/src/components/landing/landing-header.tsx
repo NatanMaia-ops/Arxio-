@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { navLinks } from "./data";
 
 export function LandingHeader() {
@@ -15,12 +17,12 @@ export function LandingHeader() {
 						</a>
 					))}
 				</nav>
-				<a
-					href="#comecar"
+				<Link
+					href="/login"
 					className="rounded-[10px] bg-ax-ink px-[18px] py-[9px] font-home-interface font-medium text-[14px] text-white transition-colors hover:bg-ax-ink-hover"
 				>
 					Começar a escrever
-				</a>
+				</Link>
 			</div>
 		</header>
 	);

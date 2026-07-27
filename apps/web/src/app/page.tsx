@@ -7,7 +7,7 @@ import { LandingHeader } from "@/components/landing/landing-header";
 import { LandingHero } from "@/components/landing/landing-hero";
 import { RevealController } from "@/components/landing/reveal-controller";
 
-export default function FeedPage() {
+export default function HomePage() {
 	return (
 		<div className="min-h-dvh overflow-x-hidden bg-white font-home-display text-ax-ink">
 			<RevealController />

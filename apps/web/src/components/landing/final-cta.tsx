@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { reveal } from "./data";
 
 export function FinalCta() {
@@ -13,13 +15,13 @@ export function FinalCta() {
 				<p {...reveal(1)} className="text-[19px] text-ax-mute">
 					Grátis. Sem anúncios. Feito para quem escreve.
 				</p>
-				<a
+				<Link
 					{...reveal(2)}
-					href="#topo"
+					href="/login"
 					className="mt-2 rounded-xl bg-white px-7 py-[15px] font-home-interface font-medium text-[16px] text-ax-ink transition-colors hover:bg-ax-fill-hover"
 				>
 					Começar a escrever
-				</a>
+				</Link>
 			</div>
 		</section>
 	);
