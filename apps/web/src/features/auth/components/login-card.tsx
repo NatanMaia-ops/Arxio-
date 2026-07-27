@@ -14,7 +14,7 @@ export function LoginCard() {
 		setIsSubmitting(true);
 
 		try {
-			await signInWithGoogle(`${window.location.origin}/artigos`);
+			await signInWithGoogle(`${window.location.origin}/onboarding`);
 		} catch {
 			setIsSubmitting(false);
 			toast.error("Não foi possível iniciar o login. Tente novamente.");
@@ -30,7 +30,7 @@ export function LoginCard() {
 
 				<p className="text-[15px] text-ax-ink-soft leading-6">
 					Use sua conta Google para continuar. Se for seu primeiro acesso, você
-					poderá escolher seus interesses.
+					poderá completar seu perfil acadêmico.
 				</p>
 			</div>
 

@@ -7,7 +7,6 @@ const validInput = {
 	name: "Lucas Silva",
 	email: "lucas@gmail.com",
 	password: "StrongPass1",
-	enrollmentNumber: "20260001",
 };
 
 describe("createUserSchema", () => {
