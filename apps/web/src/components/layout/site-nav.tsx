@@ -24,10 +24,10 @@ export function SiteNav() {
 						href={{ pathname: item.href }}
 						aria-current={isActive ? "page" : undefined}
 						className={cn(
-							"flex min-h-11 items-center rounded-md px-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2",
+							"flex min-h-11 items-center rounded-md px-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2",
 							isActive
-								? "text-[#111111] underline decoration-2 underline-offset-8"
-								: "text-[#616161] hover:text-[#111111]",
+								? "text-ax-ink underline decoration-2 underline-offset-8"
+								: "text-ax-ink-soft hover:text-ax-ink",
 						)}
 					>
 						{item.label}

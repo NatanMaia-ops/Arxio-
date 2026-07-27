@@ -33,7 +33,7 @@ export function LandingHero() {
 					>
 						<Link
 							href="/login"
-							className="rounded-xl bg-ax-ink px-[26px] py-[14px] font-home-interface font-medium text-[16px] text-white transition-colors hover:bg-ax-ink-hover"
+							className="rounded-xl bg-ax-ink px-[26px] py-[14px] font-home-interface font-medium text-[16px] text-ax-on-ink transition-colors hover:bg-ax-ink-hover"
 						>
 							Começar a escrever
 						</Link>

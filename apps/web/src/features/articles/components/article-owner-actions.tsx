@@ -39,7 +39,7 @@ export function ArticleOwnerActions({
 		<div className="flex shrink-0 items-center gap-2">
 			<Link
 				href={`/artigos/${articleId}/editar` as Route}
-				className="rounded-full border border-[#e3e3e3] px-4 py-2 font-medium text-[#616161] text-sm transition-colors hover:border-[#111111] hover:text-[#111111] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+				className="rounded-full border border-ax-line px-4 py-2 font-medium text-ax-ink-soft text-sm transition-colors hover:border-ax-ink hover:text-ax-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2"
 			>
 				Editar
 			</Link>

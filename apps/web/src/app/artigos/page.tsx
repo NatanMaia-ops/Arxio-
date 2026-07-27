@@ -26,12 +26,12 @@ export default async function ArticlesPage() {
 	}
 
 	return (
-		<div className="min-h-dvh bg-white">
+		<div className="min-h-dvh bg-ax-surface">
 			<SiteHeader />
 
 			<main className="mx-auto max-w-220 px-20 pt-13.5 pb-16">
 				<section className="flex flex-col gap-5">
-					<h1 className="font-bold font-home-display text-[#111111] text-[40px] leading-11">
+					<h1 className="font-bold font-home-display text-[40px] text-ax-ink leading-11">
 						Artigos
 					</h1>
 
@@ -54,16 +54,16 @@ export default async function ArticlesPage() {
 
 function EmptyState() {
 	return (
-		<div className="flex flex-col items-start gap-4 rounded-2xl border border-[#e3e3e3] border-dashed bg-white p-10">
-			<h2 className="font-home-display font-semibold text-[#111111] text-[28px] leading-8.5">
+		<div className="flex flex-col items-start gap-4 rounded-2xl border border-ax-line border-dashed bg-ax-surface p-10">
+			<h2 className="font-home-display font-semibold text-[28px] text-ax-ink leading-8.5">
 				Nenhum artigo por aqui ainda
 			</h2>
-			<p className="text-[#616161] text-base leading-6">
+			<p className="text-ax-ink-soft text-base leading-6">
 				Seja a primeira pessoa a publicar na Arxio.
 			</p>
 			<Link
 				href={{ pathname: "/escrever" }}
-				className="rounded-full bg-black px-4.5 py-2.5 font-medium text-sm text-white transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+				className="rounded-full bg-ax-ink px-4.5 py-2.5 font-medium text-ax-on-ink text-sm transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2"
 			>
 				Escrever artigo
 			</Link>

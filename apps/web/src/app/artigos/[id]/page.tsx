@@ -50,7 +50,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
 	if (!isAvailable) {
 		return (
-			<div className="min-h-dvh bg-white">
+			<div className="min-h-dvh bg-ax-surface">
 				<SiteHeader />
 				<main className="mx-auto max-w-180 px-6 pt-13.5 pb-24">
 					<ArticlesUnavailable
@@ -68,21 +68,21 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 	const readTimeMinutes = estimateReadTimeMinutes(article.content);
 
 	return (
-		<div className="min-h-dvh bg-white">
+		<div className="min-h-dvh bg-ax-surface">
 			<SiteHeader />
 
 			<main className="mx-auto max-w-180 px-6 pt-13.5 pb-24">
 				<article>
-					<p className="font-medium text-[#616161] text-[13px] leading-4.5">
+					<p className="font-medium text-[13px] text-ax-ink-soft leading-4.5">
 						{dateFormatter.format(article.createdAt)}
 					</p>
 
-					<h1 className="mt-3 font-bold font-home-display text-[#111111] text-[48px] leading-14">
+					<h1 className="mt-3 font-bold font-home-display text-[48px] text-ax-ink leading-14">
 						{article.title}
 					</h1>
 
-					<div className="mt-6 flex items-center justify-between gap-6 border-[#e3e3e3] border-b pb-6">
-						<span className="font-medium text-[#616161] text-sm leading-5">
+					<div className="mt-6 flex items-center justify-between gap-6 border-ax-line border-b pb-6">
+						<span className="font-medium text-ax-ink-soft text-sm leading-5">
 							{authorName} · {readTimeMinutes} min de leitura
 						</span>
 

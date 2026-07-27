@@ -113,7 +113,7 @@ export function ArticleEditor({
 				class: cn(
 					articleProseClassName,
 					"min-h-100 focus:outline-none",
-					"[&_p.is-editor-empty:first-child::before]:pointer-events-none [&_p.is-editor-empty:first-child::before]:float-left [&_p.is-editor-empty:first-child::before]:h-0 [&_p.is-editor-empty:first-child::before]:text-[#9aa1a8] [&_p.is-editor-empty:first-child::before]:content-[attr(data-placeholder)]",
+					"[&_p.is-editor-empty:first-child::before]:pointer-events-none [&_p.is-editor-empty:first-child::before]:float-left [&_p.is-editor-empty:first-child::before]:h-0 [&_p.is-editor-empty:first-child::before]:text-ax-placeholder [&_p.is-editor-empty:first-child::before]:content-[attr(data-placeholder)]",
 				),
 			},
 		},
@@ -141,7 +141,7 @@ export function ArticleEditor({
 			<div
 				role="toolbar"
 				aria-label="Formatação do texto"
-				className="sticky top-18 z-1 flex items-center gap-1 border-[#e3e3e3] border-b bg-white py-3"
+				className="sticky top-18 z-1 flex items-center gap-1 border-ax-line border-b bg-ax-surface py-3"
 			>
 				{TOOLBAR_ACTIONS.map((action) => {
 					const Icon = action.icon;
@@ -156,8 +156,8 @@ export function ArticleEditor({
 							onMouseDown={(event) => event.preventDefault()}
 							onClick={() => action.run(editor)}
 							className={cn(
-								"flex size-9 items-center justify-center rounded-full text-[#616161] transition-colors hover:bg-[#f2f2f2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2",
-								isActive && "bg-[#111111] text-white hover:bg-[#111111]",
+								"flex size-9 items-center justify-center rounded-full text-ax-ink-soft transition-colors hover:bg-ax-fill focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2",
+								isActive && "bg-ax-ink text-ax-on-ink hover:bg-ax-ink",
 							)}
 						>
 							<Icon className="size-4.5" />

@@ -1,5 +1,5 @@
 export const articleProseClassName = [
-	"font-home-display text-[#111111] text-lg leading-8",
+	"font-home-display text-ax-ink text-lg leading-8",
 	"[&>*:first-child]:mt-0 [&>*:last-child]:mb-0",
 	"[&_p]:my-5",
 	"[&_h2]:mt-10 [&_h2]:mb-3 [&_h2]:font-semibold [&_h2]:text-[28px] [&_h2]:leading-9",
@@ -7,11 +7,11 @@ export const articleProseClassName = [
 	"[&_ul]:my-5 [&_ul]:list-disc [&_ul]:pl-6",
 	"[&_ol]:my-5 [&_ol]:list-decimal [&_ol]:pl-6",
 	"[&_li]:my-1.5 [&_li_p]:my-0",
-	"[&_blockquote]:my-6 [&_blockquote]:border-[#e3e3e3] [&_blockquote]:border-l-2 [&_blockquote]:pl-5 [&_blockquote]:text-[#616161] [&_blockquote]:italic",
+	"[&_blockquote]:my-6 [&_blockquote]:border-ax-line [&_blockquote]:border-l-2 [&_blockquote]:pl-5 [&_blockquote]:text-ax-ink-soft [&_blockquote]:italic",
 	"[&_strong]:font-semibold",
 	"[&_a]:underline [&_a]:underline-offset-2",
-	"[&_code]:rounded [&_code]:bg-[#f2f2f2] [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-base",
-	"[&_pre]:my-6 [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:bg-[#f2f2f2] [&_pre]:p-4",
+	"[&_code]:rounded [&_code]:bg-ax-fill [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-base",
+	"[&_pre]:my-6 [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:bg-ax-fill [&_pre]:p-4",
 	"[&_pre_code]:bg-transparent [&_pre_code]:p-0",
-	"[&_hr]:my-10 [&_hr]:border-[#e3e3e3]",
+	"[&_hr]:my-10 [&_hr]:border-ax-line",
 ].join(" ");

@@ -34,13 +34,13 @@ export function UserMenu() {
 		<DropdownMenu>
 			<DropdownMenuTrigger
 				aria-label="Abrir menu do usuário"
-				className="size-10 shrink-0 rounded-full bg-[#d1d1d1] outline-none transition-shadow focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+				className="size-10 shrink-0 rounded-full bg-[#d1d1d1] outline-none transition-shadow focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2"
 			/>
 
 			<DropdownMenuContent
 				align="end"
 				sideOffset={8}
-				className="w-40 rounded-lg bg-white p-1 text-[#111111]"
+				className="w-40 rounded-lg bg-ax-surface p-1 text-ax-ink"
 			>
 				<DropdownMenuItem
 					onClick={handleSignOut}
