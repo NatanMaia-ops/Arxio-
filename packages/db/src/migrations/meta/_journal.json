@@ -29,6 +29,13 @@
       "when": 1784913866698,
       "tag": "0003_create_articles_table",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1785178419496,
+      "tag": "0004_update_student_profiles_for_onboarding",
+      "breakpoints": true
     }
   ]
 }

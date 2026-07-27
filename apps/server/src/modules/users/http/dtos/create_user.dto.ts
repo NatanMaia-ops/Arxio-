@@ -21,12 +21,6 @@ export const createUserSchema = z.object({
 		.regex(/[A-Z]/, "A senha deve conter ao menos uma letra maiúscula")
 		.regex(/[0-9]/, "A senha deve conter ao menos um número"),
 
-	enrollmentNumber: z
-		.string()
-		.trim()
-		.max(50, "A matrícula deve ter no máximo 50 caracteres")
-		.optional(),
-
 	course: z
 		.string()
 		.trim()

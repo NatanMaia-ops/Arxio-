@@ -12,10 +12,9 @@ export const UserResponseSchema = z.object({
 
 	student: z
 		.object({
-			enrollmentNumber: z.string(),
 			course: z.string().nullable(),
 			semester: z.number().nullable(),
-			enrollmentVerifiedAt: z.coerce.date().nullable(),
+			institution: z.string().nullable(),
 		})
 		.nullable(),
 
