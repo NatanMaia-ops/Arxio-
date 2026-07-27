@@ -161,9 +161,9 @@ export function HowItWorks() {
 								<span className="ml-2 inline-block h-[0.85em] w-[2px] translate-y-[0.08em] animate-[ax-blink_1.1s_infinite] bg-ax-ink align-[-0.08em]" />
 							</h3>
 							<div className="mt-3 flex w-full flex-col gap-[14px]">
-								<div className="h-3 w-[92%] bg-white" />
-								<div className="h-3 w-[78%] bg-white" />
-								<div className="h-3 w-[56%] bg-white" />
+								<div className="h-3 w-[92%] bg-ax-surface" />
+								<div className="h-3 w-[78%] bg-ax-surface" />
+								<div className="h-3 w-[56%] bg-ax-surface" />
 							</div>
 							<p className="mt-auto text-[15px] text-ax-meta italic">
 								Sem barra de ferramentas. Sem distração. Só o texto.
@@ -235,7 +235,7 @@ export function HowItWorks() {
 							<h3 className="font-medium text-[40px] leading-[1.1] tracking-[-0.02em]">
 								Nível 4 · Autor
 							</h3>
-							<div className="mt-3 h-[3px] w-full bg-white">
+							<div className="mt-3 h-[3px] w-full bg-ax-surface">
 								<div
 									className="h-[3px] bg-ax-ink"
 									style={{

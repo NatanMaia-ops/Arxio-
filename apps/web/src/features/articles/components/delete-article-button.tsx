@@ -7,21 +7,19 @@ import { toast } from "sonner";
 
 import { deleteArticle } from "@/features/articles/services/articles";
 
+import { ConfirmDialog } from "./confirm-dialog";
+
 export function DeleteArticleButton({ articleId }: { articleId: string }) {
 	const router = useRouter();
+	const [isOpen, setIsOpen] = useState(false);
 	const [isDeleting, setIsDeleting] = useState(false);
 
 	async function handleDelete() {
-		const confirmed = window.confirm(
-			"Excluir este artigo? Essa ação não pode ser desfeita.",
-		);
-
-		if (!confirmed) return;
-
 		setIsDeleting(true);
 
 		try {
 			await deleteArticle(articleId);
+			setIsOpen(false);
 			router.push("/artigos" as Route);
 			router.refresh();
 		} catch (error) {
@@ -35,13 +33,24 @@ export function DeleteArticleButton({ articleId }: { articleId: string }) {
 	}
 
 	return (
-		<button
-			type="button"
-			onClick={handleDelete}
-			disabled={isDeleting}
-			className="rounded-full border border-[#e3e3e3] px-4 py-2 font-medium text-[#616161] text-sm transition-colors hover:border-[#111111] hover:text-[#111111] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:opacity-50"
-		>
-			{isDeleting ? "Excluindo..." : "Excluir"}
-		</button>
+		<>
+			<button
+				type="button"
+				onClick={() => setIsOpen(true)}
+				className="inline-flex min-h-11 items-center rounded-full border border-ax-line px-4 font-medium text-ax-ink-soft text-sm transition-colors hover:border-ax-ink hover:text-ax-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
+			>
+				Excluir
+			</button>
+
+			<ConfirmDialog
+				open={isOpen}
+				onOpenChange={setIsOpen}
+				title="Excluir este artigo?"
+				description="Essa ação não pode ser desfeita. O artigo deixa de aparecer para todos os leitores."
+				confirmLabel="Excluir"
+				isConfirming={isDeleting}
+				onConfirm={handleDelete}
+			/>
+		</>
 	);
 }

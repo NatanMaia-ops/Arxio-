@@ -34,7 +34,7 @@ export function LoginGuard({ children }: { children: ReactNode }) {
 
 	if (isCheckingSession) {
 		return (
-			<div className="min-h-dvh bg-white" role="status">
+			<div className="min-h-dvh bg-ax-surface" role="status">
 				<span className="sr-only">Verificando sessão...</span>
 			</div>
 		);

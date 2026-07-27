@@ -8,7 +8,7 @@ export function FinalCta() {
 			<div className="mx-auto flex max-w-[1216px] flex-col items-start gap-7 px-8">
 				<h2
 					{...reveal(0)}
-					className="max-w-[18ch] text-balance font-medium text-[64px] text-white leading-[1.04] tracking-[-0.03em]"
+					className="max-w-[18ch] text-balance font-medium text-[64px] text-ax-on-ink leading-[1.04] tracking-[-0.03em]"
 				>
 					Pronto para publicar a primeira ideia?
 				</h2>
@@ -18,7 +18,7 @@ export function FinalCta() {
 				<Link
 					{...reveal(2)}
 					href="/login"
-					className="mt-2 rounded-xl bg-white px-7 py-[15px] font-home-interface font-medium text-[16px] text-ax-ink transition-colors hover:bg-ax-fill-hover"
+					className="mt-2 rounded-xl bg-ax-surface px-7 py-[15px] font-home-interface font-medium text-[16px] text-ax-ink transition-colors hover:bg-ax-fill-hover"
 				>
 					Começar a escrever
 				</Link>

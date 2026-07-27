@@ -1,4 +1,6 @@
+import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { SiteHeader } from "@/components/layout/site-header";
@@ -50,7 +52,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
 	if (!isAvailable) {
 		return (
-			<div className="min-h-dvh bg-white">
+			<div className="min-h-dvh bg-ax-surface">
 				<SiteHeader />
 				<main className="mx-auto max-w-180 px-6 pt-13.5 pb-24">
 					<ArticlesUnavailable
@@ -68,21 +70,29 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 	const readTimeMinutes = estimateReadTimeMinutes(article.content);
 
 	return (
-		<div className="min-h-dvh bg-white">
+		<div className="min-h-dvh bg-ax-surface">
 			<SiteHeader />
 
-			<main className="mx-auto max-w-180 px-6 pt-13.5 pb-24">
+			<main className="mx-auto max-w-180 px-5 pt-8 pb-24 sm:px-6 sm:pt-13.5">
 				<article>
-					<p className="font-medium text-[#616161] text-[13px] leading-4.5">
+					<Link
+						href={{ pathname: "/artigos" }}
+						className="-mx-2 mb-4 inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 font-medium text-ax-ink-soft text-sm transition-colors hover:text-ax-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
+					>
+						<ArrowLeft className="size-4" aria-hidden="true" />
+						Todos os artigos
+					</Link>
+
+					<p className="font-medium text-[13px] text-ax-ink-soft leading-4.5">
 						{dateFormatter.format(article.createdAt)}
 					</p>
 
-					<h1 className="mt-3 font-bold font-home-display text-[#111111] text-[48px] leading-14">
+					<h1 className="mt-3 font-bold font-home-display text-[32px] text-ax-ink leading-10 sm:text-[40px] sm:leading-12 lg:text-[48px] lg:leading-14">
 						{article.title}
 					</h1>
 
-					<div className="mt-6 flex items-center justify-between gap-6 border-[#e3e3e3] border-b pb-6">
-						<span className="font-medium text-[#616161] text-sm leading-5">
+					<div className="mt-6 flex flex-col gap-4 border-ax-line border-b pb-6 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+						<span className="font-medium text-ax-ink-soft text-sm leading-5">
 							{authorName} · {readTimeMinutes} min de leitura
 						</span>
 

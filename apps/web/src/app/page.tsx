@@ -9,7 +9,7 @@ import { RevealController } from "@/components/landing/reveal-controller";
 
 export default function HomePage() {
 	return (
-		<div className="min-h-dvh overflow-x-hidden bg-white font-home-display text-ax-ink">
+		<div className="min-h-dvh overflow-x-hidden bg-ax-surface font-home-display text-ax-ink">
 			<RevealController />
 			<LandingHeader />
 			<main>

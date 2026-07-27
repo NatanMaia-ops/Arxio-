@@ -44,7 +44,7 @@ export function OnboardingForm() {
 			const state = await fetchOnboardingState(env.NEXT_PUBLIC_SERVER_URL);
 
 			if (state.completed) {
-				router.replace("/feed");
+				router.replace("/artigos");
 				return;
 			}
 
@@ -103,7 +103,7 @@ export function OnboardingForm() {
 					: normalizeOptionalText(institution),
 			});
 
-			router.replace("/feed");
+			router.replace("/artigos");
 		} catch (error) {
 			if (error instanceof OnboardingApiError) {
 				if (error.status === 401) {
@@ -112,7 +112,7 @@ export function OnboardingForm() {
 				}
 
 				if (error.status === 409) {
-					router.replace("/feed");
+					router.replace("/artigos");
 					return;
 				}
 			}

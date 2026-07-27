@@ -1,10 +1,12 @@
 import Link from "next/link";
 
+import { ThemeToggle } from "@/components/layout/theme-toggle";
+
 import { navLinks } from "./data";
 
 export function LandingHeader() {
 	return (
-		<header className="fixed inset-x-0 top-0 z-[60] border-ax-line border-b bg-white/[0.86] backdrop-blur-[14px]">
+		<header className="fixed inset-x-0 top-0 z-[60] border-ax-line border-b bg-ax-surface/[0.86] backdrop-blur-[14px]">
 			<div className="mx-auto flex h-16 max-w-[1216px] items-center justify-between gap-6 px-8">
 				<nav aria-label="Seções" className="flex items-center gap-9">
 					{navLinks.map((link) => (
@@ -17,12 +19,16 @@ export function LandingHeader() {
 						</a>
 					))}
 				</nav>
-				<Link
-					href="/login"
-					className="rounded-[10px] bg-ax-ink px-[18px] py-[9px] font-home-interface font-medium text-[14px] text-white transition-colors hover:bg-ax-ink-hover"
-				>
-					Começar a escrever
-				</Link>
+				<div className="flex items-center gap-2">
+					<ThemeToggle />
+
+					<Link
+						href="/login"
+						className="rounded-[10px] bg-ax-ink px-[18px] py-[9px] font-home-interface font-medium text-[14px] text-ax-on-ink transition-colors hover:bg-ax-ink-hover"
+					>
+						Começar a escrever
+					</Link>
+				</div>
 			</div>
 		</header>
 	);

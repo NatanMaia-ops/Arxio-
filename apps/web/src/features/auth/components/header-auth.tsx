@@ -36,7 +36,7 @@ export function HeaderAuth() {
 			{status === "unauthenticated" && (
 				<Link
 					href="/login"
-					className="rounded-full border border-black px-4.5 py-2.5 font-medium text-black text-sm transition-colors hover:bg-black hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+					className="rounded-full border border-black px-4.5 py-2.5 font-medium text-black text-sm transition-colors hover:bg-ax-ink hover:text-ax-on-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
 				>
 					Entrar
 				</Link>

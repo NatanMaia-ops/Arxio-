@@ -94,9 +94,9 @@ export function ArticleForm({
 	}
 
 	return (
-		<div className="min-h-dvh bg-white">
-			<header className="sticky top-0 z-10 border-[#e3e3e3] border-b bg-white">
-				<div className="mx-auto flex h-18 max-w-360 items-center justify-between gap-6 px-20">
+		<div className="min-h-dvh bg-ax-surface">
+			<header className="sticky top-0 z-10 border-ax-line border-b bg-ax-surface">
+				<div className="mx-auto flex h-16 max-w-360 items-center justify-between gap-3 px-5 sm:h-18 sm:gap-6 sm:px-8 lg:px-12 xl:px-20">
 					<Logo />
 
 					<div className="flex items-center gap-3">
@@ -106,7 +106,7 @@ export function ArticleForm({
 									? (`/artigos/${articleId}` as Route)
 									: ("/artigos" as Route)
 							}
-							className="rounded-full border border-[#e3e3e3] px-4.5 py-2.5 font-medium text-[#616161] text-sm transition-colors hover:border-[#111111] hover:text-[#111111] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+							className="rounded-full border border-ax-line px-4.5 py-2.5 font-medium text-ax-ink-soft text-sm transition-colors hover:border-ax-ink hover:text-ax-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
 						>
 							Cancelar
 						</Link>
@@ -115,7 +115,7 @@ export function ArticleForm({
 							type="button"
 							onClick={handleSubmit}
 							disabled={isSaving}
-							className="rounded-full bg-black px-4.5 py-2.5 font-medium text-sm text-white transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:opacity-50"
+							className="rounded-full bg-ax-ink px-4.5 py-2.5 font-medium text-ax-on-ink text-sm transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface disabled:opacity-50"
 						>
 							{isSaving ? "Salvando..." : submitLabel}
 						</button>
@@ -123,7 +123,7 @@ export function ArticleForm({
 				</div>
 			</header>
 
-			<main className="mx-auto max-w-180 px-6 pt-13.5 pb-24">
+			<main className="mx-auto max-w-180 px-5 pt-8 pb-24 sm:px-6 sm:pt-13.5">
 				<label className="sr-only" htmlFor="article-title">
 					Título do artigo
 				</label>
@@ -134,7 +134,7 @@ export function ArticleForm({
 					onChange={(event) => setTitle(event.target.value)}
 					placeholder="Título"
 					maxLength={TITLE_MAX_LENGTH}
-					className="w-full font-bold font-home-display text-[#111111] text-[40px] leading-12 placeholder:text-[#c6ccd3] focus:outline-none"
+					className="w-full font-bold font-home-display text-[28px] text-ax-ink leading-9 placeholder:text-ax-placeholder focus:outline-none sm:text-[40px] sm:leading-12"
 				/>
 
 				<div className="mt-6">
@@ -145,7 +145,7 @@ export function ArticleForm({
 				</div>
 
 				{error && (
-					<p role="alert" className="mt-6 text-[#616161] text-sm leading-5">
+					<p role="alert" className="mt-6 text-ax-ink-soft text-sm leading-5">
 						{error}
 					</p>
 				)}
