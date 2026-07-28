@@ -4,24 +4,32 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { UserMenu } from "@/features/auth/components/user-menu";
+import type { AuthSession } from "@/features/auth/services/auth-api";
 import { getSession } from "@/features/auth/services/get-session";
 
-type AuthStatus = "loading" | "authenticated" | "unauthenticated";
+type AuthState =
+	| { status: "loading" }
+	| { status: "authenticated"; session: AuthSession }
+	| { status: "unauthenticated" };
 
 export function HeaderAuth() {
-	const [status, setStatus] = useState<AuthStatus>("loading");
+	const [state, setState] = useState<AuthState>({ status: "loading" });
 
 	useEffect(() => {
 		let isActive = true;
 
 		getSession()
 			.then((session) => {
-				if (isActive) {
-					setStatus(session ? "authenticated" : "unauthenticated");
-				}
+				if (!isActive) return;
+
+				setState(
+					session
+						? { status: "authenticated", session }
+						: { status: "unauthenticated" },
+				);
 			})
 			.catch(() => {
-				if (isActive) setStatus("unauthenticated");
+				if (isActive) setState({ status: "unauthenticated" });
 			});
 
 		return () => {
@@ -30,19 +38,19 @@ export function HeaderAuth() {
 	}, []);
 
 	return (
-		<div className="flex w-17 shrink-0 justify-end">
-			{status === "authenticated" && <UserMenu />}
+		<div className="flex h-9.5 min-w-9 shrink-0 items-center justify-end">
+			{state.status === "authenticated" && (
+				<UserMenu name={state.session.user.name} />
+			)}
 
-			{status === "unauthenticated" && (
+			{state.status === "unauthenticated" && (
 				<Link
-					href="/login"
-					className="rounded-full border border-black px-4.5 py-2.5 font-medium text-black text-sm transition-colors hover:bg-ax-ink hover:text-ax-on-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
+					href={{ pathname: "/login" }}
+					className="flex h-9.5 shrink-0 items-center rounded-lg border border-ax-line-3 px-3.5 font-medium text-ax-ink text-sm transition-colors hover:bg-ax-fill focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
 				>
 					Entrar
 				</Link>
 			)}
-
-			{status === "loading" && <span className="h-10" aria-hidden="true" />}
 		</div>
 	);
 }

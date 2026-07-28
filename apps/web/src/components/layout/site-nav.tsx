@@ -14,7 +14,7 @@ export function SiteNav() {
 	return (
 		<nav
 			aria-label="Navegação principal"
-			className="flex shrink-0 items-center gap-6 font-medium text-sm"
+			className="hidden shrink-0 items-center gap-6 font-medium text-sm sm:flex"
 		>
 			{NAV_ITEMS.map((item) => {
 				const isActive = item.section.some(
