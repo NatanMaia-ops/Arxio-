@@ -1,0 +1,95 @@
+---
+title: Arquitetura
+description: Como o projeto está organizado e como as partes conversam
+---
+
+## Monorepo
+
+O projeto vive em um único repositório, com workspaces do npm coordenados
+pelo Turborepo.
+
+- `apps/web`: a interface, em Next.js 16 com App Router e React 19.
+- `apps/server`: a API, em Express 5.
+- `apps/fumadocs`: esta documentação.
+- `packages/db`: o schema e as migrations, com Drizzle ORM sobre PostgreSQL.
+- `packages/ui`: componentes de design system compartilhados.
+- `packages/env`: validação das variáveis de ambiente.
+
+A escolha de manter web e servidor separados, em vez de usar as rotas de API
+do próprio Next, veio de antes do trabalho com artigos. O servidor Express
+concentra as regras de negócio, a autenticação e o acesso ao banco. O web
+nunca fala com o PostgreSQL diretamente.
+
+## Fluxo de uma requisição
+
+Quando alguém abre o feed, o Next renderiza a página no servidor e busca os
+artigos na API. O navegador recebe o HTML já pronto, com o conteúdo dentro.
+
+```text
+navegador
+   |
+   | GET /feed
+   v
+Next.js (Server Component)
+   |
+   | GET /articles
+   v
+Express
+   |
+   | Drizzle
+   v
+PostgreSQL
+```
+
+Alguns componentes rodam no navegador porque precisam de estado ou de eventos:
+o editor, os formulários, o alternador de tema e tudo que depende de saber
+quem está logado. Esses fazem a chamada à API a partir do navegador, levando
+o cookie de sessão.
+
+<Callout title="Dois endereços para a mesma API">
+  Essa divisão entre servidor e navegador tem uma consequência prática no
+  Docker. O navegador alcança a API em `localhost:3000`, que é a porta
+  publicada no host. O Next, rodando dentro do container, precisa usar
+  `server:3000`, o nome do serviço na rede do compose. Por isso existem duas
+  variáveis: `NEXT_PUBLIC_SERVER_URL` para o navegador e
+  `SERVER_INTERNAL_URL` para o servidor.
+</Callout>
+
+## Organização do frontend
+
+O código do web separa três coisas.
+
+- `src/app`: rotas, layouts e composição de página. As páginas são finas e
+  quase não têm lógica.
+- `src/components`: peças visuais compartilhadas entre contextos, como o
+  cabeçalho e a logo.
+- `src/features`: fatias verticais por domínio funcional. A feature de
+  artigos guarda seus próprios componentes, schemas, tipos e serviços de
+  acesso à API.
+
+A direção das dependências é de fora para dentro. Uma feature não importa de
+`app`, e o design system em `packages/ui` não conhece nada específico da
+Arxio.
+
+## Organização do servidor
+
+Cada módulo do Express segue a mesma divisão em camadas.
+
+- `entities`: o tipo de domínio.
+- `repositories`: o contrato de persistência.
+- `infra/repositories`: a implementação concreta com Drizzle.
+- `services`: os casos de uso.
+- `http`: as rotas, com os DTOs de entrada e saída validados por zod.
+
+O módulo de artigos foi escrito seguindo o mesmo desenho já usado pelos
+módulos de usuários e autenticação.
+
+## Autenticação
+
+O login usa Auth.js sobre Express, com o Google como único provedor. A sessão
+fica em cookie e o middleware `requireAuth` protege as rotas que exigem
+usuário autenticado.
+
+A autoria de um artigo nunca vem do cliente. Quem publica é sempre o usuário
+da sessão, lido no servidor. Editar e excluir são recusados com `403` quando
+quem pede não é o autor, e isso está coberto por testes de integração.

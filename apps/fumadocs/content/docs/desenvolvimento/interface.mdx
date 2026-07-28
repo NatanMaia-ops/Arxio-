@@ -1,0 +1,113 @@
+---
+title: Interface
+description: Tipografia, cores, tema escuro e acessibilidade
+---
+
+## Tipografia
+
+A Arxio usa duas famílias. Newsreader, uma serifada, para títulos e para o
+corpo dos artigos. Instrument Sans para a interface: navegação, botões,
+metadados e formulários.
+
+A divisão segue a ideia de que o texto do artigo é conteúdo de leitura longa
+e a interface é ferramenta. Serifada para ler, sem serifa para operar.
+
+## Cores
+
+As cores eram escritas literalmente dentro dos componentes. Uma varredura
+encontrou 65 ocorrências dos mesmos seis valores espalhadas por 17 arquivos,
+e nenhum lugar onde a cor do texto secundário estivesse definida de fato.
+
+Pior: existiam três paletas para os mesmos papéis. Uma nas telas de artigo,
+neutra. Outra na página institucional, azulada. Uma terceira nas telas de
+login, amarelada. A diferença entre a neutra e a azulada no texto secundário
+era grande o bastante para ser percebida a olho nu.
+
+Hoje cada papel tem um nome único, na família `--color-ax-*`.
+
+| Token | Papel |
+| --- | --- |
+| `ax-ink` | Texto primário e ações sólidas |
+| `ax-ink-soft` | Texto secundário e metadados |
+| `ax-line` | Bordas e divisores |
+| `ax-fill` | Superfícies neutras |
+| `ax-surface` | Fundo de página e cartões |
+| `ax-placeholder` | Texto de espera em campos |
+| `ax-brand` | Fundo do selo da logo |
+
+Não resta nenhuma cor literal no código da interface.
+
+## Contraste
+
+A unificação revelou falhas de contraste que já existiam. Todas em texto de
+tamanho normal, que precisa de pelo menos 4.5 para 1 pelo critério AA da
+WCAG.
+
+| Uso | Antes | Depois |
+| --- | --- | --- |
+| Placeholder de campo | 1.62:1 e 2.61:1 | 4.54:1 |
+| Metadados da institucional | 3.59:1 | 5.02:1 |
+| Numeração de ranking | 1.88:1 | 4.54:1 |
+
+O placeholder do campo de título estava praticamente invisível. As cores de
+texto principais já passavam com folga e não foram alteradas.
+
+## Tema escuro
+
+O tema escuro estava prometido e não entregue. O provedor de tema estava
+montado e respondia à preferência do sistema, mas não existia nenhuma regra
+escura no código da aplicação. Quem usava o sistema no escuro recebia
+componentes do design system escurecidos sobre telas brancas.
+
+Agora cada token tem valor para os dois temas. Os valores escuros são
+variantes dessaturadas, não uma inversão dos claros, e o fundo é um cinza
+bem escuro em vez de preto puro, que reduz o ofuscamento na leitura noturna.
+
+O contraste foi medido na página renderizada, não presumido a partir do tema
+claro. Dezenove elementos de texto verificados no escuro, nenhuma falha.
+
+<Callout title="Uma armadilha do Tailwind 4">
+  A primeira implementação não funcionava. Os tokens tinham sido declarados
+  dentro de `@theme inline`, e o `inline` resolve as variáveis em tempo de
+  compilação. O CSS servido saía com os valores claros fixos, e trocar de tema
+  não mudava nada, embora a classe no elemento raiz e o armazenamento local
+  mudassem corretamente. A correção foi usar `@theme` comum, que mantém a
+  referência à variável, com um bloco `.dark` sobrescrevendo os mesmos nomes.
+</Callout>
+
+O alternador fica no cabeçalho, disponível também para quem não está
+autenticado, já que a página institucional e o login também respondem ao
+tema.
+
+## Responsividade
+
+O layout exigia 1440 pixels de largura para caber. As colunas tinham largura
+fixa e não havia nenhum ponto de quebra. Abaixo disso o conteúdo transbordava,
+e em um celular ficava inutilizável.
+
+As larguras fixas foram substituídas por máximos, o recuo lateral passou a
+crescer com a tela e o card do feed empilha a miniatura acima do texto em
+telas estreitas. Os botões da barra de formatação foram de 36 para 44 pixels,
+o mínimo confortável para toque.
+
+<Callout title="Verificação pendente" type="warn">
+  A responsividade foi implementada e o CSS gerado foi conferido, mas não foi
+  possível testar em um viewport real de celular no ambiente de
+  desenvolvimento usado. Conferir em um aparelho de verdade continua sendo
+  necessário antes de considerar essa parte concluída.
+</Callout>
+
+## Acessibilidade
+
+Além do contraste, algumas coisas foram corrigidas ao longo do caminho.
+
+- O item de navegação atual passou a ser calculado a partir da rota. Antes
+  havia um `aria-current` fixo no código, que informava a página errada em
+  todas as telas menos uma.
+- O anel de foco usa a cor da superfície como contorno externo. Antes usava
+  branco por padrão, o que desenhava um halo claro em volta de cada botão no
+  tema escuro.
+- A confirmação de exclusão deixou de ser o diálogo nativo do navegador e
+  passou a ser um componente próprio, que move o foco e prende a navegação
+  por teclado enquanto está aberto.
+- A hierarquia de títulos é única por página.

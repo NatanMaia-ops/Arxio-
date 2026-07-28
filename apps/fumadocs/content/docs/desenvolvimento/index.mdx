@@ -1,0 +1,60 @@
+---
+title: Desenvolvimento
+description: O que já foi construído na Arxio e o que ainda está em aberto
+---
+
+## Para quem é esta seção
+
+As outras seções desta documentação explicam a Arxio para quem vai usar a
+plataforma. Esta aqui é diferente: registra como o produto foi construído,
+quais decisões técnicas foram tomadas e por quê.
+
+Serve para quem entra no projeto e precisa entender o código, e também para
+quem quiser acompanhar o raciocínio por trás das escolhas.
+
+## O que funciona hoje
+
+O ciclo de vida de um artigo está completo. Um estudante autenticado consegue
+escrever, publicar, ler, editar e excluir os próprios textos.
+
+- Entrar com a conta Google e cair direto no feed.
+- Escrever um artigo com formatação em um editor de texto rico.
+- Publicar e ver o texto renderizado com a formatação preservada.
+- Navegar pela lista de artigos publicados, com autor e tempo estimado de
+  leitura.
+- Editar e excluir os próprios artigos. Artigos de outras pessoas não exibem
+  essas ações, e o servidor recusa a operação mesmo que alguém tente por fora
+  da interface.
+- Alternar entre tema claro e escuro.
+
+## O que ainda não existe
+
+Vale ser direto sobre os limites atuais, porque várias funcionalidades
+descritas nas seções de conceitos ainda não foram construídas.
+
+- Busca de artigos. O campo de busca foi retirado da interface justamente
+  para não prometer algo que não funciona.
+- Categorias e tags. O modelo de dados de um artigo hoje guarda apenas
+  título, conteúdo, autor e datas.
+- Comentários, curtidas e salvamentos.
+- Seguir autores e feed personalizado. O feed atual lista todos os artigos
+  publicados, do mais recente para o mais antigo.
+- Perfil público de autor.
+- Imagem de capa. O espaço reservado nos cards ainda é um bloco neutro.
+
+<Callout title="Documentação e código podem divergir" type="warn">
+  As seções de conceitos descrevem o produto pretendido. Esta seção descreve
+  o que está construído. Quando houver divergência entre as duas, o que vale
+  é o que está aqui.
+</Callout>
+
+## Onde continuar
+
+- [Arquitetura](/docs/desenvolvimento/arquitetura): como o projeto está
+  organizado e como as partes conversam.
+- [Publicação de artigos](/docs/desenvolvimento/publicacao-de-artigos): como
+  o editor funciona e como o texto é guardado.
+- [Interface](/docs/desenvolvimento/interface): tipografia, cores, tema
+  escuro e acessibilidade.
+- [Decisões](/docs/desenvolvimento/decisoes): escolhas que moldaram o código
+  e o que se perdeu em cada uma.
