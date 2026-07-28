@@ -23,7 +23,7 @@ export function ArticleCard({
 
 	return (
 		<article className="group relative flex flex-col gap-4 rounded-2xl border border-ax-line bg-ax-surface p-4 transition-colors hover:border-ax-line-3 sm:flex-row-reverse sm:items-stretch sm:gap-5 sm:p-5">
-			<div className="aspect-16/9 w-full shrink-0 rounded-xl bg-ax-fill sm:aspect-auto sm:h-auto sm:w-56 lg:w-64" />
+			<div className="aspect-16/9 w-full shrink-0 rounded-xl bg-ax-fill sm:aspect-auto sm:h-auto sm:w-56 lg:w-72" />
 
 			<div className="flex min-w-0 flex-1 flex-col gap-3">
 				<header className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-ax-meta">
