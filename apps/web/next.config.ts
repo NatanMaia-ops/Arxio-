@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
 	reactCompiler: true,
 	output: "standalone",
 	async redirects() {
-		return [{ source: "/feed", destination: "/artigos", permanent: true }];
+		return [{ source: "/artigos", destination: "/feed", permanent: true }];
 	},
 };
 

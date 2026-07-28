@@ -12,8 +12,8 @@ import {
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-	title: "Artigos | Arxio",
-	description: "Leia os artigos publicados na Arxio.",
+	title: "Feed | Arxio",
+	description: "O que a comunidade da Arxio está publicando.",
 };
 
 export default async function ArticlesPage() {
@@ -32,7 +32,7 @@ export default async function ArticlesPage() {
 			<main className="mx-auto max-w-220 px-5 pt-8 pb-16 sm:px-8 sm:pt-13.5 lg:px-12 xl:px-20">
 				<section className="flex flex-col gap-5">
 					<h1 className="font-bold font-home-display text-[32px] text-ax-ink leading-9 sm:text-[40px] sm:leading-11">
-						Artigos
+						Feed
 					</h1>
 
 					{articles === null && <ArticlesUnavailable />}

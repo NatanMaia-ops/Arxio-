@@ -4,7 +4,9 @@ import { cn } from "@arxio/ui/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const NAV_ITEMS = [{ href: "/artigos", label: "Artigos" }] as const;
+const NAV_ITEMS = [
+	{ href: "/feed", label: "Feed", section: ["/feed", "/artigos"] },
+] as const;
 
 export function SiteNav() {
 	const pathname = usePathname();
@@ -15,8 +17,9 @@ export function SiteNav() {
 			className="flex shrink-0 items-center gap-6 font-medium text-sm"
 		>
 			{NAV_ITEMS.map((item) => {
-				const isActive =
-					pathname === item.href || pathname.startsWith(`${item.href}/`);
+				const isActive = item.section.some(
+					(prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+				);
 
 				return (
 					<Link

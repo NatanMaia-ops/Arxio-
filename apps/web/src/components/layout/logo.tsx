@@ -4,8 +4,8 @@ import Link from "next/link";
 export function Logo() {
 	return (
 		<Link
-			href={{ pathname: "/artigos" }}
-			aria-label="Arxio — ir para os artigos"
+			href={{ pathname: "/feed" }}
+			aria-label="Arxio — ir para o feed"
 			className="flex h-6.75 w-20 shrink-0 items-center justify-center rounded-[10px] bg-ax-brand px-2.5 py-1.5"
 		>
 			<Image

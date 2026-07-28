@@ -14,7 +14,7 @@ export function LoginCard() {
 		setIsSubmitting(true);
 
 		try {
-			await signInWithGoogle(`${window.location.origin}/onboarding`);
+			await signInWithGoogle(`${window.location.origin}/feed`);
 		} catch {
 			setIsSubmitting(false);
 			toast.error("Não foi possível iniciar o login. Tente novamente.");
@@ -54,10 +54,10 @@ export function LoginCard() {
 
 			<div className="mt-6 border-ax-line border-t pt-5">
 				<Link
-					href={{ pathname: "/artigos" }}
+					href={{ pathname: "/feed" }}
 					className="text-[15px] text-ax-ink-soft underline-offset-4 transition-colors hover:text-ax-ink hover:underline focus-visible:text-ax-ink focus-visible:underline focus-visible:outline-none"
 				>
-					Já tenho cadastro — ver os artigos
+					Já tenho cadastro — ir para o feed
 				</Link>
 			</div>
 		</div>

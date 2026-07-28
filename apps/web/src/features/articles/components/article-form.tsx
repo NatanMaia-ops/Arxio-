@@ -104,7 +104,7 @@ export function ArticleForm({
 							href={
 								mode === "edit" && articleId
 									? (`/artigos/${articleId}` as Route)
-									: ("/artigos" as Route)
+									: ("/feed" as Route)
 							}
 							className="rounded-full border border-ax-line px-4.5 py-2.5 font-medium text-ax-ink-soft text-sm transition-colors hover:border-ax-ink hover:text-ax-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
 						>
