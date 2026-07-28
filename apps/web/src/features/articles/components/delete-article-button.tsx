@@ -20,7 +20,7 @@ export function DeleteArticleButton({ articleId }: { articleId: string }) {
 		try {
 			await deleteArticle(articleId);
 			setIsOpen(false);
-			router.push("/artigos" as Route);
+			router.push("/feed" as Route);
 			router.refresh();
 		} catch (error) {
 			toast.error(

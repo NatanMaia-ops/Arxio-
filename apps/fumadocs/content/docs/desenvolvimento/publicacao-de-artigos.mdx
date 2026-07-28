@@ -1,0 +1,86 @@
+---
+title: Publicação de artigos
+description: Como o editor funciona, como o texto é guardado e como é exibido
+---
+
+## O modelo
+
+Um artigo guarda pouca coisa: identificador, autor, título, conteúdo e as
+datas de criação e atualização. Não há campo de categoria, resumo, capa ou
+status de rascunho.
+
+Essa escassez foi deliberada. A primeira entrega precisava provar o ciclo
+completo de publicação sem esperar por decisões de produto que ainda não
+estavam maduras. Cada campo novo custa uma migration e um contrato a mais
+para manter.
+
+## O editor
+
+A escrita usa o Tiptap, com negrito, itálico, títulos de seção, listas e
+citação. O título é um campo separado do corpo.
+
+Os títulos de seção começam no nível dois. O nível um pertence ao título do
+artigo, e deixar o editor gerar outro quebraria a hierarquia da página para
+quem usa leitor de tela.
+
+<Callout title="Um defeito que só a interação revelou">
+  A primeira versão da barra de formatação não funcionava. Clicar em um botão
+  tirava o foco do editor e desfazia a seleção antes do comando rodar. O
+  efeito era enganoso: o botão acendia como ativo, mas a formatação não era
+  aplicada e os primeiros caracteres digitados em seguida se perdiam. A
+  correção foi impedir o comportamento padrão do `mousedown`, o que mantém a
+  seleção intacta. Nenhum teste automatizado pegaria isso.
+</Callout>
+
+## Como o texto é guardado
+
+O Tiptap representa o documento como uma árvore JSON. Esse JSON é
+serializado e gravado na coluna de conteúdo, que já era um campo de texto
+livre.
+
+A alternativa seria guardar HTML. O JSON foi preferido porque descreve
+estrutura, não apresentação, e porque o conjunto de nós possíveis é fechado
+pelo schema do editor. Um HTML vindo do cliente aceitaria qualquer coisa.
+
+## Como o texto é exibido
+
+A página de leitura percorre o JSON e emite elementos React diretamente, no
+servidor. Não usa o Tiptap para exibir.
+
+A primeira tentativa foi diferente. O leitor era uma instância do editor em
+modo somente leitura, o que parecia econômico por reaproveitar o mesmo
+componente. Só que o Tiptap não renderiza no servidor, e o resultado foi que
+o HTML servido não continha nenhuma tag do corpo do artigo. Nem título de
+seção, nem negrito, nem citação. Para uma plataforma de publicação isso
+significa buscador enxergando artigo vazio, leitor sem JavaScript sem
+conteúdo, e todo mundo baixando a biblioteca do editor apenas para ler texto
+estático.
+
+Reescrever o leitor como componente de servidor resolveu os três problemas de
+uma vez e ainda reforçou a segurança, já que o React escapa todo texto e não
+há injeção de HTML em lugar nenhum.
+
+## Links e segurança
+
+A API aceita qualquer string no campo de conteúdo. Um JSON pode ser forjado
+sem passar pelo editor, com um link apontando para `javascript:`.
+
+Por isso o endereço de cada link é validado contra uma lista de protocolos
+permitidos, que hoje tem `http`, `https` e `mailto`. Um link fora dessa lista
+é renderizado como texto simples, sem virar âncora. Isso foi testado com um
+artigo forjado propositalmente.
+
+## Trecho e tempo de leitura
+
+O card do feed mostra um trecho do início do texto e uma estimativa de tempo
+de leitura. Os dois são calculados a partir do próprio conteúdo, sem campos
+extras no banco.
+
+O trecho corta na última palavra inteira que couber no limite. O tempo parte
+da contagem de palavras e nunca informa menos de um minuto.
+
+## Conteúdo antigo ou inválido
+
+Se o conteúdo de um artigo não for um documento válido do editor, a página
+não quebra. Ele é exibido como texto simples. Isso cobre tanto artigos
+gravados antes de o formato existir quanto dados corrompidos.

@@ -1,0 +1,105 @@
+---
+title: Decisões
+description: Escolhas que moldaram o código e o que se perdeu em cada uma
+---
+
+## Por que registrar decisões
+
+Código mostra o que foi feito, não o que foi descartado. Esta página guarda
+as escolhas que teriam sido diferentes se outra pessoa tivesse decidido, com
+o custo de cada uma.
+
+## Guardar o conteúdo como JSON do editor
+
+A coluna de conteúdo já era texto livre, então o JSON do Tiptap coube sem
+migration.
+
+O que se ganhou: nenhuma mudança no banco, no contrato da API ou nos testes
+do servidor. A entrega inteira do editor aconteceu sem tocar no backend.
+
+O que se perdeu: buscar por texto dentro do conteúdo fica mais difícil, já
+que o banco vê uma string de JSON. Quando a busca existir, provavelmente será
+preciso extrair o texto puro em uma coluna separada ou usar um índice
+dedicado.
+
+## Uma casa só para o usuário autenticado
+
+Havia duas telas para a mesma coisa. Uma maquete com dois artigos escritos à
+mão, e uma lista com dados reais. O menu oferecia as duas e o login jogava o
+usuário na maquete, cujos cards levavam a endereços inexistentes.
+
+A maquete foi removida e a lista real assumiu o endereço `/feed`. Links
+antigos continuam funcionando por redirecionamento permanente.
+
+O que se perdeu: a maquete insinuava abas de recomendados, seguindo e em
+alta. Nada disso existe no modelo de dados, então a promessa visual saiu
+junto.
+
+## Retirar o campo de busca
+
+O campo de busca aceitava texto e não fazia nada. Não era nem um formulário.
+O link de busca no menu levava a uma página inexistente.
+
+A escolha foi retirar os dois em vez de improvisar uma busca. A API não
+aceita parâmetro de busca, e uma filtragem só no navegador funcionaria
+apenas sobre o que já estivesse carregado, virando mentira assim que houvesse
+paginação.
+
+O que se perdeu junto: o painel lateral de descoberta. As seis categorias que
+ele listava apontavam todas para a busca. Sem os links, o painel não tinha
+função, e a listagem virou coluna única. As duas colunas voltam quando existir
+conteúdo de descoberta de verdade.
+
+## O leitor de artigo no servidor
+
+Descrita em detalhe na página de
+[publicação de artigos](/docs/desenvolvimento/publicacao-de-artigos). Em
+resumo, exibir o artigo com o próprio editor era mais econômico em código e
+custava o conteúdo não existir no HTML servido.
+
+O que se perdeu: paridade automática entre o que se escreve e o que se lê.
+Agora existem dois caminhos de renderização, e eles só continuam parecidos
+porque compartilham a mesma folha de estilos de texto.
+
+## Estado de carregamento na leitura
+
+As telas de artigo são renderizadas sob demanda, então há uma espera entre o
+clique e a página. Foram criadas telas de esqueleto para preencher esse
+intervalo.
+
+O custo apareceu depois: na página de leitura, o esqueleto faz o servidor
+começar a responder antes de saber se o artigo existe. Quando o artigo não
+existe, o conteúdo certo aparece, mas o código de status já foi enviado como
+200 em vez de 404. Buscadores tratam isso como página válida.
+
+A troca ainda está em aberto. Manter o esqueleto e aceitar o status errado,
+ou remover o esqueleto da leitura e recuperar o 404.
+
+## O diálogo de confirmação fora do design system
+
+O componente de confirmação de exclusão foi construído dentro da feature de
+artigos, não em `packages/ui`.
+
+O motivo: ele usa os tokens de cor da aplicação, e o design system não deve
+conhecer a paleta de um produto específico. Se surgir um segundo consumidor,
+o componente pode ser promovido com tokens próprios.
+
+Um detalhe do comportamento: o diálogo não fecha com a tecla Escape. Isso é
+proposital na primitiva usada, porque ação destrutiva exige escolha
+explícita. O caminho de teclado existe e é o botão de cancelar, que já recebe
+o foco quando o diálogo abre.
+
+## O destino da logo
+
+A logo levava sempre para a página institucional. Quem estava escrevendo um
+artigo e clicava nela, esperando voltar para casa, caía na página de vendas
+de quem ainda não tem conta.
+
+O plano inicial era fazer a logo consultar a sessão para decidir o destino. A
+verificação mostrou que isso era desnecessário: a logo só aparece dentro do
+contexto de artigos, e a lista é pública. O destino certo é o mesmo para
+todo mundo.
+
+O que se ganhou ao verificar antes de implementar: nenhuma consulta de
+sessão, nenhum provedor compartilhado, nenhuma chamada de rede duplicada e
+nenhum risco de o link mudar de destino no meio do carregamento.

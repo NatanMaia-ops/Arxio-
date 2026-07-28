@@ -28,7 +28,7 @@ export default function EditArticlePage() {
 				}
 
 				if (!found) {
-					router.replace("/artigos" as Route);
+					router.replace("/feed" as Route);
 					return;
 				}
 
@@ -40,7 +40,7 @@ export default function EditArticlePage() {
 				setArticle(found);
 			})
 			.catch(() => {
-				if (isActive) router.replace("/artigos" as Route);
+				if (isActive) router.replace("/feed" as Route);
 			});
 
 		return () => {

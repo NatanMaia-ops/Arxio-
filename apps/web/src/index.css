@@ -25,6 +25,8 @@
 	--color-ax-fill: #f2f2f2;
 	--color-ax-fill-hover: #e3e3e3;
 	--color-ax-cta: #111111;
+	--color-ax-accent: #c2255c;
+	--color-ax-on-accent: #ffffff;
 }
 
 .dark {
@@ -45,6 +47,8 @@
 	--color-ax-fill: #1e1e1e;
 	--color-ax-fill-hover: #282828;
 	--color-ax-cta: #d1d1d1;
+	--color-ax-accent: #ff7aa5;
+	--color-ax-on-accent: #2b0a17;
 }
 
 html {
