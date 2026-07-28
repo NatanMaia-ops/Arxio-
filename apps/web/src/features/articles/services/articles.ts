@@ -9,29 +9,37 @@ import type {
 import * as articlesApi from "./articles-api";
 import { fetchAuthorSummary } from "./authors-api";
 
+function apiUrl(): string {
+	if (typeof window === "undefined") {
+		return process.env.SERVER_INTERNAL_URL || env.NEXT_PUBLIC_SERVER_URL;
+	}
+
+	return env.NEXT_PUBLIC_SERVER_URL;
+}
+
 export function getArticles(): Promise<Article[]> {
-	return articlesApi.fetchArticles(env.NEXT_PUBLIC_SERVER_URL);
+	return articlesApi.fetchArticles(apiUrl());
 }
 
 export function getArticleById(id: string): Promise<Article | null> {
-	return articlesApi.fetchArticleById(env.NEXT_PUBLIC_SERVER_URL, id);
+	return articlesApi.fetchArticleById(apiUrl(), id);
 }
 
 export function createArticle(input: ArticleInput): Promise<Article> {
-	return articlesApi.createArticle(env.NEXT_PUBLIC_SERVER_URL, input);
+	return articlesApi.createArticle(apiUrl(), input);
 }
 
 export function updateArticle(
 	id: string,
 	input: Partial<ArticleInput>,
 ): Promise<Article> {
-	return articlesApi.updateArticle(env.NEXT_PUBLIC_SERVER_URL, id, input);
+	return articlesApi.updateArticle(apiUrl(), id, input);
 }
 
 export function deleteArticle(id: string): Promise<void> {
-	return articlesApi.deleteArticle(env.NEXT_PUBLIC_SERVER_URL, id);
+	return articlesApi.deleteArticle(apiUrl(), id);
 }
 
 export function getAuthorSummary(id: string): Promise<AuthorSummary | null> {
-	return fetchAuthorSummary(env.NEXT_PUBLIC_SERVER_URL, id);
+	return fetchAuthorSummary(apiUrl(), id);
 }
