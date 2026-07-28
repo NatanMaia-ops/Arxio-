@@ -29,12 +29,30 @@ export default async function ArticlesPage() {
 		<div className="min-h-dvh bg-ax-surface">
 			<SiteHeader />
 
-			<main className="mx-auto max-w-220 px-5 pt-8 pb-16 sm:px-8 sm:pt-13.5 lg:px-12 xl:px-20">
-				<section className="flex flex-col gap-5">
-					<h1 className="font-bold font-home-display text-[32px] text-ax-ink leading-9 sm:text-[40px] sm:leading-11">
-						Feed
-					</h1>
+			<main className="mx-auto max-w-5xl px-5 pt-8 pb-16 sm:px-8 sm:pt-12 lg:px-10">
+				<header className="flex flex-col gap-3 border-ax-line border-b pb-6">
+					<div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
+						<h1 className="font-bold font-home-display text-[32px] text-ax-ink leading-9 sm:text-[40px] sm:leading-11">
+							Leituras recentes
+						</h1>
 
+						{articles?.length ? (
+							<span className="text-ax-meta text-sm tabular-nums">
+								{articles.length}{" "}
+								{articles.length === 1
+									? "artigo publicado"
+									: "artigos publicados"}
+							</span>
+						) : null}
+					</div>
+
+					<p className="max-w-160 text-ax-body text-base leading-6">
+						Estudos, notas e projetos publicados por quem faz parte da
+						comunidade da Arxio.
+					</p>
+				</header>
+
+				<section className="mt-6 flex flex-col gap-4">
 					{articles === null && <ArticlesUnavailable />}
 
 					{articles?.length === 0 && <EmptyState />}

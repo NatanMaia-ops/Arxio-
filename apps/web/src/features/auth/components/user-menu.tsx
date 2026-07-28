@@ -11,8 +11,9 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { signOut } from "@/features/auth/services/sign-out";
+import { getInitials } from "@/lib/initials";
 
-export function UserMenu() {
+export function UserMenu({ name }: { name: string | null }) {
 	const [isSigningOut, setIsSigningOut] = useState(false);
 
 	async function handleSignOut() {
@@ -33,15 +34,23 @@ export function UserMenu() {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger
-				aria-label="Abrir menu do usuário"
-				className="size-10 shrink-0 rounded-full bg-ax-fill-hover outline-none transition-shadow focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
-			/>
+				aria-label={name ? `Abrir menu de ${name}` : "Abrir menu da conta"}
+				className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-ax-fill-hover font-semibold text-ax-ink text-xs uppercase outline-none transition-shadow hover:ring-2 hover:ring-ax-line-3 focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
+			>
+				<span aria-hidden="true">{name ? getInitials(name) : "?"}</span>
+			</DropdownMenuTrigger>
 
 			<DropdownMenuContent
 				align="end"
 				sideOffset={8}
-				className="w-40 rounded-lg bg-ax-surface p-1 text-ax-ink"
+				className="w-44 rounded-lg bg-ax-surface p-1 text-ax-ink"
 			>
+				{name ? (
+					<p className="truncate px-3 py-2 font-medium text-ax-meta text-xs">
+						{name}
+					</p>
+				) : null}
+
 				<DropdownMenuItem
 					onClick={handleSignOut}
 					disabled={isSigningOut}
