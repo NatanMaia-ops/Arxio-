@@ -1,4 +1,5 @@
 import { db } from "@arxio/db";
+import { studentProfiles } from "@arxio/db/schema/student-profile";
 import { users } from "@arxio/db/schema/user";
 import { eq } from "drizzle-orm";
 
@@ -8,6 +9,8 @@ import type {
 	UpdateUserInput,
 	UserRepository,
 } from "../../repositories/user-repository";
+
+import { toPublicUserProfile } from "./public-user-profile-mapper";
 
 function toUser(row: typeof users.$inferSelect): User {
 	return {
@@ -59,6 +62,29 @@ export const drizzleUserRepository: UserRepository = {
 		const [user] = await db.select().from(users).where(eq(users.id, id));
 
 		return user ? toUser(user) : null;
+	},
+
+	async findProfileById(id: string) {
+		const [profile] = await db
+			.select({
+				user: {
+					id: users.id,
+					name: users.name,
+					bio: users.bio,
+					avatarUrl: users.image,
+					createdAt: users.createdAt,
+				},
+				academicProfile: {
+					course: studentProfiles.course,
+					semester: studentProfiles.semester,
+					institution: studentProfiles.institution,
+				},
+			})
+			.from(users)
+			.leftJoin(studentProfiles, eq(studentProfiles.userId, users.id))
+			.where(eq(users.id, id));
+
+		return profile ? toPublicUserProfile(profile) : null;
 	},
 
 	async findByEmail(email: string) {

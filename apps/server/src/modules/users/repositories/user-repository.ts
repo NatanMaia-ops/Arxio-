@@ -1,3 +1,4 @@
+import type { PublicUserProfile } from "../entities/public-user-profile.entity";
 import type { User, UserWithPasswordHash } from "../entities/user.entity";
 
 export type CreateUserInput = {
@@ -17,6 +18,7 @@ export type UpdateUserInput = {
 export type UserRepository = {
 	create(input: CreateUserInput): Promise<User>;
 	findById(id: string): Promise<User | null>;
+	findProfileById(id: string): Promise<PublicUserProfile | null>;
 	findByEmail(email: string): Promise<User | null>;
 	findByEmailWithPasswordHash(
 		email: string,
