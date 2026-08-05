@@ -1,8 +1,9 @@
 import type { Article } from "../entities/article.entity";
-import {
-	type ArticleRepository,
-	type CreateArticleInput,
-	type UpdateArticleInput,
+import type {
+	ArticleRepository,
+	CreateArticleInput,
+	ListArticlesFilters,
+	UpdateArticleInput,
 } from "../repositories/article-repository";
 
 export class ArticleService {
@@ -16,8 +17,8 @@ export class ArticleService {
 		return this.articles.findById(id);
 	}
 
-	async listArticles(): Promise<Article[]> {
-		return this.articles.findAll();
+	async listArticles(filters: ListArticlesFilters = {}): Promise<Article[]> {
+		return this.articles.findAll(filters);
 	}
 
 	async updateArticle(

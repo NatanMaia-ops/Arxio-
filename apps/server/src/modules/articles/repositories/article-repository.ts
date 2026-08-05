@@ -11,10 +11,14 @@ export type UpdateArticleInput = {
 	content?: string;
 };
 
+export type ListArticlesFilters = {
+	authorId?: string;
+};
+
 export type ArticleRepository = {
 	create(input: CreateArticleInput): Promise<Article>;
 	findById(id: string): Promise<Article | null>;
-	findAll(): Promise<Article[]>;
+	findAll(filters?: ListArticlesFilters): Promise<Article[]>;
 	update(id: string, input: UpdateArticleInput): Promise<Article | null>;
 	delete(id: string): Promise<void>;
 };

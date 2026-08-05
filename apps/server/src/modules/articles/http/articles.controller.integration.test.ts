@@ -37,8 +37,14 @@ function createFakeRepository(): ArticleRepository {
 		async findById(id) {
 			return store.get(id) ?? null;
 		},
-		async findAll() {
-			return Array.from(store.values());
+		async findAll(filters = {}) {
+			const storedArticles = Array.from(store.values());
+
+			return filters.authorId
+				? storedArticles.filter(
+						(article) => article.authorId === filters.authorId,
+					)
+				: storedArticles;
 		},
 		async update(id, input) {
 			const article = store.get(id);
@@ -182,6 +188,53 @@ describe("Articles HTTP API", () => {
 
 		assert.equal(Array.isArray(body), true);
 		assert.ok(body.length >= 1);
+	});
+
+	it("lists only articles from the requested author", async () => {
+		const ownArticleResponse = await fetch(`${origin}/articles`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				title: "Artigo do autor principal",
+				content: "Conteudo principal",
+			}),
+		});
+		const otherArticleResponse = await fetch(`${origin}/articles-other`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				title: "Artigo de outro autor",
+				content: "Outro conteudo",
+			}),
+		});
+
+		assert.equal(ownArticleResponse.status, 201);
+		assert.equal(otherArticleResponse.status, 201);
+
+		const response = await fetch(`${origin}/articles?authorId=${otherUserId}`);
+		const body = (await response.json()) as Array<{ authorId: string }>;
+
+		assert.equal(response.status, 200);
+		assert.ok(body.length >= 1);
+		assert.ok(body.every((article) => article.authorId === otherUserId));
+	});
+
+	it("returns an empty list when the author has no articles", async () => {
+		const authorWithoutArticles = "c3d4e5f6-a7b8-4c5d-9e0f-1a2b3c4d5e6f";
+		const response = await fetch(
+			`${origin}/articles?authorId=${authorWithoutArticles}`,
+		);
+
+		assert.equal(response.status, 200);
+		assert.deepEqual(await response.json(), []);
+	});
+
+	it("returns 400 for an invalid authorId filter", async () => {
+		const response = await fetch(`${origin}/articles?authorId=invalid-id`);
+
+		assert.equal(response.status, 400);
+		const body = (await response.json()) as { code: string };
+		assert.equal(body.code, "VALIDATION_ERROR");
 	});
 
 	it("returns 404 on GET /:id for non-existent article", async () => {
