@@ -1,14 +1,16 @@
 import { hash } from "bcryptjs";
 
-import { ConflictError } from "../../shared/errors";
+import { ConflictError, NotFoundError } from "../../shared/errors";
 
-import type {
-	UserRepository,
-	UpdateUserInput,
-} from "./repositories/user-repository";
+import type { OwnUserAccount } from "./entities/own-user-account.entity";
+import type { PublicUserProfile } from "./entities/public-user-profile.entity";
 import type { User, UserWithPasswordHash } from "./entities/user.entity";
 import type { CreateUserInput as CreateUserDtoInput } from "./http/dtos/create_user.dto";
 import type { UserResponse } from "./http/dtos/user_response.dto";
+import type {
+	UpdateOwnProfileInput,
+	UserRepository,
+} from "./repositories/user-repository";
 
 export class UsersService {
 	constructor(private readonly users: UserRepository) {}
@@ -36,6 +38,26 @@ export class UsersService {
 		return user ? this.toResponse(user) : null;
 	}
 
+	async getPublicProfileById(id: string): Promise<PublicUserProfile> {
+		const profile = await this.users.findProfileById(id);
+
+		if (!profile) {
+			throw new NotFoundError("Usuario nao encontrado");
+		}
+
+		return profile;
+	}
+
+	async getOwnAccount(authenticatedUserId: string): Promise<OwnUserAccount> {
+		const account = await this.users.findOwnAccountById(authenticatedUserId);
+
+		if (!account) {
+			throw new NotFoundError("Usuario nao encontrado");
+		}
+
+		return account;
+	}
+
 	async getUserByEmail(email: string): Promise<UserResponse | null> {
 		const user = await this.users.findByEmail(email);
 		return user ? this.toResponse(user) : null;
@@ -47,12 +69,20 @@ export class UsersService {
 		return this.users.findByEmailWithPasswordHash(email);
 	}
 
-	async updateUser(
-		id: string,
-		input: UpdateUserInput,
-	): Promise<UserResponse | null> {
-		const updated = await this.users.update(id, input);
-		return updated ? this.toResponse(updated) : null;
+	async updateOwnProfile(
+		authenticatedUserId: string,
+		input: UpdateOwnProfileInput,
+	): Promise<OwnUserAccount> {
+		const account = await this.users.updateOwnProfile(
+			authenticatedUserId,
+			input,
+		);
+
+		if (!account) {
+			throw new NotFoundError("Usuario nao encontrado");
+		}
+
+		return account;
 	}
 
 	async verifyUserEmail(id: string): Promise<void> {

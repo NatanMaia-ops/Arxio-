@@ -3,6 +3,7 @@ import { describe, it } from "node:test";
 
 import {
 	type PublicUserProfileRow,
+	toOwnUserAccount,
 	toPublicUserProfile,
 } from "./public-user-profile-mapper";
 
@@ -80,6 +81,26 @@ describe("toPublicUserProfile", () => {
 		assert.deepEqual(profile, {
 			id: "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
 			name: "Lucas Lima",
+			bio: "Estudante e desenvolvedor",
+			avatarUrl: "https://example.com/avatar.png",
+			academicProfile: null,
+			createdAt,
+		});
+	});
+
+	it("adds email only to the authenticated user's account", () => {
+		const account = toOwnUserAccount({
+			...createRow(null),
+			user: {
+				...createRow(null).user,
+				email: "lucas@example.com",
+			},
+		});
+
+		assert.deepEqual(account, {
+			id: "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
+			name: "Lucas Lima",
+			email: "lucas@example.com",
 			bio: "Estudante e desenvolvedor",
 			avatarUrl: "https://example.com/avatar.png",
 			academicProfile: null,

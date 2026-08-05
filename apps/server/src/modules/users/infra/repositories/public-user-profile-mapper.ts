@@ -1,3 +1,4 @@
+import type { OwnUserAccount } from "../../entities/own-user-account.entity";
 import type { PublicUserProfile } from "../../entities/public-user-profile.entity";
 
 export type PublicUserProfileRow = {
@@ -15,6 +16,12 @@ export type PublicUserProfileRow = {
 	} | null;
 };
 
+export type OwnUserAccountRow = PublicUserProfileRow & {
+	user: PublicUserProfileRow["user"] & {
+		email: string;
+	};
+};
+
 export function toPublicUserProfile(
 	row: PublicUserProfileRow,
 ): PublicUserProfile {
@@ -26,7 +33,18 @@ export function toPublicUserProfile(
 			academicProfile.institution !== null);
 
 	return {
-		...row.user,
+		id: row.user.id,
+		name: row.user.name,
+		bio: row.user.bio,
+		avatarUrl: row.user.avatarUrl,
 		academicProfile: hasAcademicData ? academicProfile : null,
+		createdAt: row.user.createdAt,
+	};
+}
+
+export function toOwnUserAccount(row: OwnUserAccountRow): OwnUserAccount {
+	return {
+		...toPublicUserProfile(row),
+		email: row.user.email,
 	};
 }
