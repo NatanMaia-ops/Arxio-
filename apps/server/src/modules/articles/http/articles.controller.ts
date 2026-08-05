@@ -7,6 +7,7 @@ import type { ArticleService } from "../services/articles.service";
 
 import { articleResponseSchema } from "./dtos/article_response.dto";
 import { createArticleSchema } from "./dtos/create_article.dto";
+import { listArticlesQuerySchema } from "./dtos/list_articles_query.dto";
 import { updateArticleSchema } from "./dtos/update_article.dto";
 
 const paramsWithIdSchema = z.object({
@@ -37,9 +38,10 @@ export function createArticlesController(
 		},
 	);
 
-	router.get("/", async (_req, res, next) => {
+	router.get("/", async (req, res, next) => {
 		try {
-			const articles = await articlesService.listArticles();
+			const filters = listArticlesQuerySchema.parse(req.query);
+			const articles = await articlesService.listArticles(filters);
 
 			res.status(200).json(articles.map((a) => articleResponseSchema.parse(a)));
 		} catch (error) {

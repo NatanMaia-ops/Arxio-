@@ -6,6 +6,7 @@ import type { Article } from "../../entities/article.entity";
 import type {
 	ArticleRepository,
 	CreateArticleInput,
+	ListArticlesFilters,
 	UpdateArticleInput,
 } from "../../repositories/article-repository";
 
@@ -47,8 +48,11 @@ export const drizzleArticleRepository: ArticleRepository = {
 		return article ? toArticle(article) : null;
 	},
 
-	async findAll() {
-		const rows = await db.select().from(articles);
+	async findAll(filters: ListArticlesFilters = {}) {
+		const query = db.select().from(articles);
+		const rows = filters.authorId
+			? await query.where(eq(articles.authorId, filters.authorId))
+			: await query;
 
 		return rows.map(toArticle);
 	},
