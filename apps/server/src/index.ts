@@ -40,7 +40,7 @@ app.get("/", (_req, res) => {
 	res.status(200).send("OK");
 });
 
-app.use("/users", createUsersController(usersService));
+app.use("/users", createUsersController(usersService, requireAuth));
 
 app.use(
 	"/onboarding",
