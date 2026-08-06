@@ -2,6 +2,7 @@
 
 import { Skeleton } from "@arxio/ui/components/skeleton";
 import { cn } from "@arxio/ui/lib/utils";
+import { Dialog } from "@base-ui/react/dialog";
 import { CornerDownLeft, FileText, Search } from "lucide-react";
 import type { Route } from "next";
 import { useRouter } from "next/navigation";
@@ -15,6 +16,7 @@ type IndexStatus = "loading" | "ready" | "error";
 
 export function SearchCommand() {
 	const [isOpen, setIsOpen] = useState(false);
+	const triggerId = useId();
 	const triggerRef = useRef<HTMLButtonElement>(null);
 
 	useEffect(() => {
@@ -32,17 +34,14 @@ export function SearchCommand() {
 
 	const close = useCallback(() => {
 		setIsOpen(false);
-		triggerRef.current?.focus();
 	}, []);
 
 	return (
-		<>
-			<button
+		<Dialog.Root open={isOpen} onOpenChange={setIsOpen} triggerId={triggerId}>
+			<Dialog.Trigger
+				id={triggerId}
 				ref={triggerRef}
-				type="button"
-				onClick={() => setIsOpen(true)}
 				aria-label="Buscar artigos"
-				aria-haspopup="dialog"
 				className="flex h-9.5 min-w-9.5 cursor-pointer items-center gap-2.5 rounded-lg border border-ax-line bg-ax-fill px-2.5 text-ax-mute text-sm transition-colors hover:border-ax-line-3 hover:bg-ax-fill-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface sm:w-56 sm:px-3 lg:w-72"
 			>
 				<Search className="size-4.5 shrink-0" aria-hidden="true" />
@@ -51,16 +50,22 @@ export function SearchCommand() {
 					<Kbd>⌘</Kbd>
 					<Kbd>K</Kbd>
 				</span>
-			</button>
+			</Dialog.Trigger>
 
-			{isOpen ? <SearchDialog onClose={close} /> : null}
-		</>
+			{isOpen ? <SearchDialog onClose={close} triggerRef={triggerRef} /> : null}
+		</Dialog.Root>
 	);
 }
 
-function SearchDialog({ onClose }: { onClose: () => void }) {
+type SearchDialogProps = {
+	onClose: () => void;
+	triggerRef: React.RefObject<HTMLButtonElement | null>;
+};
+
+function SearchDialog({ onClose, triggerRef }: SearchDialogProps) {
 	const router = useRouter();
 	const listId = useId();
+	const inputRef = useRef<HTMLInputElement>(null);
 	const [query, setQuery] = useState("");
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [status, setStatus] = useState<IndexStatus>("loading");
@@ -95,18 +100,6 @@ function SearchDialog({ onClose }: { onClose: () => void }) {
 		};
 	}, [loadIndex]);
 
-	useEffect(() => {
-		function handleKey(event: KeyboardEvent) {
-			if (event.key !== "Escape") return;
-
-			event.preventDefault();
-			onClose();
-		}
-
-		document.addEventListener("keydown", handleKey);
-		return () => document.removeEventListener("keydown", handleKey);
-	}, [onClose]);
-
 	const results = filterSearchResults(index, query);
 
 	function openResult(id: string) {
@@ -136,26 +129,20 @@ function SearchDialog({ onClose }: { onClose: () => void }) {
 	}
 
 	return (
-		<div className="fixed inset-0 z-50 flex items-start justify-center px-4 pt-[12vh]">
-			<button
-				type="button"
-				aria-label="Fechar busca"
-				onClick={onClose}
-				className="absolute inset-0 cursor-default bg-black/50 backdrop-blur-[2px] dark:bg-black/70"
-			/>
+		<Dialog.Portal>
+			<Dialog.Backdrop className="fixed inset-0 z-50 bg-black/50 backdrop-blur-[2px] dark:bg-black/70" />
 
-			<div
-				role="dialog"
-				aria-modal="true"
+			<Dialog.Popup
 				aria-label="Buscar artigos"
-				className="relative flex w-full max-w-xl flex-col overflow-hidden rounded-2xl border border-ax-line bg-ax-surface shadow-2xl"
+				initialFocus={inputRef}
+				finalFocus={triggerRef}
+				className="fixed top-[12vh] left-1/2 z-50 flex w-[calc(100vw-2rem)] max-w-xl -translate-x-1/2 flex-col overflow-hidden rounded-2xl border border-ax-line bg-ax-surface shadow-2xl"
 			>
 				<div className="flex h-14 items-center gap-3 border-ax-line border-b px-4">
 					<Search className="size-5 shrink-0 text-ax-mute" aria-hidden="true" />
 
 					<input
-						// biome-ignore lint/a11y/noAutofocus: o campo é o motivo de a busca ter sido aberta
-						autoFocus
+						ref={inputRef}
 						type="text"
 						role="combobox"
 						aria-expanded="true"
@@ -175,7 +162,12 @@ function SearchDialog({ onClose }: { onClose: () => void }) {
 						className="h-full w-full bg-transparent text-ax-ink text-base outline-none placeholder:text-ax-placeholder"
 					/>
 
-					<Kbd>esc</Kbd>
+					<Dialog.Close
+						aria-label="Fechar busca"
+						className="shrink-0 cursor-pointer rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
+					>
+						<Kbd>esc</Kbd>
+					</Dialog.Close>
 				</div>
 
 				<div className="max-h-90 overflow-y-auto p-2">
@@ -222,6 +214,7 @@ function SearchDialog({ onClose }: { onClose: () => void }) {
 											id={`${listId}-${position}`}
 											type="button"
 											role="option"
+											tabIndex={-1}
 											aria-selected={position === activeIndex}
 											onMouseEnter={() => setActiveIndex(position)}
 											onClick={() => openResult(result.id)}
@@ -265,8 +258,8 @@ function SearchDialog({ onClose }: { onClose: () => void }) {
 						abrir
 					</span>
 				</footer>
-			</div>
-		</div>
+			</Dialog.Popup>
+		</Dialog.Portal>
 	);
 }
 

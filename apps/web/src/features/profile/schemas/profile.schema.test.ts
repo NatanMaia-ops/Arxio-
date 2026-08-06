@@ -1,9 +1,17 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { editProfileSchema } from "./profile.schema";
+import { editProfileSchema, profileIdSchema } from "./profile.schema";
 
 describe("Profile schema", () => {
+	it("accepts only UUIDs as public profile ids", () => {
+		assert.equal(
+			profileIdSchema.safeParse("a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d").success,
+			true,
+		);
+		assert.equal(profileIdSchema.safeParse("invalid-id").success, false);
+	});
+
 	it("normalizes raw edit form values", () => {
 		assert.deepEqual(
 			editProfileSchema.parse({

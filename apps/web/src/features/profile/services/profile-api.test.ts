@@ -58,7 +58,11 @@ async function rejectsWithKind(
 describe("Profile API", () => {
 	it("fetches and validates a public profile", async () => {
 		const { requests, fetcher } = recorder(() =>
-			Response.json({ ...profilePayload, privateField: "ignored" }),
+			Response.json({
+				...profilePayload,
+				email: "private@example.com",
+				privateField: "ignored",
+			}),
 		);
 
 		const profile = await fetchPublicProfileById(
@@ -69,6 +73,7 @@ describe("Profile API", () => {
 
 		assert.equal(profile?.id, userId);
 		assert.ok(profile?.createdAt instanceof Date);
+		assert.equal("email" in (profile ?? {}), false);
 		assert.equal("privateField" in (profile ?? {}), false);
 		assert.equal(
 			requests[0]?.input,
