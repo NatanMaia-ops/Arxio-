@@ -1,10 +1,9 @@
-import { env } from "@arxio/env/web";
-
 import {
 	type AuthSession,
 	fetchSession,
 } from "@/features/auth/services/auth-api";
+import { apiBaseUrl } from "@/lib/api-base-url";
 
 export function getSession(): Promise<AuthSession | null> {
-	return fetchSession(env.NEXT_PUBLIC_SERVER_URL);
+	return fetchSession(apiBaseUrl());
 }

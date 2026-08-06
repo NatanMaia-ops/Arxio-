@@ -1,6 +1,7 @@
 {
 	"$schema": "https://turbo.build/schema.json",
 	"ui": "tui",
+	"globalEnv": ["PORT", "WEB_PORT", "WEB_INTERNAL_URL", "SERVER_INTERNAL_URL"],
 	"tasks": {
 		"build": {
 			"dependsOn": ["^build"],

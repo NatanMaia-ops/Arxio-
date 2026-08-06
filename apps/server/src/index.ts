@@ -1,3 +1,4 @@
+import { runMigrations } from "@arxio/db/migrate";
 import { env } from "@arxio/env/server";
 import cors from "cors";
 import express, { type Response } from "express";
@@ -13,8 +14,11 @@ import {
 import { createUsersController } from "./modules/users/http/users.controller";
 import { usersService } from "./modules/users/users.module";
 import { errorHandler } from "./shared/http/error-handler";
+import { createWebProxy } from "./shared/http/web-proxy";
 
 const app = express();
+
+app.set("trust proxy", true);
 
 app.use(
 	cors({
@@ -26,7 +30,9 @@ app.use(
 
 app.use("/auth", authHandler);
 
-app.use(express.json());
+app.get("/health", (_req, res) => {
+	res.status(200).send("OK");
+});
 
 app.get(
 	"/api/protected",
@@ -36,21 +42,33 @@ app.get(
 	},
 );
 
-app.get("/", (_req, res) => {
-	res.status(200).send("OK");
-});
-
-app.use("/users", createUsersController(usersService));
+app.use("/users", express.json(), createUsersController(usersService));
 
 app.use(
 	"/onboarding",
+	express.json(),
 	createOnboardingController(onboardingService, requireAuth),
 );
 
-app.use("/articles", createArticlesController(articlesService, requireAuth));
+app.use(
+	"/articles",
+	express.json(),
+	createArticlesController(articlesService, requireAuth),
+);
+
+app.use(createWebProxy(env.WEB_INTERNAL_URL));
 
 app.use(errorHandler);
 
-app.listen(3000, () => {
-	console.log("Server is running on http://localhost:3000");
+async function start() {
+	await runMigrations();
+
+	app.listen(env.PORT, () => {
+		console.log(`Server is running on http://localhost:${env.PORT}`);
+	});
+}
+
+start().catch((error) => {
+	console.error("Failed to run migrations", error);
+	process.exit(1);
 });
