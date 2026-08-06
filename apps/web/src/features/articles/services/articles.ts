@@ -3,6 +3,7 @@ import { env } from "@arxio/env/web";
 import type {
 	Article,
 	ArticleInput,
+	ArticleListFilters,
 	AuthorSummary,
 } from "@/features/articles/types/article.types";
 
@@ -17,8 +18,10 @@ function apiUrl(): string {
 	return env.NEXT_PUBLIC_SERVER_URL;
 }
 
-export function getArticles(): Promise<Article[]> {
-	return articlesApi.fetchArticles(apiUrl());
+export function getArticles(
+	filters: ArticleListFilters = {},
+): Promise<Article[]> {
+	return articlesApi.fetchArticles(apiUrl(), filters);
 }
 
 export function getArticleById(id: string): Promise<Article | null> {

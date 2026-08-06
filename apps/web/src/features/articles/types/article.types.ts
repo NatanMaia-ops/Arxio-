@@ -12,6 +12,10 @@ export type ArticleInput = {
 	content: string;
 };
 
+export type ArticleListFilters = {
+	authorId?: string;
+};
+
 export type AuthorSummary = {
 	id: string;
 	name: string;

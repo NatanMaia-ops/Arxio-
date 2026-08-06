@@ -39,7 +39,7 @@ describe("Articles API", () => {
 			Response.json([articlePayload]),
 		);
 
-		const articles = await fetchArticles("http://localhost:3000/", fetcher);
+		const articles = await fetchArticles("http://localhost:3000/", {}, fetcher);
 
 		assert.equal(articles.length, 1);
 		assert.equal(articles[0]?.title, articlePayload.title);
@@ -53,7 +53,7 @@ describe("Articles API", () => {
 		const fetcher = async () => Response.json([{ id: "not-a-uuid" }]);
 
 		await assert.rejects(
-			fetchArticles("http://localhost:3000", fetcher),
+			fetchArticles("http://localhost:3000", {}, fetcher),
 			/Invalid articles response/,
 		);
 	});
@@ -62,8 +62,26 @@ describe("Articles API", () => {
 		const fetcher = async () => new Response(null, { status: 503 });
 
 		await assert.rejects(
-			fetchArticles("http://localhost:3000", fetcher),
+			fetchArticles("http://localhost:3000", {}, fetcher),
 			/Failed to fetch articles/,
+		);
+	});
+
+	it("lists articles filtered by author id", async () => {
+		const { requests, fetcher } = recorder(() =>
+			Response.json([articlePayload]),
+		);
+
+		const articles = await fetchArticles(
+			"http://localhost:3000",
+			{ authorId: articlePayload.authorId },
+			fetcher,
+		);
+
+		assert.equal(articles.length, 1);
+		assert.equal(
+			requests[0]?.input,
+			`http://localhost:3000/articles?authorId=${articlePayload.authorId}`,
 		);
 	});
 
