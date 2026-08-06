@@ -1,6 +1,5 @@
 "use client";
 
-import { env } from "@arxio/env/web";
 import { Button } from "@arxio/ui/components/button";
 import { Input } from "@arxio/ui/components/input";
 import { Label } from "@arxio/ui/components/label";
@@ -13,6 +12,7 @@ import {
 	OnboardingApiError,
 	submitOnboarding,
 } from "@/features/onboarding/services/onboarding-api";
+import { apiBaseUrl } from "@/lib/api-base-url";
 
 type LoadingState = "loading" | "ready" | "error";
 type Submission = "complete" | "skip" | null;
@@ -45,7 +45,7 @@ export function OnboardingForm() {
 		setLoadingState("loading");
 
 		try {
-			const state = await fetchOnboardingState(env.NEXT_PUBLIC_SERVER_URL);
+			const state = await fetchOnboardingState(apiBaseUrl());
 
 			if (state.completed) {
 				router.replace("/feed");
@@ -97,7 +97,7 @@ export function OnboardingForm() {
 		setSubmission(skipAcademicFields ? "skip" : "complete");
 
 		try {
-			await submitOnboarding(env.NEXT_PUBLIC_SERVER_URL, {
+			await submitOnboarding(apiBaseUrl(), {
 				name: normalizedName,
 				course: skipAcademicFields ? null : normalizeOptionalText(course),
 				semester:

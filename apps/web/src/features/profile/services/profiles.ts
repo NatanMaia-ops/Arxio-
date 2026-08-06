@@ -1,24 +1,15 @@
-import { env } from "@arxio/env/web";
-
 import type {
 	OwnAccount,
 	PublicProfile,
 	UpdateProfileInput,
 } from "@/features/profile/types/profile.types";
+import { apiBaseUrl as apiUrl } from "@/lib/api-base-url";
 
 import {
 	fetchOwnAccount,
 	fetchPublicProfileById,
 	updateOwnProfile,
 } from "./profile-api";
-
-function apiUrl(): string {
-	if (typeof window === "undefined") {
-		return process.env.SERVER_INTERNAL_URL || env.NEXT_PUBLIC_SERVER_URL;
-	}
-
-	return env.NEXT_PUBLIC_SERVER_URL;
-}
 
 export function getPublicProfileById(
 	id: string,

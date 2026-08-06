@@ -1,22 +1,13 @@
-import { env } from "@arxio/env/web";
-
 import type {
 	Article,
 	ArticleInput,
 	ArticleListFilters,
 	AuthorSummary,
 } from "@/features/articles/types/article.types";
+import { apiBaseUrl as apiUrl } from "@/lib/api-base-url";
 
 import * as articlesApi from "./articles-api";
 import { fetchAuthorSummary } from "./authors-api";
-
-function apiUrl(): string {
-	if (typeof window === "undefined") {
-		return process.env.SERVER_INTERNAL_URL || env.NEXT_PUBLIC_SERVER_URL;
-	}
-
-	return env.NEXT_PUBLIC_SERVER_URL;
-}
 
 export function getArticles(
 	filters: ArticleListFilters = {},

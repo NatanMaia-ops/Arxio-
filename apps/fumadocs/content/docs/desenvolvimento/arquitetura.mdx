@@ -46,13 +46,20 @@ o editor, os formulários, o alternador de tema e tudo que depende de saber
 quem está logado. Esses fazem a chamada à API a partir do navegador, levando
 o cookie de sessão.
 
-<Callout title="Dois endereços para a mesma API">
-  Essa divisão entre servidor e navegador tem uma consequência prática no
-  Docker. O navegador alcança a API em `localhost:3000`, que é a porta
-  publicada no host. O Next, rodando dentro do container, precisa usar
-  `server:3000`, o nome do serviço na rede do compose. Por isso existem duas
-  variáveis: `NEXT_PUBLIC_SERVER_URL` para o navegador e
-  `SERVER_INTERNAL_URL` para o servidor.
+<Callout title="Uma origem só em produção">
+  Em produção o web e o server rodam no mesmo container, atrás do mesmo
+  endereço: o Express é a porta de entrada e repassa ao Next tudo que não for
+  rota de API. O navegador chama a API por caminho relativo, e o Next, quando
+  renderiza no servidor, chama `127.0.0.1:3000` direto.
+
+  Isso existe para o login funcionar em todo navegador. Enquanto o web e o
+  server tinham endereços diferentes, o cookie do Auth.js era um cookie de
+  terceiro, e Safari, iPhone e aba anônima o bloqueavam. O histórico está em
+  `docs/LOGIN_COOKIES_CROSS_SITE.md`.
+
+  No desenvolvimento fora do Docker os dois continuam separados — Next em
+  `:3001` e Express em `:3000` — e aí o navegador usa
+  `NEXT_PUBLIC_SERVER_URL` para achar a API.
 </Callout>
 
 ## Organização do frontend
