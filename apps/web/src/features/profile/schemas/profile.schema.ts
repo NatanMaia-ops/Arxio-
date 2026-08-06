@@ -30,8 +30,10 @@ export const academicProfileSchema = z.object({
 	institution: z.string().nullable(),
 });
 
+export const profileIdSchema = z.uuid();
+
 export const publicProfileSchema = z.object({
-	id: z.uuid(),
+	id: profileIdSchema,
 	name: z.string(),
 	bio: z.string().nullable(),
 	avatarUrl: z.string().nullable(),
