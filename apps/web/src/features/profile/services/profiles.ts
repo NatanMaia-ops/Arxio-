@@ -1,8 +1,16 @@
 import { env } from "@arxio/env/web";
 
-import type { PublicProfile } from "@/features/profile/types/profile.types";
+import type {
+	OwnAccount,
+	PublicProfile,
+	UpdateProfileInput,
+} from "@/features/profile/types/profile.types";
 
-import { fetchPublicProfileById } from "./profile-api";
+import {
+	fetchOwnAccount,
+	fetchPublicProfileById,
+	updateOwnProfile,
+} from "./profile-api";
 
 function apiUrl(): string {
 	if (typeof window === "undefined") {
@@ -16,4 +24,12 @@ export function getPublicProfileById(
 	id: string,
 ): Promise<PublicProfile | null> {
 	return fetchPublicProfileById(apiUrl(), id);
+}
+
+export function getOwnAccount(): Promise<OwnAccount> {
+	return fetchOwnAccount(apiUrl());
+}
+
+export function saveOwnProfile(input: UpdateProfileInput): Promise<OwnAccount> {
+	return updateOwnProfile(apiUrl(), input);
 }
