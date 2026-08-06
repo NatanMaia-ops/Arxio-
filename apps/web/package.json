@@ -6,7 +6,7 @@
 		"dev": "next dev --port 3001",
 		"build": "next build",
 		"start": "next start",
-		"test": "tsx --test src/features/**/*.test.ts"
+		"test": "tsx --test \"src/features/**/*.test.ts\""
 	},
 	"dependencies": {
 		"@arxio/env": "*",

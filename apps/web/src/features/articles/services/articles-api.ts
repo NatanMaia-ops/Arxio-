@@ -5,6 +5,7 @@ import {
 import type {
 	Article,
 	ArticleInput,
+	ArticleListFilters,
 } from "@/features/articles/types/article.types";
 
 export type ArticleFetch = (
@@ -48,9 +49,16 @@ async function readErrorMessage(
 
 export async function fetchArticles(
 	serverUrl: string,
+	filters: ArticleListFilters = {},
 	fetcher: ArticleFetch = fetch,
 ): Promise<Article[]> {
-	const response = await fetcher(articlesUrl(serverUrl), {
+	const query = new URLSearchParams();
+
+	if (filters.authorId) query.set("authorId", filters.authorId);
+
+	const queryString = query.toString();
+	const url = `${articlesUrl(serverUrl)}${queryString ? `?${queryString}` : ""}`;
+	const response = await fetcher(url, {
 		credentials: "include",
 		cache: "no-store",
 	});
