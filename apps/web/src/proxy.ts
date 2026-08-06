@@ -5,6 +5,7 @@ import { checkPublicProfileAvailability } from "@/features/profile/services/prof
 
 const PROFILE_PATH_PREFIX = "/perfil/";
 const PROFILE_NOT_FOUND_PATH = "/perfil/nao-encontrado";
+const PROFILE_EDIT_PATH = "/perfil/editar";
 const AVAILABILITY_TIMEOUT_MS = 3_000;
 
 function rewriteToProfileNotFound(request: NextRequest) {
@@ -18,6 +19,7 @@ function rewriteToProfileNotFound(request: NextRequest) {
 export async function proxy(request: NextRequest) {
 	if (
 		request.nextUrl.pathname === PROFILE_NOT_FOUND_PATH ||
+		request.nextUrl.pathname === PROFILE_EDIT_PATH ||
 		(request.method !== "GET" && request.method !== "HEAD")
 	) {
 		return NextResponse.next();

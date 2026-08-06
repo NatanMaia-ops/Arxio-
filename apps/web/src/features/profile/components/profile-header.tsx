@@ -3,6 +3,8 @@ import { CalendarDays } from "lucide-react";
 import type { PublicProfile } from "@/features/profile/types/profile.types";
 import { getInitials } from "@/lib/initials";
 
+import { ProfileOwnerActions } from "./profile-owner-actions";
+
 const joinedAtFormatter = new Intl.DateTimeFormat("pt-BR", {
 	month: "long",
 	year: "numeric",
@@ -58,6 +60,8 @@ export function ProfileHeader({ profile }: { profile: PublicProfile }) {
 					<CalendarDays className="size-4 shrink-0" aria-hidden="true" />
 					Na Arxio desde {joinedAtFormatter.format(profile.createdAt)}
 				</p>
+
+				<ProfileOwnerActions profileId={profile.id} />
 			</div>
 		</header>
 	);
