@@ -1,5 +1,6 @@
 "use client";
 
+import type { Route } from "next";
 import { useRouter } from "next/navigation";
 import { type ReactNode, useEffect, useState } from "react";
 
@@ -17,7 +18,7 @@ export function LoginGuard({ children }: { children: ReactNode }) {
 				if (!isActive) return;
 
 				if (session) {
-					router.replace("/feed");
+					router.replace("/onboarding" as Route);
 					return;
 				}
 
