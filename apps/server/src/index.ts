@@ -49,7 +49,7 @@ app.use(
 );
 
 app.use(
-	"/onboarding",
+	"/api/onboarding",
 	express.json(),
 	createOnboardingController(onboardingService, requireAuth),
 );

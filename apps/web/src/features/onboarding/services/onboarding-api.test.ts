@@ -29,7 +29,7 @@ describe("Onboarding API", () => {
 		const state = await fetchOnboardingState("http://localhost:3000/", fetcher);
 
 		assert.deepEqual(state, onboardingState);
-		assert.equal(requests[0]?.input, "http://localhost:3000/onboarding");
+		assert.equal(requests[0]?.input, "http://localhost:3000/api/onboarding");
 		assert.deepEqual(requests[0]?.init, {
 			credentials: "include",
 			cache: "no-store",
@@ -61,7 +61,7 @@ describe("Onboarding API", () => {
 
 		const request = requests[0];
 		assert.ok(request);
-		assert.equal(request.input, "http://localhost:3000/onboarding");
+		assert.equal(request.input, "http://localhost:3000/api/onboarding");
 		assert.equal(request.init?.method, "PUT");
 		assert.equal(request.init?.credentials, "include");
 		assert.equal(request.init?.body, JSON.stringify(input));

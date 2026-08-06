@@ -40,7 +40,7 @@ export class OnboardingApiError extends Error {
 }
 
 function onboardingUrl(serverUrl: string): string {
-	return `${serverUrl.replace(/\/$/, "")}/onboarding`;
+	return `${serverUrl.replace(/\/$/, "")}/api/onboarding`;
 }
 
 async function parseOnboardingResponse(
