@@ -6,14 +6,22 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@arxio/ui/components/dropdown-menu";
-import { LoaderCircle, LogOut } from "lucide-react";
+import { LoaderCircle, LogOut, UserRound } from "lucide-react";
+import type { Route } from "next";
+import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 
 import { signOut } from "@/features/auth/services/sign-out";
 import { getInitials } from "@/lib/initials";
 
-export function UserMenu({ name }: { name: string | null }) {
+export function UserMenu({
+	userId,
+	name,
+}: {
+	userId: string;
+	name: string | null;
+}) {
 	const [isSigningOut, setIsSigningOut] = useState(false);
 
 	async function handleSignOut() {
@@ -50,6 +58,14 @@ export function UserMenu({ name }: { name: string | null }) {
 						{name}
 					</p>
 				) : null}
+
+				<DropdownMenuItem
+					render={<Link href={`/perfil/${userId}` as Route} />}
+					className="cursor-pointer rounded-md px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-inset"
+				>
+					<UserRound aria-hidden="true" />
+					Meu perfil
+				</DropdownMenuItem>
 
 				<DropdownMenuItem
 					onClick={handleSignOut}
