@@ -40,7 +40,10 @@ export function HeaderAuth() {
 	return (
 		<div className="flex h-9.5 min-w-9 shrink-0 items-center justify-end">
 			{state.status === "authenticated" && (
-				<UserMenu name={state.session.user.name} />
+				<UserMenu
+					userId={state.session.user.id}
+					name={state.session.user.name}
+				/>
 			)}
 
 			{state.status === "unauthenticated" && (

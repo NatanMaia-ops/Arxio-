@@ -1,5 +1,5 @@
 import { ArrowLeft } from "lucide-react";
-import type { Metadata } from "next";
+import type { Metadata, Route } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -92,8 +92,15 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 					</h1>
 
 					<div className="mt-6 flex flex-col gap-4 border-ax-line border-b pb-6 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-						<span className="font-medium text-ax-ink-soft text-sm leading-5">
-							{authorName} · {readTimeMinutes} min de leitura
+						<span className="flex flex-wrap items-center gap-x-1 font-medium text-ax-ink-soft text-sm leading-5">
+							<Link
+								href={`/perfil/${article.authorId}` as Route}
+								className="rounded-sm transition-colors hover:text-ax-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
+							>
+								{authorName}
+							</Link>
+							<span aria-hidden="true">·</span>
+							<span>{readTimeMinutes} min de leitura</span>
 						</span>
 
 						<ArticleOwnerActions
