@@ -14,7 +14,7 @@ export function LoginCard() {
 		setIsSubmitting(true);
 
 		try {
-			await signInWithGoogle(`${window.location.origin}/feed`);
+			await signInWithGoogle(`${window.location.origin}/onboarding`);
 		} catch {
 			setIsSubmitting(false);
 			toast.error("Não foi possível iniciar o login. Tente novamente.");
