@@ -448,6 +448,7 @@ que recriar o serviço agora é rápido.
 
 | Arquivo | O que é |
 |---|---|
+| `docs/DEPLOY_AWS_DIARIO_DE_BORDO.md` | o que deu errado no deploy real, a causa de cada caso e como diagnosticar |
 | `deploy/aws/README.md` | referência curta: endereços, variáveis, publicar versão |
 | `deploy/aws/create-service.sh` | cria ou atualiza o serviço App Runner |
 | `deploy/aws/apprunner-*.json` | políticas de confiança e permissão das roles |
