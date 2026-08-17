@@ -1,4 +1,5 @@
 import { ConflictError, NotFoundError } from "../../../shared/errors";
+
 import type { ArticleRepository } from "../../articles/repositories/article-repository";
 import type { Like } from "../entities/like.entity";
 import type { LikeRepository } from "../repositories/like-repository";
@@ -16,19 +17,22 @@ export class LikeService {
 			throw new NotFoundError("Artigo nao encontrado");
 		}
 
-		const existing = await this.likes.findByArticleAndUser(articleId, userId);
+		const existingLike = await this.likes.findByArticleAndUser(
+			articleId,
+			userId,
+		);
 
-		if (existing) {
-			throw new ConflictError("Voce ja curtiu este artigo");
+		if (existingLike) {
+			throw new ConflictError("Artigo ja curtido");
 		}
 
 		return this.likes.create({ articleId, userId });
 	}
 
 	async unlikeArticle(articleId: string, userId: string): Promise<void> {
-		const existing = await this.likes.findByArticleAndUser(articleId, userId);
+		const like = await this.likes.findByArticleAndUser(articleId, userId);
 
-		if (!existing) {
+		if (!like) {
 			throw new NotFoundError("Curtida nao encontrada");
 		}
 
@@ -40,8 +44,7 @@ export class LikeService {
 	}
 
 	async hasUserLiked(articleId: string, userId: string): Promise<boolean> {
-		const existing = await this.likes.findByArticleAndUser(articleId, userId);
-
-		return existing !== null;
+		const like = await this.likes.findByArticleAndUser(articleId, userId);
+		return like !== null;
 	}
 }

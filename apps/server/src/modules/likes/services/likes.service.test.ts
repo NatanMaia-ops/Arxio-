@@ -1,174 +1,191 @@
 import assert from "node:assert/strict";
-import crypto from "node:crypto";
 import { describe, it } from "node:test";
-import { ConflictError, NotFoundError } from "../../../shared/errors";
-import type { Article } from "../../articles/entities/article.entity";
-import type { ArticleRepository } from "../../articles/repositories/article-repository";
-import type { Like } from "../entities/like.entity";
-import type { LikeRepository } from "../repositories/like-repository";
 
+import { ConflictError, NotFoundError } from "../../../shared/errors";
+
+import type { Article } from "../../articles/entities/article.entity";
+import type {
+	ArticleRepository,
+	CreateArticleInput,
+	ListArticlesFilters,
+	UpdateArticleInput,
+} from "../../articles/repositories/article-repository";
+import type { Like } from "../entities/like.entity";
+import type {
+	CreateLikeInput,
+	LikeRepository,
+} from "../repositories/like-repository";
 import { LikeService } from "./likes.service";
 
-const fakeArticleId = "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d";
-const fakeUserId = "b2c3d4e5-f6a7-4b5c-8d9e-0f1a2b3c4d5e";
-const otherUserId = "c3d4e5f6-a7b8-4c5d-9e0f-1a2b3c4d5e6f";
+const articleId = "11111111-1111-4111-8111-111111111111";
+const userId = "22222222-2222-4222-8222-222222222222";
+const otherUserId = "33333333-3333-4333-8333-333333333333";
 
-function createFakeArticleRepository(articles: Article[]): ArticleRepository {
+function createArticle(id: string): Article {
 	return {
-		async create() {
-			throw new Error("not implemented");
+		id,
+		authorId: "44444444-4444-4444-8444-444444444444",
+		title: "Test article",
+		content: "Test content",
+		createdAt: new Date("2026-01-01T00:00:00.000Z"),
+		updatedAt: new Date("2026-01-01T00:00:00.000Z"),
+	};
+}
+
+function createArticleRepository(
+	initialArticles: Article[] = [],
+): ArticleRepository {
+	const articles = new Map(
+		initialArticles.map((article) => [article.id, article]),
+	);
+
+	return {
+		async create(input: CreateArticleInput) {
+			const article = createArticle(`article-${articles.size + 1}`);
+			Object.assign(article, input);
+			articles.set(article.id, article);
+			return article;
 		},
-		async findById(id) {
-			return articles.find((article) => article.id === id) ?? null;
+		async findById(id: string) {
+			return articles.get(id) ?? null;
 		},
-		async findAll() {
-			return articles;
+		async findAll(filters: ListArticlesFilters = {}) {
+			return [...articles.values()].filter(
+				(article) => !filters.authorId || article.authorId === filters.authorId,
+			);
 		},
-		async update() {
-			throw new Error("not implemented");
+		async update(id: string, input: UpdateArticleInput) {
+			const article = articles.get(id);
+			if (!article) return null;
+			const updated = { ...article, ...input };
+			articles.set(id, updated);
+			return updated;
 		},
-		async delete() {
-			throw new Error("not implemented");
+		async delete(id: string) {
+			articles.delete(id);
 		},
 	};
 }
 
-function createFakeLikeRepository(): LikeRepository {
-	const store: Like[] = [];
+function createLikeRepository(initialLikes: Like[] = []): LikeRepository {
+	const likes = new Map(
+		initialLikes.map((like) => [`${like.articleId}:${like.userId}`, like]),
+	);
 
 	return {
-		async create(input) {
+		async create(input: CreateLikeInput) {
 			const like: Like = {
-				id: crypto.randomUUID(),
-				articleId: input.articleId,
-				userId: input.userId,
-				createdAt: new Date(),
+				id: `like-${likes.size + 1}`,
+				...input,
+				createdAt: new Date("2026-01-01T00:00:00.000Z"),
 			};
-
-			store.push(like);
-
+			likes.set(`${input.articleId}:${input.userId}`, like);
 			return like;
 		},
-		async findByArticleAndUser(articleId, userId) {
-			return (
-				store.find(
-					(like) => like.articleId === articleId && like.userId === userId,
-				) ?? null
-			);
+		async findByArticleAndUser(requestedArticleId, requestedUserId) {
+			return likes.get(`${requestedArticleId}:${requestedUserId}`) ?? null;
 		},
-		async countByArticle(articleId) {
-			return store.filter((like) => like.articleId === articleId).length;
+		async countByArticle(requestedArticleId) {
+			return [...likes.values()].filter(
+				(like) => like.articleId === requestedArticleId,
+			).length;
 		},
-		async delete(articleId, userId) {
-			const index = store.findIndex(
-				(like) => like.articleId === articleId && like.userId === userId,
-			);
-
-			if (index !== -1) {
-				store.splice(index, 1);
-			}
+		async delete(requestedArticleId, requestedUserId) {
+			likes.delete(`${requestedArticleId}:${requestedUserId}`);
 		},
 	};
 }
 
-const existingArticle: Article = {
-	id: fakeArticleId,
-	authorId: otherUserId,
-	title: "Artigo existente",
-	content: "Conteudo",
-	createdAt: new Date(),
-	updatedAt: new Date(),
-};
+function createLike(overrides: Partial<Like> = {}): Like {
+	return {
+		id: "55555555-5555-4555-8555-555555555555",
+		articleId,
+		userId,
+		createdAt: new Date("2026-01-01T00:00:00.000Z"),
+		...overrides,
+	};
+}
 
 describe("LikeService", () => {
-	it("likes an article", async () => {
+	it("likes an existing article", async () => {
+		const likes = createLikeRepository();
 		const service = new LikeService(
-			createFakeLikeRepository(),
-			createFakeArticleRepository([existingArticle]),
+			likes,
+			createArticleRepository([createArticle(articleId)]),
 		);
 
-		const like = await service.likeArticle(fakeArticleId, fakeUserId);
+		const like = await service.likeArticle(articleId, userId);
 
-		assert.equal(like.articleId, fakeArticleId);
-		assert.equal(like.userId, fakeUserId);
+		assert.equal(like.articleId, articleId);
+		assert.equal(like.userId, userId);
+		assert.deepEqual(await likes.findByArticleAndUser(articleId, userId), like);
 	});
 
-	it("throws NotFoundError when the article does not exist", async () => {
+	it("does not like a missing article", async () => {
 		const service = new LikeService(
-			createFakeLikeRepository(),
-			createFakeArticleRepository([]),
+			createLikeRepository(),
+			createArticleRepository(),
 		);
 
-		await assert.rejects(
-			() => service.likeArticle(fakeArticleId, fakeUserId),
-			NotFoundError,
-		);
+		await assert.rejects(service.likeArticle(articleId, userId), NotFoundError);
 	});
 
-	it("throws ConflictError when the user already liked the article", async () => {
+	it("does not like the same article twice", async () => {
 		const service = new LikeService(
-			createFakeLikeRepository(),
-			createFakeArticleRepository([existingArticle]),
+			createLikeRepository([createLike()]),
+			createArticleRepository([createArticle(articleId)]),
 		);
 
-		await service.likeArticle(fakeArticleId, fakeUserId);
-
-		await assert.rejects(
-			() => service.likeArticle(fakeArticleId, fakeUserId),
-			ConflictError,
-		);
+		await assert.rejects(service.likeArticle(articleId, userId), ConflictError);
 	});
 
 	it("unlikes an article", async () => {
-		const service = new LikeService(
-			createFakeLikeRepository(),
-			createFakeArticleRepository([existingArticle]),
-		);
+		const likes = createLikeRepository([createLike()]);
+		const service = new LikeService(likes, createArticleRepository());
 
-		await service.likeArticle(fakeArticleId, fakeUserId);
-		await service.unlikeArticle(fakeArticleId, fakeUserId);
+		await service.unlikeArticle(articleId, userId);
 
-		const liked = await service.hasUserLiked(fakeArticleId, fakeUserId);
-
-		assert.equal(liked, false);
+		assert.equal(await likes.findByArticleAndUser(articleId, userId), null);
 	});
 
-	it("throws NotFoundError when unliking something not liked", async () => {
+	it("does not unlike an article without an existing like", async () => {
 		const service = new LikeService(
-			createFakeLikeRepository(),
-			createFakeArticleRepository([existingArticle]),
+			createLikeRepository(),
+			createArticleRepository(),
 		);
 
 		await assert.rejects(
-			() => service.unlikeArticle(fakeArticleId, fakeUserId),
+			service.unlikeArticle(articleId, userId),
 			NotFoundError,
 		);
 	});
 
-	it("counts likes for an article", async () => {
+	it("counts article likes", async () => {
 		const service = new LikeService(
-			createFakeLikeRepository(),
-			createFakeArticleRepository([existingArticle]),
+			createLikeRepository([
+				createLike(),
+				createLike({
+					id: "66666666-6666-4666-8666-666666666666",
+					userId: otherUserId,
+				}),
+				createLike({
+					id: "77777777-7777-4777-8777-777777777777",
+					articleId: "88888888-8888-4888-8888-888888888888",
+				}),
+			]),
+			createArticleRepository(),
 		);
 
-		await service.likeArticle(fakeArticleId, fakeUserId);
-		await service.likeArticle(fakeArticleId, otherUserId);
-
-		const count = await service.getLikesCount(fakeArticleId);
-
-		assert.equal(count, 2);
+		assert.equal(await service.getLikesCount(articleId), 2);
 	});
 
 	it("checks whether a user liked an article", async () => {
 		const service = new LikeService(
-			createFakeLikeRepository(),
-			createFakeArticleRepository([existingArticle]),
+			createLikeRepository([createLike()]),
+			createArticleRepository(),
 		);
 
-		assert.equal(await service.hasUserLiked(fakeArticleId, fakeUserId), false);
-
-		await service.likeArticle(fakeArticleId, fakeUserId);
-
-		assert.equal(await service.hasUserLiked(fakeArticleId, fakeUserId), true);
+		assert.equal(await service.hasUserLiked(articleId, userId), true);
+		assert.equal(await service.hasUserLiked(articleId, otherUserId), false);
 	});
 });
