@@ -44,12 +44,12 @@ export const drizzleLikeRepository: LikeRepository = {
 	},
 
 	async countByArticle(articleId: string) {
-		const [row] = await db
-			.select({ value: count() })
+		const [result] = await db
+			.select({ count: count() })
 			.from(likes)
 			.where(eq(likes.articleId, articleId));
 
-		return row?.value ?? 0;
+		return result?.count ?? 0;
 	},
 
 	async delete(articleId: string, userId: string) {
