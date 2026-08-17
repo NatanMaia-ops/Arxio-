@@ -54,6 +54,28 @@ describe("buildCommentTree", () => {
 		assert.equal(tree[0]?.children[0]?.children[0]?.id, "c");
 	});
 
+	it("treats a comment that references itself as a root", () => {
+		const comments = [createComment({ id: "a", parentId: "a" })];
+
+		const tree = buildCommentTree(comments);
+
+		assert.equal(tree.length, 1);
+		assert.deepEqual(tree[0]?.children, []);
+	});
+
+	it("breaks a mutual cycle between two comments without infinite recursion", () => {
+		const comments = [
+			createComment({ id: "a", parentId: "b" }),
+			createComment({ id: "b", parentId: "a" }),
+		];
+
+		const tree = buildCommentTree(comments);
+
+		assert.equal(tree.length, 2);
+		assert.deepEqual(tree[0]?.children, []);
+		assert.deepEqual(tree[1]?.children, []);
+	});
+
 	it("treats a reply to a missing parent as a root", () => {
 		const comments = [createComment({ id: "b", parentId: "missing" })];
 

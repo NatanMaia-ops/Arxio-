@@ -2,6 +2,23 @@ import type { Comment } from "@/features/comments/types/comment.types";
 
 export type CommentNode = Comment & { children: CommentNode[] };
 
+function isInAncestorCycle(
+	nodes: Map<string, CommentNode>,
+	id: string,
+): boolean {
+	const visited = new Set<string>();
+	let current: string | null = id;
+
+	while (current) {
+		if (visited.has(current)) return true;
+
+		visited.add(current);
+		current = nodes.get(current)?.parentId ?? null;
+	}
+
+	return false;
+}
+
 export function buildCommentTree(comments: Comment[]): CommentNode[] {
 	const nodes = new Map<string, CommentNode>();
 
@@ -16,9 +33,12 @@ export function buildCommentTree(comments: Comment[]): CommentNode[] {
 
 		if (!node) continue;
 
-		const parent = comment.parentId ? nodes.get(comment.parentId) : undefined;
+		const parent =
+			comment.parentId && comment.parentId !== comment.id
+				? nodes.get(comment.parentId)
+				: undefined;
 
-		if (parent) {
+		if (parent && !isInAncestorCycle(nodes, comment.id)) {
 			parent.children.push(node);
 		} else {
 			roots.push(node);
