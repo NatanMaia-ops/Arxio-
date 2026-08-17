@@ -13,6 +13,7 @@ import { ArticleViewer } from "@/features/articles/components/article-viewer";
 import { ArticlesUnavailable } from "@/features/articles/components/articles-unavailable";
 import { resolveAuthorName } from "@/features/articles/services/article-listing";
 import { getArticleById } from "@/features/articles/services/articles";
+import { CommentsSection } from "@/features/comments/components/comments-section";
 import { LikeButton } from "@/features/likes/components/like-button";
 
 export const dynamic = "force-dynamic";
@@ -117,6 +118,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 					<div className="mt-8">
 						<ArticleViewer content={article.content} />
 					</div>
+
+					<CommentsSection articleId={article.id} />
 				</article>
 			</main>
 		</div>

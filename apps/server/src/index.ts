@@ -11,6 +11,11 @@ import {
 	requireAuth,
 } from "./modules/auth/auth.module";
 import type { AuthenticatedLocals } from "./modules/auth/http/auth.middleware";
+import { commentsService } from "./modules/comments/comments.module";
+import {
+	createArticleCommentsController,
+	createCommentsController,
+} from "./modules/comments/http/comments.controller";
 import { createLikesController } from "./modules/likes/http/likes.controller";
 import { likesService } from "./modules/likes/likes.module";
 import {
@@ -70,6 +75,18 @@ app.use(
 	"/articles/:articleId/likes",
 	express.json(),
 	createLikesController(likesService, requireAuth, readSession),
+);
+
+app.use(
+	"/articles/:articleId/comments",
+	express.json(),
+	createArticleCommentsController(commentsService, requireAuth),
+);
+
+app.use(
+	"/comments",
+	express.json(),
+	createCommentsController(commentsService, requireAuth),
 );
 
 app.use(createWebProxy(env.WEB_INTERNAL_URL));
