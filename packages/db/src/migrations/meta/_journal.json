@@ -43,6 +43,13 @@
       "when": 1786993249938,
       "tag": "0005_create_likes_table",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1786995289748,
+      "tag": "0006_create_comments_table",
+      "breakpoints": true
     }
   ]
 }
