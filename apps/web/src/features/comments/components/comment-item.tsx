@@ -8,7 +8,7 @@ import {
 	formatAbsoluteDate,
 	formatPublishedDate,
 } from "@/features/articles/article-date";
-import type { CommentNode } from "@/features/comments/comment-tree";
+import type { FlatCommentNode } from "@/features/comments/comment-tree";
 import { getInitials } from "@/lib/initials";
 
 import { CommentForm } from "./comment-form";
@@ -17,10 +17,9 @@ import { DeleteCommentButton } from "./delete-comment-button";
 const MAX_INDENT_DEPTH = 4;
 
 type CommentItemProps = {
-	node: CommentNode;
+	node: FlatCommentNode;
 	authorNames: Map<string, string>;
 	currentUserId: string | null;
-	depth?: number;
 	onReply: (parentId: string, content: string) => Promise<void>;
 	onUpdate: (id: string, content: string) => Promise<void>;
 	onDelete: (id: string) => Promise<void>;
@@ -30,7 +29,6 @@ export function CommentItem({
 	node,
 	authorNames,
 	currentUserId,
-	depth = 0,
 	onReply,
 	onUpdate,
 	onDelete,
@@ -40,12 +38,12 @@ export function CommentItem({
 
 	const authorName = authorNames.get(node.authorId) ?? "Autor desconhecido";
 	const isOwner = currentUserId === node.authorId;
-	const indent = Math.min(depth, MAX_INDENT_DEPTH) * 24;
+	const indent = Math.min(node.depth, MAX_INDENT_DEPTH) * 24;
 
 	return (
 		<div
 			style={{ marginLeft: indent }}
-			className={depth > 0 ? "border-ax-line border-l pl-4" : undefined}
+			className={node.depth > 0 ? "border-ax-line border-l pl-4" : undefined}
 		>
 			<div className="flex gap-3 py-4">
 				<span
@@ -134,19 +132,6 @@ export function CommentItem({
 					) : null}
 				</div>
 			</div>
-
-			{node.children.map((child) => (
-				<CommentItem
-					key={child.id}
-					node={child}
-					authorNames={authorNames}
-					currentUserId={currentUserId}
-					depth={depth + 1}
-					onReply={onReply}
-					onUpdate={onUpdate}
-					onDelete={onDelete}
-				/>
-			))}
 		</div>
 	);
 }

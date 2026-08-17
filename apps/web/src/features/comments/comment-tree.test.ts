@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { buildCommentTree, collectDescendantIds } from "./comment-tree";
+import {
+	buildCommentTree,
+	collectDescendantIds,
+	flattenCommentTree,
+} from "./comment-tree";
 import type { Comment } from "./types/comment.types";
 
 function createComment(overrides: Partial<Comment> & { id: string }): Comment {
@@ -83,6 +87,63 @@ describe("buildCommentTree", () => {
 
 		assert.equal(tree.length, 1);
 		assert.equal(tree[0]?.id, "b");
+	});
+});
+
+describe("flattenCommentTree", () => {
+	it("assigns depth 0 to root comments", () => {
+		const tree = buildCommentTree([createComment({ id: "a" })]);
+
+		assert.deepEqual(
+			flattenCommentTree(tree).map((c) => c.depth),
+			[0],
+		);
+	});
+
+	it("assigns increasing depth to each nesting level", () => {
+		const tree = buildCommentTree([
+			createComment({ id: "a" }),
+			createComment({ id: "b", parentId: "a" }),
+			createComment({ id: "c", parentId: "b" }),
+		]);
+
+		assert.deepEqual(
+			flattenCommentTree(tree).map((c) => [c.id, c.depth]),
+			[
+				["a", 0],
+				["b", 1],
+				["c", 2],
+			],
+		);
+	});
+
+	it("keeps increasing depth for a long reply chain instead of resetting", () => {
+		const comments = Array.from({ length: 10 }, (_, index) =>
+			createComment({
+				id: `c${index}`,
+				parentId: index === 0 ? null : `c${index - 1}`,
+			}),
+		);
+
+		const flat = flattenCommentTree(buildCommentTree(comments));
+
+		assert.deepEqual(
+			flat.map((c) => c.depth),
+			Array.from({ length: 10 }, (_, index) => index),
+		);
+	});
+
+	it("does not nest the DOM-affecting fields, returning a flat array without children", () => {
+		const tree = buildCommentTree([
+			createComment({ id: "a" }),
+			createComment({ id: "b", parentId: "a" }),
+		]);
+
+		const flat = flattenCommentTree(tree);
+
+		for (const node of flat) {
+			assert.ok(!("children" in node));
+		}
 	});
 });
 

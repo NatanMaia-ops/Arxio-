@@ -48,6 +48,28 @@ export function buildCommentTree(comments: Comment[]): CommentNode[] {
 	return roots;
 }
 
+export type FlatCommentNode = Comment & { depth: number };
+
+export function flattenCommentTree(roots: CommentNode[]): FlatCommentNode[] {
+	const result: FlatCommentNode[] = [];
+
+	function visit(node: CommentNode, depth: number) {
+		const { children, ...comment } = node;
+
+		result.push({ ...comment, depth });
+
+		for (const child of children) {
+			visit(child, depth + 1);
+		}
+	}
+
+	for (const root of roots) {
+		visit(root, 0);
+	}
+
+	return result;
+}
+
 export function collectDescendantIds(
 	comments: Comment[],
 	id: string,

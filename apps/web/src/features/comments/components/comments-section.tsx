@@ -10,6 +10,7 @@ import { getSession } from "@/features/auth/services/get-session";
 import {
 	buildCommentTree,
 	collectDescendantIds,
+	flattenCommentTree,
 } from "@/features/comments/comment-tree";
 import {
 	editComment,
@@ -77,7 +78,10 @@ export function CommentsSection({ articleId }: { articleId: string }) {
 		};
 	}, [comments]);
 
-	const tree = useMemo(() => buildCommentTree(comments ?? []), [comments]);
+	const flatComments = useMemo(
+		() => flattenCommentTree(buildCommentTree(comments ?? [])),
+		[comments],
+	);
 
 	async function handleCreate(content: string, parentId?: string) {
 		try {
@@ -163,7 +167,7 @@ export function CommentsSection({ articleId }: { articleId: string }) {
 			</div>
 
 			<div className="mt-2 divide-y divide-ax-line">
-				{tree.map((node) => (
+				{flatComments.map((node) => (
 					<CommentItem
 						key={node.id}
 						node={node}
