@@ -13,6 +13,7 @@ import { ArticleViewer } from "@/features/articles/components/article-viewer";
 import { ArticlesUnavailable } from "@/features/articles/components/articles-unavailable";
 import { resolveAuthorName } from "@/features/articles/services/article-listing";
 import { getArticleById } from "@/features/articles/services/articles";
+import { LikeButton } from "@/features/likes/components/like-button";
 
 export const dynamic = "force-dynamic";
 
@@ -103,10 +104,14 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 							<span>{readTimeMinutes} min de leitura</span>
 						</span>
 
-						<ArticleOwnerActions
-							articleId={article.id}
-							authorId={article.authorId}
-						/>
+						<div className="flex shrink-0 items-center gap-2">
+							<LikeButton articleId={article.id} />
+
+							<ArticleOwnerActions
+								articleId={article.id}
+								authorId={article.authorId}
+							/>
+						</div>
 					</div>
 
 					<div className="mt-8">
