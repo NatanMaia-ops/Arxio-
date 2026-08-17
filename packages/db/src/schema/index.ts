@@ -6,3 +6,4 @@ export * from "./student-profile";
 export * from "./user";
 export * from "./user-role";
 export * from "./verification-token";
+export * from "./like";

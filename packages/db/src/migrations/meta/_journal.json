@@ -36,6 +36,13 @@
       "when": 1785178419496,
       "tag": "0004_update_student_profiles_for_onboarding",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1786993249938,
+      "tag": "0005_create_likes_table",
+      "breakpoints": true
     }
   ]
 }
