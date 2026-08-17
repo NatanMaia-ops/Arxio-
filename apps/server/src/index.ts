@@ -5,8 +5,14 @@ import express, { type Response } from "express";
 
 import { articlesService } from "./modules/articles/articles.module";
 import { createArticlesController } from "./modules/articles/http/articles.controller";
-import { authHandler, requireAuth } from "./modules/auth/auth.module";
+import {
+	authHandler,
+	readSession,
+	requireAuth,
+} from "./modules/auth/auth.module";
 import type { AuthenticatedLocals } from "./modules/auth/http/auth.middleware";
+import { createLikesController } from "./modules/likes/http/likes.controller";
+import { likesService } from "./modules/likes/likes.module";
 import {
 	createOnboardingController,
 	onboardingService,
@@ -58,6 +64,12 @@ app.use(
 	"/articles",
 	express.json(),
 	createArticlesController(articlesService, requireAuth),
+);
+
+app.use(
+	"/articles/:articleId/likes",
+	express.json(),
+	createLikesController(likesService, requireAuth, readSession),
 );
 
 app.use(createWebProxy(env.WEB_INTERNAL_URL));
