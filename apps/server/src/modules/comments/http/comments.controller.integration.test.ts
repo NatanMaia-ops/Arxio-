@@ -4,14 +4,13 @@ import type { Server } from "node:http";
 import { after, before, describe, it } from "node:test";
 
 import express from "express";
-import { ForbiddenError, NotFoundError } from "../../../shared/errors";
 import { errorHandler } from "../../../shared/http/error-handler";
+import type { Article } from "../../articles/entities/article.entity";
+import type { ArticleRepository } from "../../articles/repositories/article-repository";
 import { createRequireAuth } from "../../auth/http/auth.middleware";
 import type { Comment } from "../entities/comment.entity";
-import type {
-	CreateCommentInput,
-	UpdateCommentInput,
-} from "../repositories/comment-repository";
+import type { CommentRepository } from "../repositories/comment-repository";
+import { CommentService } from "../services/comments.service";
 
 import {
 	createArticleCommentsController,
@@ -24,24 +23,31 @@ const existingArticleId = "c3d4e5f6-a7b8-4c5d-9e0f-1a2b3c4d5e6f";
 const otherArticleId = "d4e5f6a7-b8c9-4d5e-9f0a-1b2c3d4e5f6a";
 const missingArticleId = "00000000-0000-0000-0000-000000000000";
 
-function createFakeCommentsService() {
+function createFakeArticleRepository(articles: Article[]): ArticleRepository {
+	return {
+		async create() {
+			throw new Error("not implemented");
+		},
+		async findById(id) {
+			return articles.find((article) => article.id === id) ?? null;
+		},
+		async findAll() {
+			return articles;
+		},
+		async update() {
+			throw new Error("not implemented");
+		},
+		async delete() {
+			throw new Error("not implemented");
+		},
+	};
+}
+
+function createFakeCommentRepository(): CommentRepository {
 	const store = new Map<string, Comment>();
-	const validArticleIds = new Set([existingArticleId, otherArticleId]);
 
 	return {
-		async createComment(input: CreateCommentInput): Promise<Comment> {
-			if (!validArticleIds.has(input.articleId)) {
-				throw new NotFoundError("Artigo nao encontrado");
-			}
-
-			if (input.parentId) {
-				const parent = store.get(input.parentId);
-
-				if (!parent || parent.articleId !== input.articleId) {
-					throw new NotFoundError("Comentario pai nao encontrado");
-				}
-			}
-
+		async create(input) {
 			const comment: Comment = {
 				id: crypto.randomUUID(),
 				articleId: input.articleId,
@@ -56,24 +62,18 @@ function createFakeCommentsService() {
 
 			return comment;
 		},
-		async listCommentsByArticle(articleId: string): Promise<Comment[]> {
-			return Array.from(store.values())
-				.filter((comment) => comment.articleId === articleId)
-				.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+		async findById(id) {
+			return store.get(id) ?? null;
 		},
-		async updateComment(
-			id: string,
-			authorId: string,
-			input: UpdateCommentInput,
-		): Promise<Comment> {
+		async findByArticle(articleId) {
+			return Array.from(store.values()).filter(
+				(comment) => comment.articleId === articleId,
+			);
+		},
+		async update(id, input) {
 			const comment = store.get(id);
 
-			if (!comment) throw new NotFoundError("Comentario nao encontrado");
-			if (comment.authorId !== authorId) {
-				throw new ForbiddenError(
-					"Voce nao tem permissao para editar este comentario",
-				);
-			}
+			if (!comment) return null;
 
 			const updated = {
 				...comment,
@@ -85,16 +85,7 @@ function createFakeCommentsService() {
 
 			return updated;
 		},
-		async deleteComment(id: string, authorId: string): Promise<void> {
-			const comment = store.get(id);
-
-			if (!comment) throw new NotFoundError("Comentario nao encontrado");
-			if (comment.authorId !== authorId) {
-				throw new ForbiddenError(
-					"Voce nao tem permissao para excluir este comentario",
-				);
-			}
-
+		async delete(id) {
 			store.delete(id);
 		},
 	};
@@ -107,10 +98,31 @@ function authenticatedSession(userId: string) {
 	});
 }
 
+const existingArticle: Article = {
+	id: existingArticleId,
+	authorId: otherUserId,
+	title: "Artigo existente",
+	content: "Conteudo",
+	createdAt: new Date(),
+	updatedAt: new Date(),
+};
+
+const otherArticle: Article = {
+	id: otherArticleId,
+	authorId: otherUserId,
+	title: "Outro artigo",
+	content: "Outro conteudo",
+	createdAt: new Date(),
+	updatedAt: new Date(),
+};
+
 describe("Comments HTTP API", () => {
 	let origin = "";
 	let server: Server;
-	const commentsService = createFakeCommentsService();
+	const commentsService = new CommentService(
+		createFakeCommentRepository(),
+		createFakeArticleRepository([existingArticle, otherArticle]),
+	);
 
 	before(async () => {
 		const app = express();
