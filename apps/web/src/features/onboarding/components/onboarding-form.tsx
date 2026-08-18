@@ -12,18 +12,22 @@ import {
 	OnboardingApiError,
 	submitOnboarding,
 } from "@/features/onboarding/services/onboarding-api";
-import { MAX_SEMESTER } from "@/lib/academic-profile";
+import {
+	COURSE_MAX_LENGTH,
+	INSTITUTION_MAX_LENGTH,
+	SEMESTERS,
+} from "@/lib/academic-profile";
 import { apiBaseUrl } from "@/lib/api-base-url";
+import { USER_NAME_MAX_LENGTH } from "@/lib/user-profile";
 
 import {
 	type AcademicFieldErrors,
 	validateAcademicFields,
+	validateUserName,
 } from "./onboarding-form.validation";
 
 type LoadingState = "loading" | "ready" | "error";
 type Submission = "complete" | "skip" | null;
-
-const semesters = Array.from({ length: MAX_SEMESTER }, (_, index) => index + 1);
 
 const fieldClassName =
 	"h-12 rounded-lg border border-ax-line-3 bg-ax-surface px-4 text-[15px] text-ax-ink shadow-none placeholder:text-ax-placeholder focus-visible:border-ax-ink focus-visible:ring-1 focus-visible:ring-ax-ink/20 md:text-[15px]";
@@ -75,20 +79,9 @@ export function OnboardingForm() {
 	}, [loadOnboarding]);
 
 	function validateName(): string | null {
-		const normalizedName = name.trim();
-
-		if (normalizedName.length < 2) {
-			setNameError("Informe um nome com pelo menos 2 caracteres.");
-			return null;
-		}
-
-		if (normalizedName.length > 150) {
-			setNameError("O nome deve ter no máximo 150 caracteres.");
-			return null;
-		}
-
-		setNameError(null);
-		return normalizedName;
+		const result = validateUserName(name);
+		setNameError(result.error);
+		return result.name;
 	}
 
 	function refreshAcademicErrors(nextValues: {
@@ -230,7 +223,7 @@ export function OnboardingForm() {
 							aria-describedby={nameError ? `${formId}-name-error` : undefined}
 							disabled={isSubmitting}
 							autoComplete="name"
-							maxLength={150}
+							maxLength={USER_NAME_MAX_LENGTH}
 							className={fieldClassName}
 						/>
 						{nameError && (
@@ -295,7 +288,7 @@ export function OnboardingForm() {
 										academicErrors.course ? `${formId}-course-error` : undefined
 									}
 									disabled={isSubmitting}
-									maxLength={150}
+									maxLength={COURSE_MAX_LENGTH}
 									placeholder="Ex.: Ciência da Computação"
 									className={fieldClassName}
 								/>
@@ -339,7 +332,7 @@ export function OnboardingForm() {
 									className={`${fieldClassName} w-full appearance-auto outline-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-1 aria-invalid:ring-destructive/20`}
 								>
 									<option value="">Selecione um período</option>
-									{semesters.map((value) => (
+									{SEMESTERS.map((value) => (
 										<option key={value} value={value}>
 											{value}º período
 										</option>
@@ -383,7 +376,7 @@ export function OnboardingForm() {
 										: undefined
 								}
 								disabled={isSubmitting}
-								maxLength={150}
+								maxLength={INSTITUTION_MAX_LENGTH}
 								placeholder="Ex.: UEPB — Campus VII"
 								className={fieldClassName}
 							/>

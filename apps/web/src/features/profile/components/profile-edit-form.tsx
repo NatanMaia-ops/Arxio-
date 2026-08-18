@@ -13,7 +13,12 @@ import {
 	saveOwnProfile,
 } from "@/features/profile/services/profiles";
 import type { OwnAccount } from "@/features/profile/types/profile.types";
-import { MAX_SEMESTER } from "@/lib/academic-profile";
+import {
+	COURSE_MAX_LENGTH,
+	INSTITUTION_MAX_LENGTH,
+	SEMESTERS,
+} from "@/lib/academic-profile";
+import { USER_BIO_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "@/lib/user-profile";
 
 import { ProfileAvatarEditor } from "./profile-avatar-editor";
 
@@ -180,7 +185,7 @@ export function ProfileEditForm() {
 						name="name"
 						type="text"
 						autoComplete="name"
-						maxLength={150}
+						maxLength={USER_NAME_MAX_LENGTH}
 						disabled={isSubmitting}
 						value={values.name}
 						onChange={(event) => updateValue("name", event.target.value)}
@@ -191,16 +196,16 @@ export function ProfileEditForm() {
 				</Field>
 
 				<Field
-					label="Biografia"
+					label="Sobre mim"
 					name="bio"
 					error={fieldErrors.bio}
-					hint="Até 500 caracteres."
+					hint={`Até ${USER_BIO_MAX_LENGTH} caracteres.`}
 				>
 					<textarea
 						id="bio"
 						name="bio"
 						rows={5}
-						maxLength={500}
+						maxLength={USER_BIO_MAX_LENGTH}
 						disabled={isSubmitting}
 						value={values.bio}
 						onChange={(event) => updateValue("bio", event.target.value)}
@@ -224,7 +229,7 @@ export function ProfileEditForm() {
 							id="institution"
 							name="institution"
 							type="text"
-							maxLength={150}
+							maxLength={INSTITUTION_MAX_LENGTH}
 							disabled={isSubmitting}
 							value={values.institution}
 							onChange={(event) =>
@@ -243,7 +248,7 @@ export function ProfileEditForm() {
 							id="course"
 							name="course"
 							type="text"
-							maxLength={150}
+							maxLength={COURSE_MAX_LENGTH}
 							disabled={isSubmitting}
 							value={values.course}
 							onChange={(event) => updateValue("course", event.target.value)}
@@ -253,14 +258,14 @@ export function ProfileEditForm() {
 						/>
 					</Field>
 
-					<Field label="Semestre" name="semester" error={fieldErrors.semester}>
-						<input
+					<Field
+						label="Período atual"
+						name="semester"
+						error={fieldErrors.semester}
+					>
+						<select
 							id="semester"
 							name="semester"
-							type="number"
-							inputMode="numeric"
-							min={1}
-							max={MAX_SEMESTER}
 							disabled={isSubmitting}
 							value={values.semester}
 							onChange={(event) => updateValue("semester", event.target.value)}
@@ -268,8 +273,15 @@ export function ProfileEditForm() {
 							aria-describedby={
 								fieldErrors.semester ? "semester-error" : undefined
 							}
-							className={inputClassName}
-						/>
+							className={`${inputClassName} appearance-auto`}
+						>
+							<option value="">Selecione um período</option>
+							{SEMESTERS.map((value) => (
+								<option key={value} value={value}>
+									{value}º período
+								</option>
+							))}
+						</select>
 					</Field>
 				</fieldset>
 			</div>
