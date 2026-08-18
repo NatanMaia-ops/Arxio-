@@ -119,6 +119,46 @@ volta.
 | `AUTH_GOOGLE_ID` | client ID do OAuth |
 | `PORT` | opcional, default 3000 |
 | `WEB_PORT` | opcional, default 3001 |
+| `MEDIA_BUCKET` | nome do bucket S3 usado para avatares e capas |
+| `MEDIA_REGION` | região AWS do bucket, por exemplo `us-east-1` |
+| `MEDIA_PUBLIC_BASE_URL` | origem pública das imagens, sem `/` no final |
+
+## Contrato externo para imagens
+
+O backend está preparado para upload direto do navegador ao S3 usando um
+presigned POST com validade de cinco minutos. O bucket, o CloudFront e as
+políticas não são criados por este repositório; precisam ser entregues pela
+pessoa responsável pela infraestrutura antes de habilitar o fluxo em produção.
+
+Requisitos do bucket:
+
+- aceitar via CORS o método `POST` vindo da origem pública da Arxio;
+- manter uma lifecycle rule que remova objetos do prefixo `pending/` depois de
+  um dia;
+- permitir apenas JPEG, PNG e WebP de até 5 MB por meio da policy assinada pelo
+  backend;
+- manter leitura pública pela origem informada em `MEDIA_PUBLIC_BASE_URL`. A
+  opção recomendada é bucket privado atrás de CloudFront com OAC;
+- entregar `X-Content-Type-Options: nosniff` na resposta pública das imagens.
+
+A instance role `ArxioAppRunnerInstanceRole` precisa das ações abaixo limitadas
+ao bucket e aos prefixos `pending/`, `avatars/` e `article-covers/`:
+
+```text
+s3:PutObject
+s3:GetObject
+s3:DeleteObject
+```
+
+`HeadObject` utiliza `s3:GetObject`; a promoção do arquivo temporário usa
+`GetObject` na origem e `PutObject` no destino. As credenciais não são expostas
+ao frontend: o SDK usa a instance role do App Runner para assinar cada upload.
+
+Como o arquivo vai direto do navegador ao S3, esta versão valida tamanho e o
+`Content-Type` registrado no objeto, mas não inspeciona os bytes internos da
+imagem. Inspeção por assinatura de arquivo, antivírus ou normalização deve ser
+adicionada como uma etapa assíncrona na infraestrutura caso passe a ser um
+requisito.
 
 O `/auth` da callback não vem do `AUTH_URL`: o `@auth/express` deriva o
 `basePath` do ponto onde o handler está montado no Express, que é

@@ -62,6 +62,8 @@ export default function EditArticlePage() {
 			articleId={article.id}
 			initialTitle={article.title}
 			initialContent={article.content}
+			initialCoverUrl={article.coverUrl}
+			initialCoverFit={article.coverFit}
 		/>
 	);
 }

@@ -3,6 +3,7 @@ import { env } from "@arxio/env/server";
 import cors from "cors";
 import express, { type Response } from "express";
 
+import { ARTICLE_REQUEST_BODY_LIMIT } from "./modules/articles/article-content";
 import { articlesService } from "./modules/articles/articles.module";
 import { createArticlesController } from "./modules/articles/http/articles.controller";
 import {
@@ -18,6 +19,8 @@ import {
 } from "./modules/comments/http/comments.controller";
 import { createLikesController } from "./modules/likes/http/likes.controller";
 import { likesService } from "./modules/likes/likes.module";
+import { createMediaController } from "./modules/media/http/media.controller";
+import { mediaService } from "./modules/media/media.module";
 import {
 	createOnboardingController,
 	onboardingService,
@@ -67,8 +70,14 @@ app.use(
 
 app.use(
 	"/articles",
-	express.json(),
+	express.json({ limit: ARTICLE_REQUEST_BODY_LIMIT }),
 	createArticlesController(articlesService, requireAuth),
+);
+
+app.use(
+	"/media",
+	express.json(),
+	createMediaController(mediaService, requireAuth),
 );
 
 app.use(

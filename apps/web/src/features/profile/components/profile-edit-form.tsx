@@ -12,6 +12,15 @@ import {
 	getOwnAccount,
 	saveOwnProfile,
 } from "@/features/profile/services/profiles";
+import type { OwnAccount } from "@/features/profile/types/profile.types";
+import {
+	COURSE_MAX_LENGTH,
+	INSTITUTION_MAX_LENGTH,
+	SEMESTERS,
+} from "@/lib/academic-profile";
+import { USER_BIO_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "@/lib/user-profile";
+
+import { ProfileAvatarEditor } from "./profile-avatar-editor";
 
 type FormValues = {
 	name: string;
@@ -39,6 +48,7 @@ export function ProfileEditForm() {
 	const router = useRouter();
 	const [values, setValues] = useState<FormValues>(EMPTY_VALUES);
 	const [userId, setUserId] = useState<string | null>(null);
+	const [account, setAccount] = useState<OwnAccount | null>(null);
 	const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 	const [loadError, setLoadError] = useState<string | null>(null);
 	const [submitError, setSubmitError] = useState<string | null>(null);
@@ -53,6 +63,7 @@ export function ProfileEditForm() {
 				if (!isActive) return;
 
 				setUserId(account.id);
+				setAccount(account);
 				setValues({
 					name: account.name,
 					bio: account.bio ?? "",
@@ -159,6 +170,14 @@ export function ProfileEditForm() {
 				</p>
 			</div>
 
+			{account ? (
+				<ProfileAvatarEditor
+					account={account}
+					name={values.name || account.name}
+					onAccountChange={setAccount}
+				/>
+			) : null}
+
 			<div className="mt-8 grid gap-6">
 				<Field label="Nome" name="name" error={fieldErrors.name} required>
 					<input
@@ -166,7 +185,7 @@ export function ProfileEditForm() {
 						name="name"
 						type="text"
 						autoComplete="name"
-						maxLength={150}
+						maxLength={USER_NAME_MAX_LENGTH}
 						disabled={isSubmitting}
 						value={values.name}
 						onChange={(event) => updateValue("name", event.target.value)}
@@ -177,16 +196,16 @@ export function ProfileEditForm() {
 				</Field>
 
 				<Field
-					label="Biografia"
+					label="Sobre mim"
 					name="bio"
 					error={fieldErrors.bio}
-					hint="Até 500 caracteres."
+					hint={`Até ${USER_BIO_MAX_LENGTH} caracteres.`}
 				>
 					<textarea
 						id="bio"
 						name="bio"
 						rows={5}
-						maxLength={500}
+						maxLength={USER_BIO_MAX_LENGTH}
 						disabled={isSubmitting}
 						value={values.bio}
 						onChange={(event) => updateValue("bio", event.target.value)}
@@ -210,7 +229,7 @@ export function ProfileEditForm() {
 							id="institution"
 							name="institution"
 							type="text"
-							maxLength={150}
+							maxLength={INSTITUTION_MAX_LENGTH}
 							disabled={isSubmitting}
 							value={values.institution}
 							onChange={(event) =>
@@ -229,7 +248,7 @@ export function ProfileEditForm() {
 							id="course"
 							name="course"
 							type="text"
-							maxLength={150}
+							maxLength={COURSE_MAX_LENGTH}
 							disabled={isSubmitting}
 							value={values.course}
 							onChange={(event) => updateValue("course", event.target.value)}
@@ -239,14 +258,14 @@ export function ProfileEditForm() {
 						/>
 					</Field>
 
-					<Field label="Semestre" name="semester" error={fieldErrors.semester}>
-						<input
+					<Field
+						label="Período atual"
+						name="semester"
+						error={fieldErrors.semester}
+					>
+						<select
 							id="semester"
 							name="semester"
-							type="number"
-							inputMode="numeric"
-							min={1}
-							max={20}
 							disabled={isSubmitting}
 							value={values.semester}
 							onChange={(event) => updateValue("semester", event.target.value)}
@@ -254,8 +273,15 @@ export function ProfileEditForm() {
 							aria-describedby={
 								fieldErrors.semester ? "semester-error" : undefined
 							}
-							className={inputClassName}
-						/>
+							className={`${inputClassName} appearance-auto`}
+						>
+							<option value="">Selecione um período</option>
+							{SEMESTERS.map((value) => (
+								<option key={value} value={value}>
+									{value}º período
+								</option>
+							))}
+						</select>
 					</Field>
 				</fieldset>
 			</div>

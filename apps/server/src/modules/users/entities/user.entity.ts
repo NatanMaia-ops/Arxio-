@@ -4,6 +4,7 @@ export type User = {
 	email: string;
 	bio: string | null;
 	avatarUrl: string | null;
+	avatarObjectKey: string | null;
 	emailVerifiedAt: Date | null;
 	lastLoginAt: Date | null;
 	disabledAt: Date | null;

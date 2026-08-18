@@ -149,3 +149,44 @@ export async function deleteArticle(
 		);
 	}
 }
+
+export async function confirmArticleCover(
+	serverUrl: string,
+	id: string,
+	objectKey: string,
+	fetcher: ArticleFetch = fetch,
+): Promise<Article> {
+	const response = await fetcher(articlesUrl(serverUrl, `/${id}/cover`), {
+		method: "PUT",
+		credentials: "include",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ objectKey }),
+	});
+
+	if (!response.ok) {
+		throw new Error(
+			await readErrorMessage(response, "Não foi possível salvar a capa"),
+		);
+	}
+
+	return parseArticle(await response.json());
+}
+
+export async function removeArticleCover(
+	serverUrl: string,
+	id: string,
+	fetcher: ArticleFetch = fetch,
+): Promise<Article> {
+	const response = await fetcher(articlesUrl(serverUrl, `/${id}/cover`), {
+		method: "DELETE",
+		credentials: "include",
+	});
+
+	if (!response.ok) {
+		throw new Error(
+			await readErrorMessage(response, "Não foi possível remover a capa"),
+		);
+	}
+
+	return parseArticle(await response.json());
+}

@@ -16,6 +16,9 @@ function toArticle(row: typeof articles.$inferSelect): Article {
 		authorId: row.authorId,
 		title: row.title,
 		content: row.content,
+		coverObjectKey: row.coverObjectKey,
+		coverUrl: null,
+		coverFit: row.coverFit,
 		createdAt: row.createdAt,
 		updatedAt: row.updatedAt,
 	};
@@ -29,6 +32,7 @@ export const drizzleArticleRepository: ArticleRepository = {
 				authorId: input.authorId,
 				title: input.title,
 				content: input.content,
+				coverFit: input.coverFit,
 			})
 			.returning();
 
@@ -63,12 +67,40 @@ export const drizzleArticleRepository: ArticleRepository = {
 			.set({
 				title: input.title,
 				content: input.content,
+				coverFit: input.coverFit,
 				updatedAt: new Date(),
 			})
 			.where(eq(articles.id, id))
 			.returning();
 
 		return article ? toArticle(article) : null;
+	},
+
+	async replaceCoverObjectKey(id, objectKey) {
+		return db.transaction(async (transaction) => {
+			const [existing] = await transaction
+				.select({ previousObjectKey: articles.coverObjectKey })
+				.from(articles)
+				.where(eq(articles.id, id))
+				.for("update");
+
+			if (!existing) return null;
+
+			const [article] = await transaction
+				.update(articles)
+				.set({ coverObjectKey: objectKey, updatedAt: new Date() })
+				.where(eq(articles.id, id))
+				.returning();
+
+			if (!article) {
+				throw new Error("Failed to update article cover");
+			}
+
+			return {
+				article: toArticle(article),
+				previousObjectKey: existing.previousObjectKey,
+			};
+		});
 	},
 
 	async delete(id: string) {

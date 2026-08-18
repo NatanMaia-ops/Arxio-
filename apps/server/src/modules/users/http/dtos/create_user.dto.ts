@@ -1,11 +1,11 @@
 import { z } from "zod";
 
+import { courseTextSchema } from "../../../../shared/schemas/academic-profile.schema";
+import { semesterSchema } from "../../../../shared/schemas/semester.schema";
+import { userNameSchema } from "../../../../shared/schemas/user-profile.schema";
+
 export const createUserSchema = z.object({
-	name: z
-		.string()
-		.trim()
-		.min(2, "O nome deve ter no mínimo 2 caracteres")
-		.max(150, "O nome deve ter no máximo 150 caracteres"),
+	name: userNameSchema,
 
 	email: z
 		.email("Informe um e-mail válido")
@@ -21,18 +21,9 @@ export const createUserSchema = z.object({
 		.regex(/[A-Z]/, "A senha deve conter ao menos uma letra maiúscula")
 		.regex(/[0-9]/, "A senha deve conter ao menos um número"),
 
-	course: z
-		.string()
-		.trim()
-		.max(150, "O curso deve ter no máximo 150 caracteres")
-		.optional(),
+	course: courseTextSchema.optional(),
 
-	semester: z
-		.number()
-		.int("O semestre deve ser um número inteiro")
-		.min(1, "O semestre deve ser no mínimo 1")
-		.max(20, "Informe um semestre válido")
-		.optional(),
+	semester: semesterSchema.optional(),
 });
 
 export type CreateUserInput = z.infer<typeof createUserSchema>;

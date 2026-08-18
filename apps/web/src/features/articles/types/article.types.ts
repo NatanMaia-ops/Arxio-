@@ -3,6 +3,8 @@ export type Article = {
 	authorId: string;
 	title: string;
 	content: string;
+	coverUrl: string | null;
+	coverFit: CoverFit;
 	createdAt: Date;
 	updatedAt: Date;
 };
@@ -10,7 +12,10 @@ export type Article = {
 export type ArticleInput = {
 	title: string;
 	content: string;
+	coverFit: CoverFit;
 };
+
+export type CoverFit = "cover" | "contain";
 
 export type ArticleListFilters = {
 	authorId?: string;

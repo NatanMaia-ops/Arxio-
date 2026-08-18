@@ -3,9 +3,11 @@ import { describe, it } from "node:test";
 
 import { editProfileSchema } from "../schemas/profile.schema";
 import {
+	confirmOwnAvatar,
 	fetchOwnAccount,
 	fetchPublicProfileById,
 	ProfileApiError,
+	removeOwnAvatar,
 	updateOwnProfile,
 } from "./profile-api";
 
@@ -30,6 +32,7 @@ const profilePayload = {
 const ownAccountPayload = {
 	...profilePayload,
 	email: "lucas@example.com",
+	hasCustomAvatar: false,
 };
 
 function recorder(response: () => Response) {
@@ -239,6 +242,59 @@ describe("Profile API", () => {
 		await rejectsWithKind(
 			fetchOwnAccount("http://localhost:3000", fetcher),
 			"request_failed",
+		);
+	});
+
+	it("confirms and removes a custom avatar", async () => {
+		const requests: RecordedRequest[] = [];
+		const fetcher = async (input: RequestInfo | URL, init?: RequestInit) => {
+			requests.push({ input, init });
+			return Response.json({
+				...ownAccountPayload,
+				hasCustomAvatar: init?.method === "PUT",
+				avatarUrl:
+					init?.method === "PUT"
+						? "https://media.example.com/avatar.webp"
+						: null,
+			});
+		};
+
+		const saved = await confirmOwnAvatar(
+			"http://localhost:3000",
+			"pending/user/avatar/image.webp",
+			fetcher,
+		);
+		const removed = await removeOwnAvatar("http://localhost:3000", fetcher);
+
+		assert.equal(saved.hasCustomAvatar, true);
+		assert.equal(removed.hasCustomAvatar, false);
+		assert.equal(requests[0]?.init?.method, "PUT");
+		assert.equal(
+			requests[0]?.init?.body,
+			JSON.stringify({ objectKey: "pending/user/avatar/image.webp" }),
+		);
+		assert.equal(requests[1]?.init?.method, "DELETE");
+	});
+
+	it("preserves server messages and authentication errors for avatar actions", async () => {
+		const forbidden = async () =>
+			Response.json({ message: "Upload de imagem inválido" }, { status: 400 });
+		await assert.rejects(
+			confirmOwnAvatar(
+				"http://localhost:3000",
+				"pending/wrong.webp",
+				forbidden,
+			),
+			/Upload de imagem inválido/,
+		);
+
+		await rejectsWithKind(
+			removeOwnAvatar(
+				"http://localhost:3000",
+				async () => new Response(null, { status: 401 }),
+			),
+			"unauthorized",
+			401,
 		);
 	});
 });

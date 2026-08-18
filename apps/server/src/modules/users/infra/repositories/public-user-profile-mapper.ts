@@ -7,6 +7,7 @@ export type PublicUserProfileRow = {
 		name: string;
 		bio: string | null;
 		avatarUrl: string | null;
+		avatarObjectKey: string | null;
 		createdAt: Date;
 	};
 	academicProfile: {
@@ -37,6 +38,7 @@ export function toPublicUserProfile(
 		name: row.user.name,
 		bio: row.user.bio,
 		avatarUrl: row.user.avatarUrl,
+		avatarObjectKey: row.user.avatarObjectKey,
 		academicProfile: hasAcademicData ? academicProfile : null,
 		createdAt: row.user.createdAt,
 	};
@@ -46,5 +48,6 @@ export function toOwnUserAccount(row: OwnUserAccountRow): OwnUserAccount {
 	return {
 		...toPublicUserProfile(row),
 		email: row.user.email,
+		hasCustomAvatar: row.user.avatarObjectKey !== null,
 	};
 }

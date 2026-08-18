@@ -13,6 +13,9 @@ export const env = createEnv({
 		JWT_SECRET: z.string().min(32),
 		AUTH_GOOGLE_ID: z.string().min(1),
 		AUTH_GOOGLE_SECRET: z.string().min(1),
+		MEDIA_BUCKET: z.string().min(1).optional(),
+		MEDIA_REGION: z.string().min(1).optional(),
+		MEDIA_PUBLIC_BASE_URL: z.url().optional(),
 		NODE_ENV: z
 			.enum(["development", "production", "test"])
 			.default("development"),

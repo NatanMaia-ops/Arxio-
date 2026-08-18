@@ -1,5 +1,6 @@
 const WORDS_PER_MINUTE = 200;
 const EXCERPT_MAX_LENGTH = 180;
+export const ARTICLE_CONTENT_MAX_LENGTH = 30_000;
 
 export type EditorMark = {
 	type?: string;
@@ -43,6 +44,24 @@ function nodeToText(node: EditorNode): string {
 	const text = node.content.map(nodeToText).join("");
 
 	return node.type === "doc" ? text : `${text}\n`;
+}
+
+function countNodeCharacters(node: EditorNode): number {
+	if (typeof node.text === "string") return node.text.length;
+	if (Array.isArray(node.content)) {
+		return node.content.reduce(
+			(total, child) => total + countNodeCharacters(child),
+			0,
+		);
+	}
+
+	return node.type === "hardBreak" ? 1 : 0;
+}
+
+export function countArticleContentCharacters(content: string): number {
+	const document = parseEditorDocument(content);
+
+	return document ? countNodeCharacters(document) : content.trim().length;
 }
 
 export function extractPlainText(content: string): string {

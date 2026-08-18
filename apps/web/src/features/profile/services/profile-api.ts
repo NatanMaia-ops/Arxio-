@@ -181,3 +181,32 @@ export async function updateOwnProfile(
 
 	return parseResponse(response, ownAccountSchema);
 }
+
+export async function confirmOwnAvatar(
+	serverUrl: string,
+	objectKey: string,
+	fetcher: ProfileFetch = fetch,
+): Promise<OwnAccount> {
+	const response = await request(fetcher, profileUrl(serverUrl, "me/avatar"), {
+		method: "PUT",
+		credentials: "include",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ objectKey }),
+	});
+
+	if (!response.ok) throw await responseError(response);
+	return parseResponse(response, ownAccountSchema);
+}
+
+export async function removeOwnAvatar(
+	serverUrl: string,
+	fetcher: ProfileFetch = fetch,
+): Promise<OwnAccount> {
+	const response = await request(fetcher, profileUrl(serverUrl, "me/avatar"), {
+		method: "DELETE",
+		credentials: "include",
+	});
+
+	if (!response.ok) throw await responseError(response);
+	return parseResponse(response, ownAccountSchema);
+}

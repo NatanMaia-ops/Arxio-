@@ -3,14 +3,15 @@ import {
 	ArticleCard,
 	ArticlesUnavailable,
 } from "@/features/articles";
+import type { AuthorSummary } from "@/features/articles/types/article.types";
 import { ProfileEmptyState } from "@/features/profile/components/profile-empty-state";
 
 export function ProfileArticleList({
 	articles,
-	authorName,
+	author,
 }: {
 	articles: Article[] | null;
-	authorName: string;
+	author: AuthorSummary;
 }) {
 	return (
 		<section aria-labelledby="profile-articles-title">
@@ -40,11 +41,7 @@ export function ProfileArticleList({
 				{articles?.length === 0 ? <ProfileEmptyState /> : null}
 
 				{articles?.map((article) => (
-					<ArticleCard
-						key={article.id}
-						article={article}
-						authorName={authorName}
-					/>
+					<ArticleCard key={article.id} article={article} author={author} />
 				))}
 			</div>
 		</section>

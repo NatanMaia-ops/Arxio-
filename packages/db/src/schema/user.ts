@@ -9,6 +9,7 @@ export const users = pgTable("users", {
 
 	bio: text("bio"),
 	image: varchar("avatar_url", { length: 500 }),
+	avatarObjectKey: varchar("avatar_object_key", { length: 500 }),
 
 	emailVerified: timestamp("email_verified_at"),
 	lastLoginAt: timestamp("last_login_at"),

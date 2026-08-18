@@ -18,6 +18,7 @@ function createRow(
 			name: "Lucas Lima",
 			bio: "Estudante e desenvolvedor",
 			avatarUrl: "https://example.com/avatar.png",
+			avatarObjectKey: null,
 			createdAt,
 		},
 		academicProfile,
@@ -83,6 +84,7 @@ describe("toPublicUserProfile", () => {
 			name: "Lucas Lima",
 			bio: "Estudante e desenvolvedor",
 			avatarUrl: "https://example.com/avatar.png",
+			avatarObjectKey: null,
 			academicProfile: null,
 			createdAt,
 		});
@@ -103,8 +105,10 @@ describe("toPublicUserProfile", () => {
 			email: "lucas@example.com",
 			bio: "Estudante e desenvolvedor",
 			avatarUrl: "https://example.com/avatar.png",
+			avatarObjectKey: null,
 			academicProfile: null,
 			createdAt,
+			hasCustomAvatar: false,
 		});
 	});
 });

@@ -6,10 +6,16 @@ import { useEffect, useState } from "react";
 import { UserMenu } from "@/features/auth/components/user-menu";
 import type { AuthSession } from "@/features/auth/services/auth-api";
 import { getSession } from "@/features/auth/services/get-session";
+import { getOwnAccount } from "@/features/profile/services/profiles";
 
 type AuthState =
 	| { status: "loading" }
-	| { status: "authenticated"; session: AuthSession }
+	| {
+			status: "authenticated";
+			session: AuthSession;
+			name: string | null;
+			avatarUrl: string | null;
+	  }
 	| { status: "unauthenticated" };
 
 export function HeaderAuth() {
@@ -19,14 +25,26 @@ export function HeaderAuth() {
 		let isActive = true;
 
 		getSession()
-			.then((session) => {
+			.then(async (session) => {
 				if (!isActive) return;
+				if (!session) {
+					setState({ status: "unauthenticated" });
+					return;
+				}
 
-				setState(
-					session
-						? { status: "authenticated", session }
-						: { status: "unauthenticated" },
-				);
+				let avatarUrl = session.user.image;
+				let name = session.user.name;
+				try {
+					const account = await getOwnAccount();
+					avatarUrl = account.avatarUrl;
+					name = account.name;
+				} catch {
+					// A sessão continua válida; a imagem dela é o fallback do header.
+				}
+
+				if (isActive) {
+					setState({ status: "authenticated", session, name, avatarUrl });
+				}
 			})
 			.catch(() => {
 				if (isActive) setState({ status: "unauthenticated" });
@@ -42,7 +60,8 @@ export function HeaderAuth() {
 			{state.status === "authenticated" && (
 				<UserMenu
 					userId={state.session.user.id}
-					name={state.session.user.name}
+					name={state.name}
+					avatarUrl={state.avatarUrl}
 				/>
 			)}
 

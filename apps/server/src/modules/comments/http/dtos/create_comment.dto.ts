@@ -1,7 +1,9 @@
 import { z } from "zod";
 
+import { commentContentSchema } from "./comment_content.dto";
+
 export const createCommentSchema = z.object({
-	content: z.string().trim().min(1).max(2000),
+	content: commentContentSchema,
 	parentId: z.uuid().optional(),
 });
 

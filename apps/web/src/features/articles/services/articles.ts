@@ -34,6 +34,17 @@ export function deleteArticle(id: string): Promise<void> {
 	return articlesApi.deleteArticle(apiUrl(), id);
 }
 
+export function saveArticleCover(
+	id: string,
+	objectKey: string,
+): Promise<Article> {
+	return articlesApi.confirmArticleCover(apiUrl(), id, objectKey);
+}
+
+export function deleteArticleCover(id: string): Promise<Article> {
+	return articlesApi.removeArticleCover(apiUrl(), id);
+}
+
 export function getAuthorSummary(id: string): Promise<AuthorSummary | null> {
 	return fetchAuthorSummary(apiUrl(), id);
 }

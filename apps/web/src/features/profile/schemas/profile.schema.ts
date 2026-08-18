@@ -1,10 +1,20 @@
 import { z } from "zod";
 
-const optionalNullableText = (maxLength: number) =>
+import {
+	COURSE_MAX_LENGTH,
+	INSTITUTION_MAX_LENGTH,
+	MAX_SEMESTER,
+} from "@/lib/academic-profile";
+import { USER_BIO_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "@/lib/user-profile";
+
+const optionalNullableText = (maxLength: number, message?: string) =>
 	z
 		.string()
 		.trim()
-		.max(maxLength, `O campo deve ter no máximo ${maxLength} caracteres`)
+		.max(
+			maxLength,
+			message ?? `O campo deve ter no máximo ${maxLength} caracteres`,
+		)
 		.nullable()
 		.transform((value) => value || null)
 		.optional();
@@ -20,7 +30,7 @@ const optionalNullableSemester = z
 		.number()
 		.int("O período deve ser um número inteiro")
 		.min(1, "O período deve ser no mínimo 1")
-		.max(20, "Informe um período válido")
+		.max(MAX_SEMESTER, "Informe um período válido")
 		.nullable())
 	.optional();
 
@@ -43,6 +53,7 @@ export const publicProfileSchema = z.object({
 
 export const ownAccountSchema = publicProfileSchema.extend({
 	email: z.email(),
+	hasCustomAvatar: z.boolean(),
 });
 
 export const editProfileSchema = z
@@ -51,12 +62,21 @@ export const editProfileSchema = z
 			.string()
 			.trim()
 			.min(2, "O nome deve ter no mínimo 2 caracteres")
-			.max(150, "O nome deve ter no máximo 150 caracteres")
+			.max(
+				USER_NAME_MAX_LENGTH,
+				`O nome deve ter no máximo ${USER_NAME_MAX_LENGTH} caracteres`,
+			)
 			.optional(),
-		bio: optionalNullableText(500),
-		course: optionalNullableText(150),
+		bio: optionalNullableText(USER_BIO_MAX_LENGTH),
+		course: optionalNullableText(
+			COURSE_MAX_LENGTH,
+			`O curso deve ter no máximo ${COURSE_MAX_LENGTH} caracteres`,
+		),
 		semester: optionalNullableSemester,
-		institution: optionalNullableText(150),
+		institution: optionalNullableText(
+			INSTITUTION_MAX_LENGTH,
+			`A instituição/campus deve ter no máximo ${INSTITUTION_MAX_LENGTH} caracteres`,
+		),
 	})
 	.refine(
 		(input) => Object.values(input).some((value) => value !== undefined),

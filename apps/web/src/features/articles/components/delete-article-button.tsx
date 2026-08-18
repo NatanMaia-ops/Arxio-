@@ -4,10 +4,8 @@ import type { Route } from "next";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-
+import { ConfirmDialog } from "@/components/confirm-dialog";
 import { deleteArticle } from "@/features/articles/services/articles";
-
-import { ConfirmDialog } from "./confirm-dialog";
 
 export function DeleteArticleButton({ articleId }: { articleId: string }) {
 	const router = useRouter();

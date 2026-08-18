@@ -1,7 +1,10 @@
-import { z } from "zod";
+import type { z } from "zod";
 
-import { createArticleSchema } from "./create_article.dto";
+import { coverFitSchema, createArticleSchema } from "./create_article.dto";
 
-export const updateArticleSchema = createArticleSchema.partial();
+export const updateArticleSchema = createArticleSchema
+	.omit({ coverFit: true })
+	.partial()
+	.extend({ coverFit: coverFitSchema.optional() });
 
 export type UpdateArticleInput = z.infer<typeof updateArticleSchema>;
