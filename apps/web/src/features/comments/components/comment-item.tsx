@@ -89,7 +89,7 @@ export function CommentItem({
 							/>
 						</div>
 					) : (
-						<p className="mt-1 whitespace-pre-wrap text-ax-body text-sm leading-6">
+						<p className="mt-1 whitespace-pre-wrap break-words text-ax-body text-sm leading-6">
 							{node.content}
 						</p>
 					)}
