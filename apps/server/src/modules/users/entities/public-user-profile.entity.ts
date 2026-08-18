@@ -3,6 +3,7 @@ export type PublicUserProfile = {
 	name: string;
 	bio: string | null;
 	avatarUrl: string | null;
+	avatarObjectKey: string | null;
 	academicProfile: {
 		course: string | null;
 		semester: number | null;

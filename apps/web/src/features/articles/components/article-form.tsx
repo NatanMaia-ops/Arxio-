@@ -16,10 +16,13 @@ import {
 	TITLE_MIN_LENGTH,
 } from "@/features/articles/schemas/article.schema";
 import {
-	createArticle,
-	updateArticle,
-} from "@/features/articles/services/articles";
+	ArticleCoverSaveError,
+	saveArticleWithCover,
+} from "@/features/articles/services/save-article";
+import type { CoverFit } from "@/features/articles/types/article.types";
+import type { MediaUploadStage } from "@/features/media";
 
+import { ArticleCoverEditor } from "./article-cover-editor";
 import { ArticleEditor } from "./article-editor";
 
 type ArticleFormProps = {
@@ -27,6 +30,8 @@ type ArticleFormProps = {
 	articleId?: string;
 	initialTitle?: string;
 	initialContent?: string;
+	initialCoverUrl?: string | null;
+	initialCoverFit?: CoverFit;
 };
 
 const EMPTY_CONTENT = JSON.stringify(EMPTY_DOCUMENT);
@@ -54,14 +59,24 @@ export function ArticleForm({
 	articleId,
 	initialTitle = "",
 	initialContent,
+	initialCoverUrl = null,
+	initialCoverFit = "cover",
 }: ArticleFormProps) {
 	const router = useRouter();
 	const [title, setTitle] = useState(initialTitle);
 	const [content, setContent] = useState(initialContent ?? EMPTY_CONTENT);
 	const [error, setError] = useState<string | null>(null);
 	const [isSaving, setIsSaving] = useState(false);
+	const [persistedArticleId, setPersistedArticleId] = useState(
+		articleId ?? null,
+	);
+	const [coverFile, setCoverFile] = useState<File | null>(null);
+	const [isCoverRemoved, setIsCoverRemoved] = useState(false);
+	const [coverFit, setCoverFit] = useState<CoverFit>(initialCoverFit);
+	const [stage, setStage] = useState<MediaUploadStage | null>(null);
 
-	const submitLabel = mode === "create" ? "Publicar" : "Salvar";
+	const submitLabel =
+		mode === "create" && !persistedArticleId ? "Publicar" : "Salvar";
 
 	async function handleSubmit() {
 		const validationError = validate(title, content);
@@ -75,20 +90,39 @@ export function ArticleForm({
 		setIsSaving(true);
 
 		try {
-			const input = { title: title.trim(), content };
-			const article =
-				mode === "edit" && articleId
-					? await updateArticle(articleId, input)
-					: await createArticle(input);
+			const article = await saveArticleWithCover({
+				articleId: persistedArticleId,
+				article: { title: title.trim(), content, coverFit },
+				cover: coverFile
+					? { type: "upload", file: coverFile }
+					: isCoverRemoved
+						? { type: "remove" }
+						: { type: "unchanged" },
+				onStage: setStage,
+				onArticlePersisted: (savedArticle) => {
+					if (persistedArticleId) return;
+					setPersistedArticleId(savedArticle.id);
+					window.history.replaceState(
+						window.history.state,
+						"",
+						`/artigos/${savedArticle.id}/editar`,
+					);
+				},
+			});
 
 			router.push(`/artigos/${article.id}` as Route);
 			router.refresh();
 		} catch (cause) {
-			toast.error(
+			const message =
 				cause instanceof Error
 					? cause.message
-					: "Não foi possível salvar o artigo",
-			);
+					: "Não foi possível salvar o artigo";
+			setError(message);
+			toast.error(message);
+			if (cause instanceof ArticleCoverSaveError) {
+				setPersistedArticleId(cause.article.id);
+			}
+			setStage(null);
 			setIsSaving(false);
 		}
 	}
@@ -102,8 +136,8 @@ export function ArticleForm({
 					<div className="flex items-center gap-3">
 						<Link
 							href={
-								mode === "edit" && articleId
-									? (`/artigos/${articleId}` as Route)
+								persistedArticleId
+									? (`/artigos/${persistedArticleId}` as Route)
 									: ("/feed" as Route)
 							}
 							className="rounded-full border border-ax-line px-4.5 py-2.5 font-medium text-ax-ink-soft text-sm transition-colors hover:border-ax-ink hover:text-ax-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
@@ -117,7 +151,13 @@ export function ArticleForm({
 							disabled={isSaving}
 							className="rounded-full bg-ax-ink px-4.5 py-2.5 font-medium text-ax-on-ink text-sm transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface disabled:opacity-50"
 						>
-							{isSaving ? "Salvando..." : submitLabel}
+							{isSaving
+								? stage === "preparing"
+									? "Preparando..."
+									: stage === "uploading"
+										? "Enviando..."
+										: "Salvando..."
+								: submitLabel}
 						</button>
 					</div>
 				</div>
@@ -137,7 +177,26 @@ export function ArticleForm({
 					className="w-full font-bold font-home-display text-[28px] text-ax-ink leading-9 placeholder:text-ax-placeholder focus:outline-none sm:text-[40px] sm:leading-12"
 				/>
 
-				<div className="mt-6">
+				<ArticleCoverEditor
+					initialUrl={initialCoverUrl}
+					isRemoved={isCoverRemoved}
+					disabled={isSaving}
+					fit={coverFit}
+					onFitChange={setCoverFit}
+					onFileChange={(file) => {
+						setCoverFile(file);
+						if (file) setIsCoverRemoved(false);
+						setError(null);
+					}}
+					onRemove={() => {
+						setCoverFile(null);
+						setIsCoverRemoved(true);
+						setCoverFit("cover");
+						setError(null);
+					}}
+				/>
+
+				<div className="mt-8">
 					<ArticleEditor
 						initialContent={initialContent}
 						onChange={setContent}
@@ -145,7 +204,11 @@ export function ArticleForm({
 				</div>
 
 				{error && (
-					<p role="alert" className="mt-6 text-ax-ink-soft text-sm leading-5">
+					<p
+						role="alert"
+						aria-live="assertive"
+						className="mt-6 rounded-lg border border-ax-line bg-ax-fill/50 px-4 py-3 text-ax-ink-soft text-sm leading-5"
+					>
 						{error}
 					</p>
 				)}

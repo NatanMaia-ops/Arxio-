@@ -1,0 +1,88 @@
+import type {
+	Article,
+	ArticleInput,
+} from "@/features/articles/types/article.types";
+import { uploadImage } from "@/features/media";
+import type { MediaUploadStage } from "@/features/media/types/media.types";
+
+import {
+	createArticle,
+	deleteArticleCover,
+	saveArticleCover,
+	updateArticle,
+} from "./articles";
+
+export type CoverChange =
+	| { type: "unchanged" }
+	| { type: "upload"; file: File }
+	| { type: "remove" };
+
+type SaveArticleDependencies = {
+	create: typeof createArticle;
+	update: typeof updateArticle;
+	upload: typeof uploadImage;
+	confirmCover: typeof saveArticleCover;
+	removeCover: typeof deleteArticleCover;
+};
+
+const defaultDependencies: SaveArticleDependencies = {
+	create: createArticle,
+	update: updateArticle,
+	upload: uploadImage,
+	confirmCover: saveArticleCover,
+	removeCover: deleteArticleCover,
+};
+
+export class ArticleCoverSaveError extends Error {
+	constructor(
+		public readonly article: Article,
+		public readonly wasCreated: boolean,
+		options?: ErrorOptions,
+	) {
+		super(
+			wasCreated
+				? "O artigo foi publicado, mas a capa não foi enviada. Tente salvar novamente."
+				: "O artigo foi salvo, mas não foi possível concluir a alteração da capa. Tente novamente.",
+			options,
+		);
+		this.name = "ArticleCoverSaveError";
+	}
+}
+
+export async function saveArticleWithCover(
+	input: {
+		articleId: string | null;
+		article: ArticleInput;
+		cover: CoverChange;
+		onArticlePersisted?: (article: Article) => void;
+		onStage?: (stage: MediaUploadStage) => void;
+	},
+	dependencies: SaveArticleDependencies = defaultDependencies,
+): Promise<Article> {
+	const wasCreated = input.articleId === null;
+	let article =
+		input.articleId === null
+			? await dependencies.create(input.article)
+			: await dependencies.update(input.articleId, input.article);
+
+	input.onArticlePersisted?.(article);
+
+	try {
+		if (input.cover.type === "upload") {
+			const objectKey = await dependencies.upload(
+				input.cover.file,
+				"article-cover",
+				input.onStage,
+			);
+			input.onStage?.("saving");
+			article = await dependencies.confirmCover(article.id, objectKey);
+		} else if (input.cover.type === "remove") {
+			input.onStage?.("saving");
+			article = await dependencies.removeCover(article.id);
+		}
+	} catch (cause) {
+		throw new ArticleCoverSaveError(article, wasCreated, { cause });
+	}
+
+	return article;
+}

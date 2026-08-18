@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import { NotFoundError } from "../../shared/errors";
+import { MediaService } from "../media/media.service";
+import type { ObjectStorage } from "../media/object-storage";
 
 import type { OwnUserAccount } from "./entities/own-user-account.entity";
 import type { PublicUserProfile } from "./entities/public-user-profile.entity";
@@ -22,6 +24,7 @@ const user: User = {
 	email: "lucas@example.com",
 	bio: null,
 	avatarUrl: null,
+	avatarObjectKey: null,
 	emailVerifiedAt: null,
 	lastLoginAt: null,
 	disabledAt: null,
@@ -34,6 +37,7 @@ const publicProfile: PublicUserProfile = {
 	name: user.name,
 	bio: user.bio,
 	avatarUrl: user.avatarUrl,
+	avatarObjectKey: user.avatarObjectKey,
 	academicProfile: null,
 	createdAt: user.createdAt,
 };
@@ -41,6 +45,7 @@ const publicProfile: PublicUserProfile = {
 const ownAccount: OwnUserAccount = {
 	...publicProfile,
 	email: user.email,
+	hasCustomAvatar: false,
 };
 
 function createRepository(
@@ -68,6 +73,9 @@ function createRepository(
 		async updateOwnProfile() {
 			return ownAccount;
 		},
+		async replaceAvatarObjectKey() {
+			return { account: ownAccount, previousObjectKey: null };
+		},
 		async updateLastLoginAt() {},
 		async verifyEmail() {},
 		async disable() {},
@@ -81,7 +89,7 @@ describe("UsersService profile use cases", () => {
 
 		const result = await service.getPublicProfileById(userId);
 
-		assert.equal(result, publicProfile);
+		assert.deepEqual(result, publicProfile);
 	});
 
 	it("reports a missing public profile", async () => {
@@ -100,7 +108,7 @@ describe("UsersService profile use cases", () => {
 
 		const result = await service.getOwnAccount(userId);
 
-		assert.equal(result, ownAccount);
+		assert.deepEqual(result, ownAccount);
 	});
 
 	it("reports a missing own account", async () => {
@@ -212,5 +220,91 @@ describe("UsersService profile use cases", () => {
 			service.updateOwnProfile(userId, { name: "Lucas Atualizado" }),
 			NotFoundError,
 		);
+	});
+
+	it("promotes an avatar and prioritizes its public URL", async () => {
+		const pendingKey = `pending/${userId}/avatar/11111111-1111-4111-8111-111111111111.jpg`;
+		const oldKey = `avatars/${userId}/old.jpg`;
+		const deleted: string[] = [];
+		let storedKey: string | null = null;
+		const storage: ObjectStorage = {
+			async createPresignedUpload() {
+				throw new Error("not used");
+			},
+			async getMetadata() {
+				return { contentType: "image/jpeg", sizeBytes: 1024 };
+			},
+			async copy(_source, destination) {
+				storedKey = destination;
+			},
+			async delete(key) {
+				deleted.push(key);
+			},
+		};
+		const repository = createRepository({
+			async replaceAvatarObjectKey(_authenticatedUserId, objectKey) {
+				storedKey = objectKey;
+				return {
+					account: {
+						...ownAccount,
+						avatarUrl: "https://accounts.google.com/avatar.jpg",
+						avatarObjectKey: objectKey,
+						hasCustomAvatar: true,
+					},
+					previousObjectKey: oldKey,
+				};
+			},
+		});
+		const service = new UsersService(
+			repository,
+			new MediaService(storage, "https://media.example.com"),
+		);
+
+		const account = await service.setOwnAvatar(userId, pendingKey);
+
+		assert.ok(storedKey);
+		assert.equal(account.avatarUrl, `https://media.example.com/${storedKey}`);
+		assert.deepEqual(deleted, [pendingKey, oldKey]);
+	});
+
+	it("removes the uploaded avatar and falls back to the external URL", async () => {
+		const oldKey = `avatars/${userId}/old.jpg`;
+		const deleted: string[] = [];
+		const storage: ObjectStorage = {
+			async createPresignedUpload() {
+				throw new Error("not used");
+			},
+			async getMetadata() {
+				return null;
+			},
+			async copy() {},
+			async delete(key) {
+				deleted.push(key);
+			},
+		};
+		const externalAvatarUrl = "https://accounts.google.com/avatar.jpg";
+		const repository = createRepository({
+			async replaceAvatarObjectKey(_authenticatedUserId, objectKey) {
+				assert.equal(objectKey, null);
+				return {
+					account: {
+						...ownAccount,
+						avatarUrl: externalAvatarUrl,
+						avatarObjectKey: null,
+						hasCustomAvatar: false,
+					},
+					previousObjectKey: oldKey,
+				};
+			},
+		});
+		const service = new UsersService(
+			repository,
+			new MediaService(storage, "https://media.example.com"),
+		);
+
+		const account = await service.removeOwnAvatar(userId);
+
+		assert.equal(account.avatarUrl, externalAvatarUrl);
+		assert.deepEqual(deleted, [oldKey]);
 	});
 });

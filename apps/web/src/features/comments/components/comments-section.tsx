@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
-import { resolveAuthorName } from "@/features/articles/services/article-listing";
+import { resolveAuthor } from "@/features/articles/services/article-listing";
+import type { AuthorSummary } from "@/features/articles/types/article.types";
 import { getSession } from "@/features/auth/services/get-session";
 import {
 	buildCommentTree,
@@ -25,9 +26,7 @@ import { CommentItem } from "./comment-item";
 
 export function CommentsSection({ articleId }: { articleId: string }) {
 	const [comments, setComments] = useState<Comment[] | null>(null);
-	const [authorNames, setAuthorNames] = useState<Map<string, string>>(
-		new Map(),
-	);
+	const [authors, setAuthors] = useState<Map<string, AuthorSummary>>(new Map());
 	const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 	const [isSessionLoaded, setIsSessionLoaded] = useState(false);
 
@@ -66,11 +65,10 @@ export function CommentsSection({ articleId }: { articleId: string }) {
 
 		Promise.all(
 			authorIds.map(
-				async (authorId) =>
-					[authorId, await resolveAuthorName(authorId)] as const,
+				async (authorId) => [authorId, await resolveAuthor(authorId)] as const,
 			),
 		).then((entries) => {
-			if (isActive) setAuthorNames(new Map(entries));
+			if (isActive) setAuthors(new Map(entries));
 		});
 
 		return () => {
@@ -171,7 +169,7 @@ export function CommentsSection({ articleId }: { articleId: string }) {
 					<CommentItem
 						key={node.id}
 						node={node}
-						authorNames={authorNames}
+						authors={authors}
 						currentUserId={currentUserId}
 						onReply={(parentId, content) => handleCreate(content, parentId)}
 						onUpdate={handleUpdate}

@@ -9,10 +9,10 @@ export async function GET() {
 		const articles = await listArticlesWithAuthors();
 
 		return NextResponse.json(
-			articles.map(({ article, authorName }) => ({
+			articles.map(({ article, author }) => ({
 				id: article.id,
 				title: article.title,
-				authorName,
+				authorName: author.name,
 			})),
 		);
 	} catch {

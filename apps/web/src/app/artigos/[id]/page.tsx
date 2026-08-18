@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { SiteHeader } from "@/components/layout/site-header";
+import { UserAvatar } from "@/components/user-avatar";
 import {
 	estimateReadTimeMinutes,
 	extractExcerpt,
@@ -11,7 +12,7 @@ import {
 import { ArticleOwnerActions } from "@/features/articles/components/article-owner-actions";
 import { ArticleViewer } from "@/features/articles/components/article-viewer";
 import { ArticlesUnavailable } from "@/features/articles/components/articles-unavailable";
-import { resolveAuthorName } from "@/features/articles/services/article-listing";
+import { resolveAuthor } from "@/features/articles/services/article-listing";
 import { getArticleById } from "@/features/articles/services/articles";
 import { CommentsSection } from "@/features/comments/components/comments-section";
 import { LikeButton } from "@/features/likes/components/like-button";
@@ -68,7 +69,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
 	if (!article) notFound();
 
-	const authorName = await resolveAuthorName(article.authorId);
+	const author = await resolveAuthor(article.authorId);
 	const readTimeMinutes = estimateReadTimeMinutes(article.content);
 
 	return (
@@ -94,12 +95,17 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 					</h1>
 
 					<div className="mt-6 flex flex-col gap-4 border-ax-line border-b pb-6 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-						<span className="flex flex-wrap items-center gap-x-1 font-medium text-ax-ink-soft text-sm leading-5">
+						<span className="flex flex-wrap items-center gap-x-2 font-medium text-ax-ink-soft text-sm leading-5">
+							<UserAvatar
+								name={author.name}
+								src={author.avatarUrl}
+								className="size-9 text-xs"
+							/>
 							<Link
 								href={`/perfil/${article.authorId}` as Route}
-								className="rounded-sm transition-colors hover:text-ax-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
+								className="rounded-sm font-semibold text-ax-ink transition-colors hover:text-ax-ink-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
 							>
-								{authorName}
+								{author.name}
 							</Link>
 							<span aria-hidden="true">·</span>
 							<span>{readTimeMinutes} min de leitura</span>
@@ -114,6 +120,27 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 							/>
 						</div>
 					</div>
+
+					{article.coverUrl ? (
+						<div
+							className={
+								article.coverFit === "contain"
+									? "mt-8 flex max-h-[70vh] min-h-64 items-center justify-center overflow-hidden rounded-xl bg-ax-fill"
+									: "mt-8 aspect-video overflow-hidden rounded-xl bg-ax-fill"
+							}
+						>
+							{/* biome-ignore lint/performance/noImgElement: capas usam hosts de mídia configurados fora do build. */}
+							<img
+								src={article.coverUrl}
+								alt=""
+								className={
+									article.coverFit === "contain"
+										? "max-h-[70vh] max-w-full object-contain p-4 sm:p-6"
+										: "size-full object-cover"
+								}
+							/>
+						</div>
+					) : null}
 
 					<div className="mt-8">
 						<ArticleViewer content={article.content} />

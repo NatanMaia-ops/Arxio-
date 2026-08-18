@@ -2,10 +2,12 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import {
+	confirmArticleCover,
 	createArticle,
 	deleteArticle,
 	fetchArticleById,
 	fetchArticles,
+	removeArticleCover,
 	updateArticle,
 } from "./articles-api";
 
@@ -19,6 +21,8 @@ const articlePayload = {
 	authorId: "b2c3d4e5-f6a7-4b5c-8d9e-0f1a2b3c4d5e",
 	title: "Como pequenas escolhas moldam produtos melhores",
 	content: '{"type":"doc","content":[]}',
+	coverUrl: null,
+	coverFit: "cover",
 	createdAt: "2026-07-20T12:00:00.000Z",
 	updatedAt: "2026-07-20T12:00:00.000Z",
 };
@@ -122,7 +126,11 @@ describe("Articles API", () => {
 
 		const article = await createArticle(
 			"http://localhost:3000",
-			{ title: articlePayload.title, content: articlePayload.content },
+			{
+				title: articlePayload.title,
+				content: articlePayload.content,
+				coverFit: "cover",
+			},
 			fetcher,
 		);
 
@@ -134,6 +142,7 @@ describe("Articles API", () => {
 			JSON.stringify({
 				title: articlePayload.title,
 				content: articlePayload.content,
+				coverFit: "cover",
 			}),
 		);
 	});
@@ -148,7 +157,7 @@ describe("Articles API", () => {
 		await assert.rejects(
 			createArticle(
 				"http://localhost:3000",
-				{ title: "titulo", content: "conteudo" },
+				{ title: "titulo", content: "conteudo", coverFit: "cover" },
 				fetcher,
 			),
 			/Authentication required/,
@@ -161,7 +170,7 @@ describe("Articles API", () => {
 		await assert.rejects(
 			createArticle(
 				"http://localhost:3000",
-				{ title: "titulo", content: "conteudo" },
+				{ title: "titulo", content: "conteudo", coverFit: "cover" },
 				fetcher,
 			),
 			/Não foi possível publicar o artigo/,
@@ -182,6 +191,26 @@ describe("Articles API", () => {
 		assert.equal(
 			requests[0]?.init?.body,
 			JSON.stringify({ title: "Novo título" }),
+		);
+	});
+
+	it("parses and updates the cover fit", async () => {
+		const containedPayload = { ...articlePayload, coverFit: "contain" };
+		const { requests, fetcher } = recorder(() =>
+			Response.json(containedPayload),
+		);
+
+		const article = await updateArticle(
+			"http://localhost:3000",
+			articlePayload.id,
+			{ coverFit: "contain" },
+			fetcher,
+		);
+
+		assert.equal(article.coverFit, "contain");
+		assert.equal(
+			requests[0]?.init?.body,
+			JSON.stringify({ coverFit: "contain" }),
 		);
 	});
 
@@ -213,5 +242,51 @@ describe("Articles API", () => {
 			deleteArticle("http://localhost:3000", articlePayload.id, fetcher),
 			/Voce nao tem permissao/,
 		);
+	});
+
+	it("parses coverUrl and confirms a new cover", async () => {
+		const coveredPayload = {
+			...articlePayload,
+			coverUrl: "https://media.example.com/article-cover.webp",
+		};
+		const { requests, fetcher } = recorder(() => Response.json(coveredPayload));
+		const saved = await confirmArticleCover(
+			"http://localhost:3000",
+			articlePayload.id,
+			"pending/user/article-cover/image.webp",
+			fetcher,
+		);
+
+		assert.equal(saved.coverUrl, coveredPayload.coverUrl);
+		assert.equal(requests[0]?.init?.method, "PUT");
+		assert.equal(
+			requests[0]?.init?.body,
+			JSON.stringify({ objectKey: "pending/user/article-cover/image.webp" }),
+		);
+	});
+
+	it("removes a cover and reports forbidden or missing articles", async () => {
+		const { requests, fetcher } = recorder(() => Response.json(articlePayload));
+		const removed = await removeArticleCover(
+			"http://localhost:3000",
+			articlePayload.id,
+			fetcher,
+		);
+		assert.equal(removed.coverUrl, null);
+		assert.equal(requests[0]?.init?.method, "DELETE");
+
+		for (const [status, message] of [
+			[403, "Sem permissão"],
+			[404, "Artigo não encontrado"],
+		] as const) {
+			await assert.rejects(
+				removeArticleCover(
+					"http://localhost:3000",
+					articlePayload.id,
+					async () => Response.json({ message }, { status }),
+				),
+				new RegExp(message),
+			);
+		}
 	});
 });

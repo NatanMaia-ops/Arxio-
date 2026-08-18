@@ -12,15 +12,17 @@ import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { UserAvatar } from "@/components/user-avatar";
 import { signOut } from "@/features/auth/services/sign-out";
-import { getInitials } from "@/lib/initials";
 
 export function UserMenu({
 	userId,
 	name,
+	avatarUrl,
 }: {
 	userId: string;
 	name: string | null;
+	avatarUrl: string | null;
 }) {
 	const [isSigningOut, setIsSigningOut] = useState(false);
 
@@ -45,7 +47,11 @@ export function UserMenu({
 				aria-label={name ? `Abrir menu de ${name}` : "Abrir menu da conta"}
 				className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-ax-fill-hover font-semibold text-ax-ink text-xs uppercase outline-none transition-shadow hover:ring-2 hover:ring-ax-line-3 focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
 			>
-				<span aria-hidden="true">{name ? getInitials(name) : "?"}</span>
+				<UserAvatar
+					name={name}
+					src={avatarUrl}
+					className="size-9 text-xs ring-0"
+				/>
 			</DropdownMenuTrigger>
 
 			<DropdownMenuContent

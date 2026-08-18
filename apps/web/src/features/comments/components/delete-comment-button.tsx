@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { ConfirmDialog } from "@/features/articles/components/confirm-dialog";
+import { ConfirmDialog } from "@/components/confirm-dialog";
 
 export function DeleteCommentButton({
 	onConfirm,

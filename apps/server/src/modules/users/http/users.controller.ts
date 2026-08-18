@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { NotFoundError } from "../../../shared/errors";
 import type { AuthenticatedLocals } from "../../auth/http/auth.middleware";
+import { confirmMediaUploadSchema } from "../../media/http/dtos/confirm_media_upload.dto";
 import type { UsersService } from "../users.service";
 
 import { createUserSchema } from "./dtos/create_user.dto";
@@ -24,6 +25,8 @@ type UsersControllerService = Pick<
 	| "getPublicProfileById"
 	| "getOwnAccount"
 	| "updateOwnProfile"
+	| "setOwnAvatar"
+	| "removeOwnAvatar"
 >;
 
 function toUpdateOwnProfileInput(input: UpdateOwnProfileDto) {
@@ -88,6 +91,40 @@ export function createUsersController(
 				const account = await usersService.updateOwnProfile(
 					res.locals.session.user.id,
 					toUpdateOwnProfileInput(input),
+				);
+
+				res.status(200).json(ownUserAccountResponseSchema.parse(account));
+			} catch (error) {
+				next(error);
+			}
+		},
+	);
+
+	router.put(
+		"/me/avatar",
+		requireAuth,
+		async (req, res: Response<unknown, AuthenticatedLocals>, next) => {
+			try {
+				const { objectKey } = confirmMediaUploadSchema.parse(req.body);
+				const account = await usersService.setOwnAvatar(
+					res.locals.session.user.id,
+					objectKey,
+				);
+
+				res.status(200).json(ownUserAccountResponseSchema.parse(account));
+			} catch (error) {
+				next(error);
+			}
+		},
+	);
+
+	router.delete(
+		"/me/avatar",
+		requireAuth,
+		async (_req, res: Response<unknown, AuthenticatedLocals>, next) => {
+			try {
+				const account = await usersService.removeOwnAvatar(
+					res.locals.session.user.id,
 				);
 
 				res.status(200).json(ownUserAccountResponseSchema.parse(account));

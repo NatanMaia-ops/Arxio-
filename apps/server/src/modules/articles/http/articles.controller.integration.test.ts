@@ -7,6 +7,8 @@ import express from "express";
 
 import { errorHandler } from "../../../shared/http/error-handler";
 import { createRequireAuth } from "../../auth/http/auth.middleware";
+import { MediaService } from "../../media/media.service";
+import type { ObjectStorage } from "../../media/object-storage";
 import type { Article } from "../entities/article.entity";
 import type { ArticleRepository } from "../repositories/article-repository";
 import { ArticleService } from "../services/articles.service";
@@ -26,6 +28,9 @@ function createFakeRepository(): ArticleRepository {
 				authorId: input.authorId,
 				title: input.title,
 				content: input.content,
+				coverObjectKey: null,
+				coverUrl: null,
+				coverFit: input.coverFit,
 				createdAt: new Date(),
 				updatedAt: new Date(),
 			};
@@ -55,6 +60,7 @@ function createFakeRepository(): ArticleRepository {
 				...article,
 				...(input.title !== undefined ? { title: input.title } : {}),
 				...(input.content !== undefined ? { content: input.content } : {}),
+				...(input.coverFit !== undefined ? { coverFit: input.coverFit } : {}),
 				updatedAt: new Date(),
 			};
 
@@ -62,17 +68,39 @@ function createFakeRepository(): ArticleRepository {
 
 			return updated;
 		},
+		async replaceCoverObjectKey(id, objectKey) {
+			const article = store.get(id);
+			if (!article) return null;
+			const previousObjectKey = article.coverObjectKey;
+			const updated = { ...article, coverObjectKey: objectKey, coverUrl: null };
+			store.set(id, updated);
+			return { article: updated, previousObjectKey };
+		},
 		async delete(id) {
 			store.delete(id);
 		},
 	};
 }
 
+const mediaStorage: ObjectStorage = {
+	async createPresignedUpload() {
+		throw new Error("not used");
+	},
+	async getMetadata() {
+		return { contentType: "image/png", sizeBytes: 1024 };
+	},
+	async copy() {},
+	async delete() {},
+};
+
 describe("Articles HTTP API", () => {
 	let origin = "";
 	let server: Server;
 	const repository = createFakeRepository();
-	const articlesService = new ArticleService(repository);
+	const articlesService = new ArticleService(
+		repository,
+		new MediaService(mediaStorage, "https://media.example.com"),
+	);
 
 	before(async () => {
 		const app = express();
@@ -321,9 +349,88 @@ describe("Articles HTTP API", () => {
 		assert.equal(updated.authorId, fakeUserId);
 		assert.equal(updated.title, "Artigo atualizado");
 		assert.equal(updated.content, "Original");
+		assert.equal(updated.coverFit, "cover");
 		assert.ok(
 			new Date(updated.updatedAt as string) > new Date(created.updatedAt),
 		);
+	});
+
+	it("updates the cover fit without requiring a new image", async () => {
+		const createResponse = await fetch(`${origin}/articles`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ title: "Diagrama", content: "Conteudo" }),
+		});
+		const created = (await createResponse.json()) as {
+			id: string;
+			coverFit: string;
+		};
+		assert.equal(created.coverFit, "cover");
+
+		const patchResponse = await fetch(`${origin}/articles/${created.id}`, {
+			method: "PATCH",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ coverFit: "contain" }),
+		});
+		const updated = (await patchResponse.json()) as { coverFit: string };
+
+		assert.equal(patchResponse.status, 200);
+		assert.equal(updated.coverFit, "contain");
+	});
+
+	it("confirms and removes a cover when the caller is the author", async () => {
+		const createResponse = await fetch(`${origin}/articles`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ title: "Artigo com capa", content: "Conteudo" }),
+		});
+		const created = (await createResponse.json()) as { id: string };
+		const putResponse = await fetch(`${origin}/articles/${created.id}/cover`, {
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				objectKey: `pending/${fakeUserId}/article-cover/11111111-1111-4111-8111-111111111111.png`,
+			}),
+		});
+		const covered = (await putResponse.json()) as { coverUrl: string | null };
+		const deleteResponse = await fetch(
+			`${origin}/articles/${created.id}/cover`,
+			{ method: "DELETE" },
+		);
+		const withoutCover = (await deleteResponse.json()) as {
+			coverUrl: string | null;
+		};
+
+		assert.equal(putResponse.status, 200);
+		assert.match(
+			covered.coverUrl ?? "",
+			new RegExp(
+				`^https://media\\.example\\.com/article-covers/${created.id}/`,
+			),
+		);
+		assert.equal(deleteResponse.status, 200);
+		assert.equal(withoutCover.coverUrl, null);
+	});
+
+	it("returns 403 when another user tries to confirm a cover", async () => {
+		const createResponse = await fetch(`${origin}/articles`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ title: "Capa protegida", content: "Conteudo" }),
+		});
+		const created = (await createResponse.json()) as { id: string };
+		const response = await fetch(
+			`${origin}/articles-other/${created.id}/cover`,
+			{
+				method: "PUT",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					objectKey: `pending/${otherUserId}/article-cover/11111111-1111-4111-8111-111111111111.png`,
+				}),
+			},
+		);
+
+		assert.equal(response.status, 403);
 	});
 
 	it("returns 404 on PATCH when update finds no article", async () => {
@@ -333,6 +440,9 @@ describe("Articles HTTP API", () => {
 			authorId: fakeUserId,
 			title: "Artigo sumiu",
 			content: "Conteudo",
+			coverObjectKey: null,
+			coverUrl: null,
+			coverFit: "cover",
 			createdAt: new Date(),
 			updatedAt: new Date(),
 		};
@@ -347,6 +457,9 @@ describe("Articles HTTP API", () => {
 				return [article];
 			},
 			async update() {
+				return null;
+			},
+			async replaceCoverObjectKey() {
 				return null;
 			},
 			async delete() {},

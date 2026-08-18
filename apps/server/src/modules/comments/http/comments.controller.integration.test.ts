@@ -37,6 +37,9 @@ function createFakeArticleRepository(articles: Article[]): ArticleRepository {
 		async update() {
 			throw new Error("not implemented");
 		},
+		async replaceCoverObjectKey() {
+			throw new Error("not implemented");
+		},
 		async delete() {
 			throw new Error("not implemented");
 		},
@@ -103,6 +106,9 @@ const existingArticle: Article = {
 	authorId: otherUserId,
 	title: "Artigo existente",
 	content: "Conteudo",
+	coverObjectKey: null,
+	coverUrl: null,
+	coverFit: "cover",
 	createdAt: new Date(),
 	updatedAt: new Date(),
 };
@@ -112,6 +118,9 @@ const otherArticle: Article = {
 	authorId: otherUserId,
 	title: "Outro artigo",
 	content: "Outro conteudo",
+	coverObjectKey: null,
+	coverUrl: null,
+	coverFit: "cover",
 	createdAt: new Date(),
 	updatedAt: new Date(),
 };

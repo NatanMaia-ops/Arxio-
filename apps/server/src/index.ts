@@ -18,6 +18,8 @@ import {
 } from "./modules/comments/http/comments.controller";
 import { createLikesController } from "./modules/likes/http/likes.controller";
 import { likesService } from "./modules/likes/likes.module";
+import { createMediaController } from "./modules/media/http/media.controller";
+import { mediaService } from "./modules/media/media.module";
 import {
 	createOnboardingController,
 	onboardingService,
@@ -69,6 +71,12 @@ app.use(
 	"/articles",
 	express.json(),
 	createArticlesController(articlesService, requireAuth),
+);
+
+app.use(
+	"/media",
+	express.json(),
+	createMediaController(mediaService, requireAuth),
 );
 
 app.use(

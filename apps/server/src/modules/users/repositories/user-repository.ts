@@ -8,6 +8,7 @@ export type CreateUserInput = {
 	passwordHash: string;
 	bio?: string | null;
 	avatarUrl?: string | null;
+	avatarObjectKey?: string | null;
 };
 
 export type UpdateOwnProfileInput = {
@@ -33,6 +34,13 @@ export type UserRepository = {
 		authenticatedUserId: string,
 		input: UpdateOwnProfileInput,
 	): Promise<OwnUserAccount | null>;
+	replaceAvatarObjectKey(
+		authenticatedUserId: string,
+		objectKey: string | null,
+	): Promise<{
+		account: OwnUserAccount;
+		previousObjectKey: string | null;
+	} | null>;
 	updateLastLoginAt(id: string): Promise<void>;
 	verifyEmail(id: string): Promise<void>;
 	disable(id: string): Promise<void>;

@@ -4,12 +4,13 @@ import type { Route } from "next";
 import Link from "next/link";
 import { useState } from "react";
 
+import { UserAvatar } from "@/components/user-avatar";
 import {
 	formatAbsoluteDate,
 	formatPublishedDate,
 } from "@/features/articles/article-date";
+import type { AuthorSummary } from "@/features/articles/types/article.types";
 import type { FlatCommentNode } from "@/features/comments/comment-tree";
-import { getInitials } from "@/lib/initials";
 
 import { CommentForm } from "./comment-form";
 import { DeleteCommentButton } from "./delete-comment-button";
@@ -18,7 +19,7 @@ const MAX_INDENT_DEPTH = 4;
 
 type CommentItemProps = {
 	node: FlatCommentNode;
-	authorNames: Map<string, string>;
+	authors: Map<string, AuthorSummary>;
 	currentUserId: string | null;
 	onReply: (parentId: string, content: string) => Promise<void>;
 	onUpdate: (id: string, content: string) => Promise<void>;
@@ -27,7 +28,7 @@ type CommentItemProps = {
 
 export function CommentItem({
 	node,
-	authorNames,
+	authors,
 	currentUserId,
 	onReply,
 	onUpdate,
@@ -36,7 +37,12 @@ export function CommentItem({
 	const [isReplying, setIsReplying] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
 
-	const authorName = authorNames.get(node.authorId) ?? "Autor desconhecido";
+	const author = authors.get(node.authorId) ?? {
+		id: node.authorId,
+		name: "Autor desconhecido",
+		avatarUrl: null,
+	};
+	const authorName = author.name;
 	const isOwner = currentUserId === node.authorId;
 	const indent = Math.min(node.depth, MAX_INDENT_DEPTH) * 24;
 
@@ -46,12 +52,11 @@ export function CommentItem({
 			className={node.depth > 0 ? "border-ax-line border-l pl-4" : undefined}
 		>
 			<div className="flex gap-3 py-4">
-				<span
-					aria-hidden="true"
-					className="flex size-8 shrink-0 items-center justify-center rounded-full bg-ax-fill-hover font-semibold text-[11px] text-ax-ink uppercase"
-				>
-					{getInitials(authorName)}
-				</span>
+				<UserAvatar
+					name={authorName}
+					src={author.avatarUrl}
+					className="size-8 text-[11px] ring-0"
+				/>
 
 				<div className="min-w-0 flex-1">
 					<div className="flex flex-wrap items-center gap-x-2 text-[13px]">

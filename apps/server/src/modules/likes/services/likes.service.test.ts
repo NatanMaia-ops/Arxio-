@@ -27,6 +27,9 @@ function createArticle(id: string): Article {
 		authorId: "44444444-4444-4444-8444-444444444444",
 		title: "Test article",
 		content: "Test content",
+		coverObjectKey: null,
+		coverUrl: null,
+		coverFit: "cover",
 		createdAt: new Date("2026-01-01T00:00:00.000Z"),
 		updatedAt: new Date("2026-01-01T00:00:00.000Z"),
 	};
@@ -60,6 +63,14 @@ function createArticleRepository(
 			const updated = { ...article, ...input };
 			articles.set(id, updated);
 			return updated;
+		},
+		async replaceCoverObjectKey(id, objectKey) {
+			const article = articles.get(id);
+			if (!article) return null;
+			const previousObjectKey = article.coverObjectKey;
+			const updated = { ...article, coverObjectKey: objectKey, coverUrl: null };
+			articles.set(id, updated);
+			return { article: updated, previousObjectKey };
 		},
 		async delete(id: string) {
 			articles.delete(id);

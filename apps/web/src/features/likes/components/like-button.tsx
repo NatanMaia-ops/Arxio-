@@ -44,9 +44,14 @@ function LikeBurst() {
 }
 
 export function LikeButton({ articleId }: { articleId: string }) {
+	const [hasHydrated, setHasHydrated] = useState(false);
 	const [status, setStatus] = useState<LikesStatus | null>(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [justLiked, setJustLiked] = useState(false);
+
+	useEffect(() => {
+		setHasHydrated(true);
+	}, []);
 
 	useEffect(() => {
 		let isActive = true;
@@ -100,13 +105,15 @@ export function LikeButton({ articleId }: { articleId: string }) {
 		}
 	}
 
-	const isLiked = status?.likedByMe ?? false;
+	const displayedStatus = hasHydrated ? status : null;
+	const isLiked = displayedStatus?.likedByMe ?? false;
+	const isJustLiked = hasHydrated && justLiked;
 
 	return (
 		<button
 			type="button"
 			onClick={handleToggle}
-			disabled={!status || isSubmitting}
+			disabled={!displayedStatus || isSubmitting}
 			aria-pressed={isLiked}
 			className={`inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full border bg-ax-surface px-4 font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface disabled:cursor-not-allowed disabled:opacity-60 ${
 				isLiked
@@ -117,7 +124,7 @@ export function LikeButton({ articleId }: { articleId: string }) {
 			<span className="relative inline-flex size-4.5 items-center justify-center">
 				<Heart
 					className={`size-4.5 ${
-						justLiked
+						isJustLiked
 							? "animate-[ax-like-pop_0.5s_cubic-bezier(0.34,1.56,0.64,1)] motion-reduce:animate-none"
 							: ""
 					}`}
@@ -126,10 +133,12 @@ export function LikeButton({ articleId }: { articleId: string }) {
 					aria-hidden="true"
 				/>
 
-				{justLiked ? <LikeBurst /> : null}
+				{isJustLiked ? <LikeBurst /> : null}
 			</span>
 
-			<span aria-live="polite">{status ? status.count : " "}</span>
+			<span aria-live="polite">
+				{displayedStatus ? displayedStatus.count : " "}
+			</span>
 
 			<span className="sr-only">
 				{isLiked ? "Descurtir artigo" : "Curtir artigo"}

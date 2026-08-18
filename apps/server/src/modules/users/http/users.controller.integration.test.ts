@@ -23,6 +23,7 @@ const publicProfile: PublicUserProfile = {
 	name: "Lucas Lima",
 	bio: "Estudante e pesquisador",
 	avatarUrl: "https://example.com/avatar.png",
+	avatarObjectKey: null,
 	academicProfile: {
 		course: "Ciência da Computação",
 		semester: 4,
@@ -34,6 +35,16 @@ const publicProfile: PublicUserProfile = {
 const ownAccount: OwnUserAccount = {
 	...publicProfile,
 	email: "lucas@example.com",
+	hasCustomAvatar: false,
+};
+
+const publicProfileResponse = {
+	id: publicProfile.id,
+	name: publicProfile.name,
+	bio: publicProfile.bio,
+	avatarUrl: publicProfile.avatarUrl,
+	academicProfile: publicProfile.academicProfile,
+	createdAt,
 };
 
 type ControllerService = Pick<
@@ -43,6 +54,8 @@ type ControllerService = Pick<
 	| "getPublicProfileById"
 	| "getOwnAccount"
 	| "updateOwnProfile"
+	| "setOwnAvatar"
+	| "removeOwnAvatar"
 >;
 
 describe("Users profile HTTP API", () => {
@@ -103,6 +116,12 @@ describe("Users profile HTTP API", () => {
 					: ownAccount.academicProfile,
 			};
 		},
+		async setOwnAvatar() {
+			return ownAccount;
+		},
+		async removeOwnAvatar() {
+			return ownAccount;
+		},
 	};
 
 	before(async () => {
@@ -144,7 +163,7 @@ describe("Users profile HTTP API", () => {
 
 		assert.equal(response.status, 200);
 		assert.deepEqual(await response.json(), {
-			...publicProfile,
+			...publicProfileResponse,
 			createdAt: createdAt.toISOString(),
 		});
 	});
@@ -186,7 +205,9 @@ describe("Users profile HTTP API", () => {
 		assert.equal(response.status, 200);
 		assert.equal(receivedOwnAccountId, userId);
 		assert.deepEqual(await response.json(), {
-			...ownAccount,
+			...publicProfileResponse,
+			email: ownAccount.email,
+			hasCustomAvatar: false,
 			createdAt: createdAt.toISOString(),
 		});
 	});
@@ -231,6 +252,22 @@ describe("Users profile HTTP API", () => {
 		assert.deepEqual(receivedUpdateInput, {
 			academicProfile: { course: null },
 		});
+	});
+
+	it("confirms and removes the authenticated user's avatar", async () => {
+		const putResponse = await fetch(`${origin}/users/me/avatar`, {
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				objectKey: `pending/${userId}/avatar/11111111-1111-4111-8111-111111111111.jpg`,
+			}),
+		});
+		const deleteResponse = await fetch(`${origin}/users/me/avatar`, {
+			method: "DELETE",
+		});
+
+		assert.equal(putResponse.status, 200);
+		assert.equal(deleteResponse.status, 200);
 	});
 
 	it("rejects invalid profile update payloads", async () => {

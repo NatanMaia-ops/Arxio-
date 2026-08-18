@@ -57,12 +57,8 @@ export default async function ArticlesPage() {
 
 					{articles?.length === 0 && <EmptyState />}
 
-					{articles?.map(({ article, authorName }) => (
-						<ArticleCard
-							key={article.id}
-							article={article}
-							authorName={authorName}
-						/>
+					{articles?.map(({ article, author }) => (
+						<ArticleCard key={article.id} article={article} author={author} />
 					))}
 				</section>
 			</main>

@@ -19,6 +19,11 @@ export const articles = pgTable(
 
 		title: varchar("title", { length: 200 }).notNull(),
 		content: text("content").notNull(),
+		coverObjectKey: varchar("cover_object_key", { length: 500 }),
+		coverFit: varchar("cover_fit", { length: 10 })
+			.$type<"cover" | "contain">()
+			.notNull()
+			.default("cover"),
 
 		createdAt: timestamp("created_at").notNull().defaultNow(),
 		updatedAt: timestamp("updated_at").notNull().defaultNow(),

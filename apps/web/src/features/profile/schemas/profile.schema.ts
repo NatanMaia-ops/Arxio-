@@ -43,6 +43,7 @@ export const publicProfileSchema = z.object({
 
 export const ownAccountSchema = publicProfileSchema.extend({
 	email: z.email(),
+	hasCustomAvatar: z.boolean(),
 });
 
 export const editProfileSchema = z

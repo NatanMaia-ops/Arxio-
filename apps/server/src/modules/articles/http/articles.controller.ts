@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { ForbiddenError, NotFoundError } from "../../../shared/errors";
 import type { AuthenticatedLocals } from "../../auth/http/auth.middleware";
+import { confirmMediaUploadSchema } from "../../media/http/dtos/confirm_media_upload.dto";
 import type { ArticleService } from "../services/articles.service";
 
 import { articleResponseSchema } from "./dtos/article_response.dto";
@@ -90,6 +91,44 @@ export function createArticlesController(
 				}
 
 				res.status(200).json(articleResponseSchema.parse(updated));
+			} catch (error) {
+				next(error);
+			}
+		},
+	);
+
+	router.put(
+		"/:id/cover",
+		requireAuth,
+		async (req, res: Response<unknown, AuthenticatedLocals>, next) => {
+			try {
+				const { id } = paramsWithIdSchema.parse(req.params);
+				const { objectKey } = confirmMediaUploadSchema.parse(req.body);
+				const article = await articlesService.setCover(
+					id,
+					res.locals.session.user.id,
+					objectKey,
+				);
+
+				res.status(200).json(articleResponseSchema.parse(article));
+			} catch (error) {
+				next(error);
+			}
+		},
+	);
+
+	router.delete(
+		"/:id/cover",
+		requireAuth,
+		async (req, res: Response<unknown, AuthenticatedLocals>, next) => {
+			try {
+				const { id } = paramsWithIdSchema.parse(req.params);
+				const article = await articlesService.removeCover(
+					id,
+					res.locals.session.user.id,
+				);
+
+				res.status(200).json(articleResponseSchema.parse(article));
 			} catch (error) {
 				next(error);
 			}

@@ -1,6 +1,7 @@
 import { Clock3 } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
+import { UserAvatar } from "@/components/user-avatar";
 import {
 	estimateReadTimeMinutes,
 	extractExcerpt,
@@ -9,36 +10,50 @@ import {
 	formatAbsoluteDate,
 	formatPublishedDate,
 } from "@/features/articles/article-date";
-import type { Article } from "@/features/articles/types/article.types";
-import { getInitials } from "@/lib/initials";
+import type {
+	Article,
+	AuthorSummary,
+} from "@/features/articles/types/article.types";
 
 export function ArticleCard({
 	article,
-	authorName,
+	author,
 }: {
 	article: Article;
-	authorName: string;
+	author: AuthorSummary;
 }) {
 	const readTimeMinutes = estimateReadTimeMinutes(article.content);
 
 	return (
 		<article className="relative flex flex-col gap-4 rounded-2xl border border-ax-line bg-ax-surface p-4 transition-colors hover:border-ax-line-3 sm:flex-row-reverse sm:items-stretch sm:gap-5 sm:p-5">
-			<div className="aspect-16/9 w-full shrink-0 rounded-xl bg-ax-fill sm:aspect-auto sm:h-auto sm:w-56 lg:w-72" />
+			{article.coverUrl ? (
+				<div className="aspect-video w-full shrink-0 overflow-hidden rounded-xl bg-ax-fill sm:h-auto sm:w-56 lg:w-72">
+					{/* biome-ignore lint/performance/noImgElement: capas usam hosts de mídia configurados fora do build. */}
+					<img
+						src={article.coverUrl}
+						alt=""
+						loading="lazy"
+						className={
+							article.coverFit === "contain"
+								? "size-full object-contain p-4"
+								: "size-full object-cover"
+						}
+					/>
+				</div>
+			) : null}
 
 			<div className="flex min-w-0 flex-1 flex-col gap-3">
 				<header className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-ax-meta">
 					<Link
-						href={`/perfil/${article.authorId}` as Route}
+						href={`/perfil/${author.id}` as Route}
 						className="relative z-10 inline-flex min-w-0 max-w-full items-center gap-2 rounded-md font-medium text-ax-ink-soft transition-colors hover:text-ax-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
 					>
-						<span
-							aria-hidden="true"
-							className="flex size-7 shrink-0 items-center justify-center rounded-full bg-ax-fill-hover font-semibold text-[11px] text-ax-ink uppercase"
-						>
-							{getInitials(authorName)}
-						</span>
-
-						<span className="truncate">{authorName}</span>
+						<UserAvatar
+							name={author.name}
+							src={author.avatarUrl}
+							className="size-7 text-[11px] ring-0"
+						/>
+						<span className="truncate">{author.name}</span>
 					</Link>
 
 					<span aria-hidden="true" className="text-ax-line-3">

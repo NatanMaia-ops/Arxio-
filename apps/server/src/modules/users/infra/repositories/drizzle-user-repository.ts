@@ -22,6 +22,7 @@ const ownAccountSelection = {
 		email: users.email,
 		bio: users.bio,
 		avatarUrl: users.image,
+		avatarObjectKey: users.avatarObjectKey,
 		createdAt: users.createdAt,
 	},
 	academicProfile: {
@@ -38,6 +39,7 @@ function toUser(row: typeof users.$inferSelect): User {
 		email: row.email,
 		bio: row.bio,
 		avatarUrl: row.image,
+		avatarObjectKey: row.avatarObjectKey,
 		emailVerifiedAt: row.emailVerified,
 		lastLoginAt: row.lastLoginAt,
 		disabledAt: row.disabledAt,
@@ -67,6 +69,7 @@ export const drizzleUserRepository: UserRepository = {
 				passwordHash: input.passwordHash,
 				bio: input.bio,
 				image: input.avatarUrl,
+				avatarObjectKey: input.avatarObjectKey,
 			})
 			.returning();
 
@@ -91,6 +94,7 @@ export const drizzleUserRepository: UserRepository = {
 					name: users.name,
 					bio: users.bio,
 					avatarUrl: users.image,
+					avatarObjectKey: users.avatarObjectKey,
 					createdAt: users.createdAt,
 				},
 				academicProfile: {
@@ -232,6 +236,38 @@ export const drizzleUserRepository: UserRepository = {
 			}
 
 			return toOwnUserAccount(account);
+		});
+	},
+
+	async replaceAvatarObjectKey(authenticatedUserId, objectKey) {
+		return db.transaction(async (transaction) => {
+			const [user] = await transaction
+				.select({ previousObjectKey: users.avatarObjectKey })
+				.from(users)
+				.where(eq(users.id, authenticatedUserId))
+				.for("update");
+
+			if (!user) return null;
+
+			await transaction
+				.update(users)
+				.set({ avatarObjectKey: objectKey, updatedAt: new Date() })
+				.where(eq(users.id, authenticatedUserId));
+
+			const [account] = await transaction
+				.select(ownAccountSelection)
+				.from(users)
+				.leftJoin(studentProfiles, eq(studentProfiles.userId, users.id))
+				.where(eq(users.id, authenticatedUserId));
+
+			if (!account) {
+				throw new Error("Failed to load updated user avatar");
+			}
+
+			return {
+				account: toOwnUserAccount(account),
+				previousObjectKey: user.previousObjectKey,
+			};
 		});
 	},
 

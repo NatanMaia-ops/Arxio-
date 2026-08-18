@@ -9,17 +9,23 @@ export const UNKNOWN_AUTHOR_NAME = "Autor desconhecido";
 
 export type ArticleWithAuthor = {
 	article: Article;
-	authorName: string;
+	author: AuthorSummary;
 };
 
-export async function resolveAuthorName(authorId: string): Promise<string> {
+export async function resolveAuthor(authorId: string): Promise<AuthorSummary> {
 	try {
 		const author = await getAuthorSummary(authorId);
 
-		return author?.name ?? UNKNOWN_AUTHOR_NAME;
+		return (
+			author ?? { id: authorId, name: UNKNOWN_AUTHOR_NAME, avatarUrl: null }
+		);
 	} catch {
-		return UNKNOWN_AUTHOR_NAME;
+		return { id: authorId, name: UNKNOWN_AUTHOR_NAME, avatarUrl: null };
 	}
+}
+
+export async function resolveAuthorName(authorId: string): Promise<string> {
+	return (await resolveAuthor(authorId)).name;
 }
 
 export function sortByNewest(articles: Article[]): Article[] {
@@ -31,17 +37,21 @@ export function sortByNewest(articles: Article[]): Article[] {
 export async function listArticlesWithAuthors(): Promise<ArticleWithAuthor[]> {
 	const articles = sortByNewest(await getArticles());
 	const authorIds = [...new Set(articles.map((article) => article.authorId))];
-	const names = new Map<string, string>();
+	const authors = new Map<string, AuthorSummary>();
 
 	await Promise.all(
 		authorIds.map(async (authorId) => {
-			names.set(authorId, await resolveAuthorName(authorId));
+			authors.set(authorId, await resolveAuthor(authorId));
 		}),
 	);
 
 	return articles.map((article) => ({
 		article,
-		authorName: names.get(article.authorId) ?? UNKNOWN_AUTHOR_NAME,
+		author: authors.get(article.authorId) ?? {
+			id: article.authorId,
+			name: UNKNOWN_AUTHOR_NAME,
+			avatarUrl: null,
+		},
 	}));
 }
 

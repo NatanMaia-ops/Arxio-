@@ -86,7 +86,11 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 
 					<ProfileArticleList
 						articles={articles}
-						authorName={profileResult.profile.name}
+						author={{
+							id: profileResult.profile.id,
+							name: profileResult.profile.name,
+							avatarUrl: profileResult.profile.avatarUrl,
+						}}
 					/>
 				</div>
 			</main>

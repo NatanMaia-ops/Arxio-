@@ -12,6 +12,9 @@ import {
 	getOwnAccount,
 	saveOwnProfile,
 } from "@/features/profile/services/profiles";
+import type { OwnAccount } from "@/features/profile/types/profile.types";
+
+import { ProfileAvatarEditor } from "./profile-avatar-editor";
 
 type FormValues = {
 	name: string;
@@ -39,6 +42,7 @@ export function ProfileEditForm() {
 	const router = useRouter();
 	const [values, setValues] = useState<FormValues>(EMPTY_VALUES);
 	const [userId, setUserId] = useState<string | null>(null);
+	const [account, setAccount] = useState<OwnAccount | null>(null);
 	const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 	const [loadError, setLoadError] = useState<string | null>(null);
 	const [submitError, setSubmitError] = useState<string | null>(null);
@@ -53,6 +57,7 @@ export function ProfileEditForm() {
 				if (!isActive) return;
 
 				setUserId(account.id);
+				setAccount(account);
 				setValues({
 					name: account.name,
 					bio: account.bio ?? "",
@@ -158,6 +163,14 @@ export function ProfileEditForm() {
 					Atualize como você se apresenta e suas informações acadêmicas.
 				</p>
 			</div>
+
+			{account ? (
+				<ProfileAvatarEditor
+					account={account}
+					name={values.name || account.name}
+					onAccountChange={setAccount}
+				/>
+			) : null}
 
 			<div className="mt-8 grid gap-6">
 				<Field label="Nome" name="name" error={fieldErrors.name} required>

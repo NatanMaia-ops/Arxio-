@@ -1,6 +1,7 @@
 import { hash } from "bcryptjs";
 
 import { ConflictError, NotFoundError } from "../../shared/errors";
+import type { MediaService } from "../media/media.service";
 
 import type { OwnUserAccount } from "./entities/own-user-account.entity";
 import type { PublicUserProfile } from "./entities/public-user-profile.entity";
@@ -13,7 +14,10 @@ import type {
 } from "./repositories/user-repository";
 
 export class UsersService {
-	constructor(private readonly users: UserRepository) {}
+	constructor(
+		private readonly users: UserRepository,
+		private readonly media?: MediaService,
+	) {}
 
 	async createUser(input: CreateUserDtoInput): Promise<UserResponse> {
 		const existing = await this.users.findByEmail(input.email);
@@ -45,7 +49,7 @@ export class UsersService {
 			throw new NotFoundError("Usuario nao encontrado");
 		}
 
-		return profile;
+		return this.withResolvedAvatar(profile);
 	}
 
 	async getOwnAccount(authenticatedUserId: string): Promise<OwnUserAccount> {
@@ -55,7 +59,7 @@ export class UsersService {
 			throw new NotFoundError("Usuario nao encontrado");
 		}
 
-		return account;
+		return this.withResolvedAvatar(account);
 	}
 
 	async getUserByEmail(email: string): Promise<UserResponse | null> {
@@ -82,7 +86,51 @@ export class UsersService {
 			throw new NotFoundError("Usuario nao encontrado");
 		}
 
-		return account;
+		return this.withResolvedAvatar(account);
+	}
+
+	async setOwnAvatar(
+		authenticatedUserId: string,
+		pendingObjectKey: string,
+	): Promise<OwnUserAccount> {
+		const media = this.requireMedia();
+		const objectKey = await media.promotePendingUpload({
+			userId: authenticatedUserId,
+			purpose: "avatar",
+			pendingObjectKey,
+			destinationOwnerId: authenticatedUserId,
+		});
+
+		try {
+			const result = await this.users.replaceAvatarObjectKey(
+				authenticatedUserId,
+				objectKey,
+			);
+
+			if (!result) {
+				throw new NotFoundError("Usuario nao encontrado");
+			}
+
+			await media.deleteBestEffort(result.previousObjectKey);
+			return this.withResolvedAvatar(result.account);
+		} catch (error) {
+			await media.deleteBestEffort(objectKey);
+			throw error;
+		}
+	}
+
+	async removeOwnAvatar(authenticatedUserId: string): Promise<OwnUserAccount> {
+		const result = await this.users.replaceAvatarObjectKey(
+			authenticatedUserId,
+			null,
+		);
+
+		if (!result) {
+			throw new NotFoundError("Usuario nao encontrado");
+		}
+
+		await this.media?.deleteBestEffort(result.previousObjectKey);
+		return this.withResolvedAvatar(result.account);
 	}
 
 	async verifyUserEmail(id: string): Promise<void> {
@@ -103,10 +151,36 @@ export class UsersService {
 			name: user.name,
 			email: user.email,
 			bio: user.bio,
-			avatarUrl: user.avatarUrl,
+			avatarUrl: this.resolveAvatarUrl(user.avatarObjectKey, user.avatarUrl),
 			emailVerifiedAt: user.emailVerifiedAt,
 			student: null,
 			createdAt: user.createdAt,
 		};
+	}
+
+	private withResolvedAvatar<T extends PublicUserProfile>(profile: T): T {
+		return {
+			...profile,
+			avatarUrl: this.resolveAvatarUrl(
+				profile.avatarObjectKey,
+				profile.avatarUrl,
+			),
+		};
+	}
+
+	private resolveAvatarUrl(
+		objectKey: string | null,
+		fallbackUrl: string | null,
+	): string | null {
+		if (!objectKey) return fallbackUrl;
+		return this.requireMedia().publicUrl(objectKey);
+	}
+
+	private requireMedia(): MediaService {
+		if (!this.media) {
+			throw new Error("MediaService is required for avatar operations");
+		}
+
+		return this.media;
 	}
 }
