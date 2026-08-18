@@ -135,6 +135,28 @@ describe("Onboarding HTTP API", () => {
 		assert.equal(body.code, "VALIDATION_ERROR");
 	});
 
+	it("rejects partial academic data", async () => {
+		const response = await fetch(`${origin}/onboarding`, {
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				name: "Lucas Atualizado",
+				course: "Ciência da Computação",
+			}),
+		});
+
+		assert.equal(response.status, 400);
+		const body = (await response.json()) as {
+			code: string;
+			issues: Array<{ path: string[] }>;
+		};
+		assert.equal(body.code, "VALIDATION_ERROR");
+		assert.deepEqual(
+			body.issues.map((issue) => issue.path),
+			[["semester"], ["institution"]],
+		);
+	});
+
 	it("completes onboarding and normalizes blank optional fields", async () => {
 		const response = await fetch(`${origin}/onboarding`, {
 			method: "PUT",
