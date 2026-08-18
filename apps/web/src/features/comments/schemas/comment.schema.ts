@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const CONTENT_MAX_LENGTH = 2000;
+export const COMMENT_CONTENT_MAX_LENGTH = 300;
 
 export const commentSchema = z.object({
 	id: z.uuid(),
@@ -19,5 +19,8 @@ export const commentInputSchema = z.object({
 		.string()
 		.trim()
 		.min(1, "O comentário não pode estar vazio")
-		.max(CONTENT_MAX_LENGTH, "O comentário deve ter no máximo 2000 caracteres"),
+		.max(
+			COMMENT_CONTENT_MAX_LENGTH,
+			`O comentário deve ter no máximo ${COMMENT_CONTENT_MAX_LENGTH} caracteres`,
+		),
 });
