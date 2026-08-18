@@ -1,3 +1,9 @@
+import {
+	COURSE_MAX_LENGTH,
+	INSTITUTION_MAX_LENGTH,
+} from "@/lib/academic-profile";
+import { USER_NAME_MAX_LENGTH } from "@/lib/user-profile";
+
 export type AcademicField = "course" | "semester" | "institution";
 
 export type AcademicFieldErrors = Partial<Record<AcademicField, string>>;
@@ -19,6 +25,29 @@ function normalizeOptionalText(value: string): string | null {
 	return normalized.length > 0 ? normalized : null;
 }
 
+export function validateUserName(value: string): {
+	name: string | null;
+	error: string | null;
+} {
+	const name = value.trim();
+
+	if (name.length < 2) {
+		return {
+			name: null,
+			error: "Informe um nome com pelo menos 2 caracteres.",
+		};
+	}
+
+	if (name.length > USER_NAME_MAX_LENGTH) {
+		return {
+			name: null,
+			error: `O nome deve ter no máximo ${USER_NAME_MAX_LENGTH} caracteres.`,
+		};
+	}
+
+	return { name, error: null };
+}
+
 export function validateAcademicFields(values: AcademicFormValues): {
 	input: AcademicInput;
 	errors: AcademicFieldErrors;
@@ -32,14 +61,27 @@ export function validateAcademicFields(values: AcademicFormValues): {
 	const filledFields = Object.values(input).filter(
 		(value) => value !== null,
 	).length;
+	const errors: AcademicFieldErrors = {
+		...(input.course && input.course.length > COURSE_MAX_LENGTH
+			? {
+					course: `O curso deve ter no máximo ${COURSE_MAX_LENGTH} caracteres.`,
+				}
+			: {}),
+		...(input.institution && input.institution.length > INSTITUTION_MAX_LENGTH
+			? {
+					institution: `A instituição/campus deve ter no máximo ${INSTITUTION_MAX_LENGTH} caracteres.`,
+				}
+			: {}),
+	};
 
 	if (filledFields === 0 || filledFields === 3) {
-		return { input, errors: {} };
+		return { input, errors };
 	}
 
 	return {
 		input,
 		errors: {
+			...errors,
 			...(input.course === null
 				? { course: "Informe o curso para completar os dados acadêmicos." }
 				: {}),

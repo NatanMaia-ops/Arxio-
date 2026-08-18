@@ -1,7 +1,27 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { validateAcademicFields } from "./onboarding-form.validation";
+import {
+	validateAcademicFields,
+	validateUserName,
+} from "./onboarding-form.validation";
+
+describe("validateUserName", () => {
+	it("normalizes a valid name", () => {
+		assert.deepEqual(validateUserName(" Lucas Lima "), {
+			name: "Lucas Lima",
+			error: null,
+		});
+	});
+
+	it("accepts 60 characters and rejects 61 characters", () => {
+		assert.equal(validateUserName("x".repeat(60)).name?.length, 60);
+		assert.deepEqual(validateUserName("x".repeat(61)), {
+			name: null,
+			error: "O nome deve ter no máximo 60 caracteres.",
+		});
+	});
+});
 
 describe("validateAcademicFields", () => {
 	it("accepts an empty academic profile", () => {
@@ -32,6 +52,32 @@ describe("validateAcademicFields", () => {
 					institution: "UEPB — Campus VII",
 				},
 				errors: {},
+			},
+		);
+	});
+
+	it("rejects course and institution values above their limits", () => {
+		const validValues = {
+			course: "x".repeat(45),
+			semester: "4",
+			institution: "x".repeat(60),
+		};
+
+		assert.deepEqual(validateAcademicFields(validValues).errors, {});
+		assert.deepEqual(
+			validateAcademicFields({
+				...validValues,
+				course: "x".repeat(46),
+			}).errors,
+			{ course: "O curso deve ter no máximo 45 caracteres." },
+		);
+		assert.deepEqual(
+			validateAcademicFields({
+				...validValues,
+				institution: "x".repeat(61),
+			}).errors,
+			{
+				institution: "A instituição/campus deve ter no máximo 60 caracteres.",
 			},
 		);
 	});

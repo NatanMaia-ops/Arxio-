@@ -47,6 +47,44 @@ describe("Profile schema", () => {
 		);
 	});
 
+	it("accepts the profile text limits and rejects values above them", () => {
+		assert.equal(
+			editProfileSchema.safeParse({ name: "x".repeat(60) }).success,
+			true,
+		);
+		assert.equal(
+			editProfileSchema.safeParse({ name: "x".repeat(61) }).success,
+			false,
+		);
+		assert.equal(
+			editProfileSchema.safeParse({ bio: "x".repeat(300) }).success,
+			true,
+		);
+		assert.equal(
+			editProfileSchema.safeParse({ bio: "x".repeat(301) }).success,
+			false,
+		);
+	});
+
+	it("accepts the academic text limits and rejects values above them", () => {
+		assert.equal(
+			editProfileSchema.safeParse({ course: "x".repeat(45) }).success,
+			true,
+		);
+		assert.equal(
+			editProfileSchema.safeParse({ course: "x".repeat(46) }).success,
+			false,
+		);
+		assert.equal(
+			editProfileSchema.safeParse({ institution: "x".repeat(60) }).success,
+			true,
+		);
+		assert.equal(
+			editProfileSchema.safeParse({ institution: "x".repeat(61) }).success,
+			false,
+		);
+	});
+
 	it("accepts partial updates and explicit removals", () => {
 		assert.deepEqual(editProfileSchema.parse({ course: null }), {
 			course: null,
@@ -57,9 +95,9 @@ describe("Profile schema", () => {
 		const invalidInputs = [
 			{},
 			{ name: "L" },
-			{ bio: "x".repeat(501) },
-			{ course: "x".repeat(151) },
-			{ institution: "x".repeat(151) },
+			{ bio: "x".repeat(301) },
+			{ course: "x".repeat(46) },
+			{ institution: "x".repeat(61) },
 			{ semester: "0" },
 			{ semester: 11 },
 			{ semester: "2.5" },
