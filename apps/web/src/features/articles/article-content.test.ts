@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import {
+	ARTICLE_CONTENT_MAX_LENGTH,
+	countArticleContentCharacters,
 	estimateReadTimeMinutes,
 	extractExcerpt,
 	extractPlainText,
@@ -78,6 +80,29 @@ describe("Article content", () => {
 		});
 
 		assert.equal(extractPlainText(content), "Primeiro item Segundo item");
+	});
+
+	it("counts visible characters without counting editor markup", () => {
+		assert.equal(
+			countArticleContentCharacters(documentOf("Texto visível")),
+			13,
+		);
+		assert.equal(
+			countArticleContentCharacters(
+				JSON.stringify({
+					type: "doc",
+					content: [
+						{ type: "paragraph", content: [{ type: "text", text: "a" }] },
+						{ type: "paragraph", content: [{ type: "hardBreak" }] },
+					],
+				}),
+			),
+			2,
+		);
+		assert.equal(
+			countArticleContentCharacters("x".repeat(ARTICLE_CONTENT_MAX_LENGTH)),
+			ARTICLE_CONTENT_MAX_LENGTH,
+		);
 	});
 
 	it("falls back to raw text when the content is not an editor document", () => {

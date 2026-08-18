@@ -3,6 +3,7 @@ import { env } from "@arxio/env/server";
 import cors from "cors";
 import express, { type Response } from "express";
 
+import { ARTICLE_REQUEST_BODY_LIMIT } from "./modules/articles/article-content";
 import { articlesService } from "./modules/articles/articles.module";
 import { createArticlesController } from "./modules/articles/http/articles.controller";
 import {
@@ -69,7 +70,7 @@ app.use(
 
 app.use(
 	"/articles",
-	express.json(),
+	express.json({ limit: ARTICLE_REQUEST_BODY_LIMIT }),
 	createArticlesController(articlesService, requireAuth),
 );
 

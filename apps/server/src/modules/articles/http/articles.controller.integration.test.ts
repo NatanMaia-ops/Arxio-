@@ -9,6 +9,10 @@ import { errorHandler } from "../../../shared/http/error-handler";
 import { createRequireAuth } from "../../auth/http/auth.middleware";
 import { MediaService } from "../../media/media.service";
 import type { ObjectStorage } from "../../media/object-storage";
+import {
+	ARTICLE_CONTENT_MAX_LENGTH,
+	ARTICLE_REQUEST_BODY_LIMIT,
+} from "../article-content";
 import type { Article } from "../entities/article.entity";
 import type { ArticleRepository } from "../repositories/article-repository";
 import { ArticleService } from "../services/articles.service";
@@ -105,7 +109,7 @@ describe("Articles HTTP API", () => {
 	before(async () => {
 		const app = express();
 
-		app.use(express.json());
+		app.use(express.json({ limit: ARTICLE_REQUEST_BODY_LIMIT }));
 
 		app.use(
 			"/articles",
@@ -205,6 +209,38 @@ describe("Articles HTTP API", () => {
 		const body = (await response.json()) as { code: string };
 
 		assert.equal(body.code, "VALIDATION_ERROR");
+	});
+
+	it("rejects article content above the character limit", async () => {
+		const response = await fetch(`${origin}/articles`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				title: "Artigo longo",
+				content: "x".repeat(ARTICLE_CONTENT_MAX_LENGTH + 1),
+			}),
+		});
+
+		assert.equal(response.status, 400);
+		const body = (await response.json()) as { code: string };
+		assert.equal(body.code, "VALIDATION_ERROR");
+	});
+
+	it("returns 413 when the article payload exceeds 1 MB", async () => {
+		const response = await fetch(`${origin}/articles`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				title: "Payload excessivo",
+				content: "x".repeat(1_100_000),
+			}),
+		});
+
+		assert.equal(response.status, 413);
+		assert.deepEqual(await response.json(), {
+			code: "PAYLOAD_TOO_LARGE",
+			message: "O corpo da requisição excede o limite permitido",
+		});
 	});
 
 	it("lists all articles on GET /", async () => {
@@ -467,7 +503,7 @@ describe("Articles HTTP API", () => {
 		const raceService = new ArticleService(repository);
 		const app = express();
 
-		app.use(express.json());
+		app.use(express.json({ limit: ARTICLE_REQUEST_BODY_LIMIT }));
 		app.use(
 			"/articles-race",
 			createArticlesController(

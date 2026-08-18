@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@arxio/ui/lib/utils";
-import { Placeholder } from "@tiptap/extensions";
+import { CharacterCount, Placeholder } from "@tiptap/extensions";
 import {
 	type Content,
 	type Editor,
@@ -22,6 +22,7 @@ import {
 import type { ComponentType } from "react";
 
 import {
+	ARTICLE_CONTENT_MAX_LENGTH,
 	EMPTY_DOCUMENT,
 	parseEditorDocument,
 } from "@/features/articles/article-content";
@@ -104,6 +105,11 @@ export function ArticleEditor({
 		extensions: [
 			StarterKit.configure({ heading: { levels: [2, 3] } }),
 			Placeholder.configure({ placeholder }),
+			CharacterCount.configure({
+				limit: ARTICLE_CONTENT_MAX_LENGTH,
+				mode: "textSize",
+				autoTrim: false,
+			}),
 		],
 		content: (initialContent
 			? (parseEditorDocument(initialContent) ?? initialContent)
@@ -131,10 +137,16 @@ export function ArticleEditor({
 					)
 				: [],
 	});
+	const characterCount = useEditorState({
+		editor,
+		selector: ({ editor: instance }) =>
+			instance?.storage.characterCount.characters() ?? 0,
+	});
 
 	if (!editor) {
 		return <div className="min-h-100" aria-hidden="true" />;
 	}
+	const currentCharacterCount = characterCount ?? 0;
 
 	return (
 		<div className="flex flex-col gap-4">
@@ -167,6 +179,17 @@ export function ArticleEditor({
 			</div>
 
 			<EditorContent editor={editor} />
+
+			<p
+				className={cn(
+					"text-right text-ax-meta text-xs",
+					currentCharacterCount >= ARTICLE_CONTENT_MAX_LENGTH &&
+						"text-destructive",
+				)}
+			>
+				{currentCharacterCount.toLocaleString("pt-BR")} /{" "}
+				{ARTICLE_CONTENT_MAX_LENGTH.toLocaleString("pt-BR")} caracteres
+			</p>
 		</div>
 	);
 }

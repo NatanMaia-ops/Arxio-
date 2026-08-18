@@ -8,6 +8,8 @@ import { toast } from "sonner";
 
 import { Logo } from "@/components/layout/logo";
 import {
+	ARTICLE_CONTENT_MAX_LENGTH,
+	countArticleContentCharacters,
 	EMPTY_DOCUMENT,
 	isEmptyContent,
 } from "@/features/articles/article-content";
@@ -49,6 +51,10 @@ function validate(title: string, content: string): string | null {
 
 	if (isEmptyContent(content)) {
 		return "O conteúdo não pode estar vazio";
+	}
+
+	if (countArticleContentCharacters(content) > ARTICLE_CONTENT_MAX_LENGTH) {
+		return `O conteúdo deve ter no máximo ${ARTICLE_CONTENT_MAX_LENGTH.toLocaleString("pt-BR")} caracteres`;
 	}
 
 	return null;
