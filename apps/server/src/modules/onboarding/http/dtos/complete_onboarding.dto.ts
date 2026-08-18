@@ -1,28 +1,27 @@
 import { z } from "zod";
 
+import {
+	courseTextSchema,
+	institutionTextSchema,
+} from "../../../../shared/schemas/academic-profile.schema";
 import { semesterSchema } from "../../../../shared/schemas/semester.schema";
-
-const optionalTextSchema = z
-	.string()
-	.trim()
-	.max(150, "O campo deve ter no máximo 150 caracteres")
-	.nullable()
-	.optional()
-	.transform((value) => value || null);
+import { userNameSchema } from "../../../../shared/schemas/user-profile.schema";
 
 export const completeOnboardingSchema = z
 	.object({
-		name: z
-			.string()
-			.trim()
-			.min(2, "O nome deve ter no mínimo 2 caracteres")
-			.max(150, "O nome deve ter no máximo 150 caracteres"),
-		course: optionalTextSchema,
+		name: userNameSchema,
+		course: courseTextSchema
+			.nullable()
+			.optional()
+			.transform((value) => value || null),
 		semester: semesterSchema
 			.nullable()
 			.optional()
 			.transform((value) => value ?? null),
-		institution: optionalTextSchema,
+		institution: institutionTextSchema
+			.nullable()
+			.optional()
+			.transform((value) => value || null),
 	})
 	.superRefine((input, context) => {
 		const filledFields = [

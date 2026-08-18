@@ -1,12 +1,17 @@
 import { z } from "zod";
 
+import {
+	courseTextSchema,
+	institutionTextSchema,
+} from "../../../../shared/schemas/academic-profile.schema";
 import { semesterSchema } from "../../../../shared/schemas/semester.schema";
+import {
+	optionalUserBioSchema,
+	userNameSchema,
+} from "../../../../shared/schemas/user-profile.schema";
 
-const optionalNullableText = (maxLength: number) =>
-	z
-		.string()
-		.trim()
-		.max(maxLength, `O campo deve ter no máximo ${maxLength} caracteres`)
+const optionalNullableAcademicText = (schema: typeof courseTextSchema) =>
+	schema
 		.nullable()
 		.optional()
 		.transform((value) => {
@@ -16,16 +21,11 @@ const optionalNullableText = (maxLength: number) =>
 
 export const updateOwnProfileSchema = z
 	.strictObject({
-		name: z
-			.string()
-			.trim()
-			.min(2, "O nome deve ter no mínimo 2 caracteres")
-			.max(150, "O nome deve ter no máximo 150 caracteres")
-			.optional(),
-		bio: optionalNullableText(500),
-		course: optionalNullableText(150),
+		name: userNameSchema.optional(),
+		bio: optionalUserBioSchema,
+		course: optionalNullableAcademicText(courseTextSchema),
 		semester: semesterSchema.nullable().optional(),
-		institution: optionalNullableText(150),
+		institution: optionalNullableAcademicText(institutionTextSchema),
 	})
 	.refine(
 		(input) => Object.values(input).some((value) => value !== undefined),

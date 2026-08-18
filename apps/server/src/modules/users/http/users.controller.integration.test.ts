@@ -274,9 +274,10 @@ describe("Users profile HTTP API", () => {
 		const invalidPayloads = [
 			{},
 			{ name: "L" },
-			{ bio: "x".repeat(501) },
-			{ course: "x".repeat(151) },
-			{ institution: "x".repeat(151) },
+			{ name: "x".repeat(61) },
+			{ bio: "x".repeat(301) },
+			{ course: "x".repeat(46) },
+			{ institution: "x".repeat(61) },
 			{ semester: 0 },
 			{ semester: 11 },
 			{ semester: 2.5 },

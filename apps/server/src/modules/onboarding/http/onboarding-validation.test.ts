@@ -6,6 +6,17 @@ import { completeOnboardingSchema } from "./dtos/complete_onboarding.dto";
 const validName = "Lucas Lima";
 
 describe("completeOnboardingSchema academic fields", () => {
+	it("accepts a 60-character name and rejects a 61-character name", () => {
+		assert.equal(
+			completeOnboardingSchema.safeParse({ name: "x".repeat(60) }).success,
+			true,
+		);
+		assert.equal(
+			completeOnboardingSchema.safeParse({ name: "x".repeat(61) }).success,
+			false,
+		);
+	});
+
 	it("accepts an empty academic profile and normalizes blank texts", () => {
 		assert.deepEqual(
 			completeOnboardingSchema.parse({
@@ -31,6 +42,34 @@ describe("completeOnboardingSchema academic fields", () => {
 		});
 
 		assert.equal(result.success, true);
+	});
+
+	it("accepts the academic text limits and rejects values above them", () => {
+		const validAcademicProfile = {
+			name: validName,
+			course: "x".repeat(45),
+			semester: 4,
+			institution: "x".repeat(60),
+		};
+
+		assert.equal(
+			completeOnboardingSchema.safeParse(validAcademicProfile).success,
+			true,
+		);
+		assert.equal(
+			completeOnboardingSchema.safeParse({
+				...validAcademicProfile,
+				course: "x".repeat(46),
+			}).success,
+			false,
+		);
+		assert.equal(
+			completeOnboardingSchema.safeParse({
+				...validAcademicProfile,
+				institution: "x".repeat(61),
+			}).success,
+			false,
+		);
 	});
 
 	it("rejects a semester above the limit", () => {
