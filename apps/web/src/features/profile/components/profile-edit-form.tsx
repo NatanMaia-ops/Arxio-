@@ -13,6 +13,7 @@ import {
 	saveOwnProfile,
 } from "@/features/profile/services/profiles";
 import type { OwnAccount } from "@/features/profile/types/profile.types";
+import { MAX_SEMESTER } from "@/lib/academic-profile";
 
 import { ProfileAvatarEditor } from "./profile-avatar-editor";
 
@@ -259,7 +260,7 @@ export function ProfileEditForm() {
 							type="number"
 							inputMode="numeric"
 							min={1}
-							max={20}
+							max={MAX_SEMESTER}
 							disabled={isSubmitting}
 							value={values.semester}
 							onChange={(event) => updateValue("semester", event.target.value)}

@@ -126,7 +126,7 @@ describe("Onboarding HTTP API", () => {
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({
 				name: "L",
-				semester: 21,
+				semester: 11,
 			}),
 		});
 

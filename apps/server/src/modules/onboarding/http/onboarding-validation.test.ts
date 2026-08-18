@@ -22,15 +22,26 @@ describe("completeOnboardingSchema academic fields", () => {
 		);
 	});
 
-	it("accepts a complete academic profile", () => {
+	it("accepts a complete academic profile at the semester limit", () => {
 		const result = completeOnboardingSchema.safeParse({
 			name: validName,
 			course: "Ciência da Computação",
-			semester: 4,
+			semester: 10,
 			institution: "UEPB — Campus VII",
 		});
 
 		assert.equal(result.success, true);
+	});
+
+	it("rejects a semester above the limit", () => {
+		const result = completeOnboardingSchema.safeParse({
+			name: validName,
+			course: "Ciência da Computação",
+			semester: 11,
+			institution: "UEPB — Campus VII",
+		});
+
+		assert.equal(result.success, false);
 	});
 
 	it("rejects every partial academic profile", () => {

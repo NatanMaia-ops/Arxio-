@@ -222,7 +222,7 @@ describe("Users profile HTTP API", () => {
 				name: " Lucas Atualizado ",
 				bio: " ",
 				course: " Sistemas de Informação ",
-				semester: 5,
+				semester: 10,
 				institution: null,
 			}),
 		});
@@ -234,7 +234,7 @@ describe("Users profile HTTP API", () => {
 			bio: null,
 			academicProfile: {
 				course: "Sistemas de Informação",
-				semester: 5,
+				semester: 10,
 				institution: null,
 			},
 		});
@@ -278,7 +278,7 @@ describe("Users profile HTTP API", () => {
 			{ course: "x".repeat(151) },
 			{ institution: "x".repeat(151) },
 			{ semester: 0 },
-			{ semester: 21 },
+			{ semester: 11 },
 			{ semester: 2.5 },
 			{ email: "new@example.com" },
 			{ avatarUrl: "https://example.com/new.png" },

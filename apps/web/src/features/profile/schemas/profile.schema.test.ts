@@ -37,6 +37,16 @@ describe("Profile schema", () => {
 		});
 	});
 
+	it("accepts semester 10 and rejects semester 11", () => {
+		assert.deepEqual(editProfileSchema.parse({ semester: "10" }), {
+			semester: 10,
+		});
+		assert.equal(
+			editProfileSchema.safeParse({ semester: "11" }).success,
+			false,
+		);
+	});
+
 	it("accepts partial updates and explicit removals", () => {
 		assert.deepEqual(editProfileSchema.parse({ course: null }), {
 			course: null,
@@ -51,7 +61,7 @@ describe("Profile schema", () => {
 			{ course: "x".repeat(151) },
 			{ institution: "x".repeat(151) },
 			{ semester: "0" },
-			{ semester: 21 },
+			{ semester: 11 },
 			{ semester: "2.5" },
 			{ semester: "not-a-number" },
 			{ email: "new@example.com" },

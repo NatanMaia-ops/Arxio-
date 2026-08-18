@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { semesterSchema } from "../../../../shared/schemas/semester.schema";
+
 const optionalTextSchema = z
 	.string()
 	.trim()
@@ -16,11 +18,7 @@ export const completeOnboardingSchema = z
 			.min(2, "O nome deve ter no mínimo 2 caracteres")
 			.max(150, "O nome deve ter no máximo 150 caracteres"),
 		course: optionalTextSchema,
-		semester: z
-			.number()
-			.int("O período deve ser um número inteiro")
-			.min(1, "O período deve ser no mínimo 1")
-			.max(10, "Informe um período válido")
+		semester: semesterSchema
 			.nullable()
 			.optional()
 			.transform((value) => value ?? null),

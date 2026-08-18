@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { semesterSchema } from "../../../../shared/schemas/semester.schema";
+
 const optionalNullableText = (maxLength: number) =>
 	z
 		.string()
@@ -22,13 +24,7 @@ export const updateOwnProfileSchema = z
 			.optional(),
 		bio: optionalNullableText(500),
 		course: optionalNullableText(150),
-		semester: z
-			.number()
-			.int("O período deve ser um número inteiro")
-			.min(1, "O período deve ser no mínimo 1")
-			.max(20, "Informe um período válido")
-			.nullable()
-			.optional(),
+		semester: semesterSchema.nullable().optional(),
 		institution: optionalNullableText(150),
 	})
 	.refine(

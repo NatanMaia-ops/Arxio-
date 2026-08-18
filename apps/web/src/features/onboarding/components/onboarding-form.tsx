@@ -12,6 +12,7 @@ import {
 	OnboardingApiError,
 	submitOnboarding,
 } from "@/features/onboarding/services/onboarding-api";
+import { MAX_SEMESTER } from "@/lib/academic-profile";
 import { apiBaseUrl } from "@/lib/api-base-url";
 
 import {
@@ -22,7 +23,7 @@ import {
 type LoadingState = "loading" | "ready" | "error";
 type Submission = "complete" | "skip" | null;
 
-const semesters = Array.from({ length: 10 }, (_, index) => index + 1);
+const semesters = Array.from({ length: MAX_SEMESTER }, (_, index) => index + 1);
 
 const fieldClassName =
 	"h-12 rounded-lg border border-ax-line-3 bg-ax-surface px-4 text-[15px] text-ax-ink shadow-none placeholder:text-ax-placeholder focus-visible:border-ax-ink focus-visible:ring-1 focus-visible:ring-ax-ink/20 md:text-[15px]";

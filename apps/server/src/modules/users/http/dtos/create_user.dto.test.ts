@@ -25,6 +25,17 @@ describe("createUserSchema", () => {
 		assert.equal(result.success, true);
 	});
 
+	it("accepts semester 10 and rejects semester 11", () => {
+		assert.equal(
+			createUserSchema.safeParse({ ...validInput, semester: 10 }).success,
+			true,
+		);
+		assert.equal(
+			createUserSchema.safeParse({ ...validInput, semester: 11 }).success,
+			false,
+		);
+	});
+
 	it("rejects an invalid email", () => {
 		const result = createUserSchema.safeParse({
 			...validInput,

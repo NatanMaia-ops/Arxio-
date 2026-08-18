@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { semesterSchema } from "../../../../shared/schemas/semester.schema";
+
 export const createUserSchema = z.object({
 	name: z
 		.string()
@@ -27,12 +29,7 @@ export const createUserSchema = z.object({
 		.max(150, "O curso deve ter no máximo 150 caracteres")
 		.optional(),
 
-	semester: z
-		.number()
-		.int("O semestre deve ser um número inteiro")
-		.min(1, "O semestre deve ser no mínimo 1")
-		.max(20, "Informe um semestre válido")
-		.optional(),
+	semester: semesterSchema.optional(),
 });
 
 export type CreateUserInput = z.infer<typeof createUserSchema>;

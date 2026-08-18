@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { MAX_SEMESTER } from "@/lib/academic-profile";
+
 const optionalNullableText = (maxLength: number) =>
 	z
 		.string()
@@ -20,7 +22,7 @@ const optionalNullableSemester = z
 		.number()
 		.int("O período deve ser um número inteiro")
 		.min(1, "O período deve ser no mínimo 1")
-		.max(20, "Informe um período válido")
+		.max(MAX_SEMESTER, "Informe um período válido")
 		.nullable())
 	.optional();
 
