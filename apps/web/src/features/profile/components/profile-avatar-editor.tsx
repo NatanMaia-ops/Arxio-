@@ -127,7 +127,7 @@ export function ProfileAvatarEditor({
 					className="size-24 font-home-display text-2xl"
 				/>
 				<div className="min-w-0 flex-1">
-					<h2 id="avatar-title" className="font-semibold text-ax-ink text-base">
+					<h2 id="avatar-title" className="font-medium text-ax-ink text-body">
 						Foto de perfil
 					</h2>
 					<p id="avatar-help" className="mt-1 text-ax-meta text-sm">

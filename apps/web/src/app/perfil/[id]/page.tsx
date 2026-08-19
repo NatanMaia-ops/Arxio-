@@ -3,8 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 
-import { SiteHeader } from "@/components/layout/site-header";
-import { sortByNewest } from "@/features/articles/services/article-listing";
+import { AppShell } from "@/components/layout/app-shell";
+import {
+	listEngagement,
+	sortByNewest,
+} from "@/features/articles/services/article-listing";
 import { getArticles } from "@/features/articles/services/articles";
 import { ProfileAcademicInfo } from "@/features/profile/components/profile-academic-info";
 import { ProfileArticleList } from "@/features/profile/components/profile-article-list";
@@ -65,6 +68,9 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 		profileRequest,
 		articlesRequest,
 	]);
+	const engagement = await listEngagement(
+		(articles ?? []).map((article) => article.id),
+	);
 
 	if (profileResult.status === "not_found") notFound();
 
@@ -73,10 +79,8 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 	}
 
 	return (
-		<div className="min-h-dvh bg-ax-surface">
-			<SiteHeader />
-
-			<main className="mx-auto max-w-5xl px-5 pt-8 pb-16 sm:px-8 sm:pt-12 lg:px-10">
+		<AppShell>
+			<div className="mx-auto max-w-5xl px-5 pt-8 pb-16 sm:px-8 sm:pt-12 lg:px-10">
 				<ProfileHeader profile={profileResult.profile} />
 
 				<div className="mt-8 flex flex-col gap-10 sm:mt-10 sm:gap-12">
@@ -86,6 +90,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 
 					<ProfileArticleList
 						articles={articles}
+						engagement={engagement}
 						author={{
 							id: profileResult.profile.id,
 							name: profileResult.profile.name,
@@ -93,19 +98,17 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 						}}
 					/>
 				</div>
-			</main>
-		</div>
+			</div>
+		</AppShell>
 	);
 }
 
 function ProfileUnavailable() {
 	return (
-		<div className="min-h-dvh bg-ax-surface">
-			<SiteHeader />
-
-			<main className="mx-auto max-w-180 px-5 pt-20 pb-24 sm:px-6 sm:pt-30">
+		<AppShell>
+			<div className="mx-auto max-w-180 px-5 pt-20 pb-24 sm:px-6 sm:pt-30">
 				<section role="status" className="flex flex-col items-start gap-4">
-					<h1 className="font-bold font-home-display text-[28px] text-ax-ink leading-9 sm:text-[40px] sm:leading-11">
+					<h1 className="font-home-display text-ax-ink text-display-lg">
 						Não foi possível carregar o perfil
 					</h1>
 					<p className="text-ax-ink-soft text-base leading-6">
@@ -119,7 +122,7 @@ function ProfileUnavailable() {
 						Voltar para o feed
 					</Link>
 				</section>
-			</main>
-		</div>
+			</div>
+		</AppShell>
 	);
 }

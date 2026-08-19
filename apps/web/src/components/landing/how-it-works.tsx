@@ -103,7 +103,7 @@ export function HowItWorks() {
 				>
 					<div className="flex flex-col items-start gap-5">
 						<Kicker>Como funciona</Kicker>
-						<h2 className="text-balance font-medium text-[48px] leading-[1.05] tracking-[-0.03em]">
+						<h2 className="text-balance font-light text-[48px] leading-[1.05] tracking-[-0.03em]">
 							Do rascunho à reputação.
 						</h2>
 					</div>
@@ -156,7 +156,7 @@ export function HowItWorks() {
 							className="absolute inset-0 flex flex-col items-start gap-[18px] p-[52px_56px] transition-[opacity,transform] duration-500 ease-in-out"
 						>
 							<Kicker size={12}>Rascunho · salvo agora</Kicker>
-							<h3 className="max-w-[20ch] font-medium text-[36px] leading-[1.12] tracking-[-0.02em]">
+							<h3 className="max-w-[20ch] font-light text-[36px] leading-[1.12] tracking-[-0.02em]">
 								Por que escrever me faz estudar melhor
 								<span className="ml-2 inline-block h-[0.85em] w-[2px] translate-y-[0.08em] animate-[ax-blink_1.1s_infinite] bg-ax-ink align-[-0.08em]" />
 							</h3>
@@ -180,7 +180,7 @@ export function HowItWorks() {
 									Publicado agora
 								</Kicker>
 							</div>
-							<h3 className="max-w-[20ch] font-medium text-[36px] leading-[1.12] tracking-[-0.02em]">
+							<h3 className="max-w-[20ch] font-light text-[36px] leading-[1.12] tracking-[-0.02em]">
 								Por que escrever me faz estudar melhor
 							</h3>
 							<p className="font-home-interface text-[14px] text-ax-meta">
@@ -204,19 +204,19 @@ export function HowItWorks() {
 							<Kicker size={12}>Primeiras 48 horas</Kicker>
 							<div className="mt-3 flex flex-wrap gap-[72px]">
 								<div className="flex flex-col gap-1.5">
-									<span className="font-home-interface font-medium text-[56px] leading-none tracking-[-0.02em]">
+									<span className="font-home-interface font-light text-[56px] leading-none tracking-[-0.02em]">
 										{counts.reads}
 									</span>
 									<Kicker size={12}>Leituras</Kicker>
 								</div>
 								<div className="flex flex-col gap-1.5">
-									<span className="font-home-interface font-medium text-[56px] leading-none tracking-[-0.02em]">
+									<span className="font-home-interface font-light text-[56px] leading-none tracking-[-0.02em]">
 										{counts.claps}
 									</span>
 									<Kicker size={12}>Aplausos</Kicker>
 								</div>
 								<div className="flex flex-col gap-1.5">
-									<span className="font-home-interface font-medium text-[56px] leading-none tracking-[-0.02em]">
+									<span className="font-home-interface font-light text-[56px] leading-none tracking-[-0.02em]">
 										{counts.comments}
 									</span>
 									<Kicker size={12}>Comentários</Kicker>
@@ -232,7 +232,7 @@ export function HowItWorks() {
 							className="absolute inset-0 flex flex-col items-start gap-[18px] p-[52px_56px] transition-[opacity,transform] duration-500 ease-in-out"
 						>
 							<Kicker size={12}>Sua reputação</Kicker>
-							<h3 className="font-medium text-[40px] leading-[1.1] tracking-[-0.02em]">
+							<h3 className="font-light text-[40px] leading-[1.1] tracking-[-0.02em]">
 								Nível 4 · Autor
 							</h3>
 							<div className="mt-3 h-[3px] w-full bg-ax-surface">

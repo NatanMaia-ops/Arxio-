@@ -32,12 +32,12 @@ type PreviewFrameProps = {
 
 export function PreviewFrame({ maxWidth, children }: PreviewFrameProps) {
 	return (
-		<div className="rounded-2xl border border-ax-line bg-ax-fill/50 p-3 sm:p-5">
+		<div className="ax-canvas rounded-3xl border border-ax-line/60 p-3 sm:p-5">
 			<div
 				className="mx-auto w-full transition-[max-width] duration-300 ease-out motion-reduce:transition-none"
 				style={{ maxWidth: maxWidth ? `${maxWidth}px` : "100%" }}
 			>
-				<div className="relative h-115 overflow-y-auto overscroll-contain rounded-xl border border-ax-line bg-ax-surface">
+				<div className="relative h-115 overflow-y-auto overscroll-contain rounded-2xl bg-ax-surface shadow-ax-float">
 					{children}
 
 					<PreviewContent />
@@ -49,7 +49,7 @@ export function PreviewFrame({ maxWidth, children }: PreviewFrameProps) {
 
 export function PreviewSurface({ maxWidth, children }: PreviewFrameProps) {
 	return (
-		<div className="rounded-2xl border border-ax-line bg-ax-fill/50 p-3 sm:p-6">
+		<div className="ax-canvas rounded-3xl border border-ax-line/60 p-3 sm:p-6">
 			<div
 				className="mx-auto w-full transition-[max-width] duration-300 ease-out motion-reduce:transition-none"
 				style={{ maxWidth: maxWidth ? `${maxWidth}px` : "100%" }}
@@ -63,7 +63,7 @@ export function PreviewSurface({ maxWidth, children }: PreviewFrameProps) {
 function PreviewContent() {
 	return (
 		<main className="px-5 pt-6 pb-12 sm:px-8">
-			<h2 className="font-bold font-home-display text-[28px] text-ax-ink leading-8">
+			<h2 className="font-home-display font-light text-[28px] text-ax-ink leading-8">
 				Artigos
 			</h2>
 
@@ -78,7 +78,7 @@ function PreviewContent() {
 						key={article.title}
 						className="border-ax-line border-b py-4 last:border-b-0"
 					>
-						<h3 className="font-home-display font-semibold text-[19px] text-ax-ink leading-6">
+						<h3 className="font-home-display font-normal text-[19px] text-ax-ink leading-6">
 							{article.title}
 						</h3>
 						<p className="mt-1.5 text-ax-meta text-xs">{article.meta}</p>

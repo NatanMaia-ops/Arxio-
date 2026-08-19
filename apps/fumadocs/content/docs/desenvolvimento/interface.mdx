@@ -5,9 +5,35 @@ description: Tipografia, cores, tema escuro e acessibilidade
 
 ## Tipografia
 
-A Arxio usa duas famílias. Newsreader, uma serifada, para títulos e para o
-corpo dos artigos. Instrument Sans para a interface: navegação, botões,
+A Arxio usa duas famílias. Newsreader, uma serifada caligráfica com eixo de
+tamanho óptico, para títulos e para o corpo dos artigos. Familjen Grotesk,
+uma grotesca quente e arredondada, para a interface: navegação, botões,
 metadados e formulários.
+
+A hierarquia vive em tokens de tipo (`--text-*` no `index.css`), não em
+tamanhos avulsos. Cada token carrega tamanho, altura de linha e peso — uma
+classe (`text-display-lg`) aplica o papel inteiro.
+
+Trilho editorial (Newsreader), regra "maior = mais leve", tamanhos fluidos:
+
+| Token | Tamanho | Peso | Papel |
+| --- | --- | --- | --- |
+| `display-xl` | 36→52px | 300 | título do artigo aberto |
+| `display-lg` | 32→44px | 300 | títulos de página |
+| `display-md` | 22→28px | 500 | títulos de card, `h2` do artigo, seções |
+| `display-sm` | 19px | 500 | `h3` do artigo, título de comentários |
+
+Trilho utilitário (Familjen Grotesk), dois pesos: 400 lê, 500 age.
+
+| Token | Tamanho | Peso | Papel |
+| --- | --- | --- | --- |
+| `body` / `body-sm` | 16 / 15px | 400 | subtítulos, resumos, comentários |
+| `meta` | 13px | 400 | datas, contagens, autores |
+| `label` | 12px + tracking | 500 | eyebrows em caixa alta |
+
+Botões e inputs continuam em `text-sm` com peso 500. A serifada nunca aparece
+em negrito em títulos; `strong` dentro do artigo é a única exceção. Peso 300
+nunca desce abaixo de 24px, onde o traço fino prejudica a leitura.
 
 A divisão segue a ideia de que o texto do artigo é conteúdo de leitura longa
 e a interface é ferramenta. Serifada para ler, sem serifa para operar.

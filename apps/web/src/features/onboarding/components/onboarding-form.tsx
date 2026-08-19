@@ -166,7 +166,7 @@ export function OnboardingForm() {
 		return (
 			<main className="flex min-h-dvh items-center justify-center bg-ax-surface px-4 py-8 text-ax-ink">
 				<section className="w-full max-w-md rounded-2xl border border-ax-line bg-ax-surface p-8 text-center">
-					<h1 className="font-bold font-home-display text-3xl">
+					<h1 className="font-home-display text-display-lg">
 						Não foi possível carregar seu perfil
 					</h1>
 					<p className="mt-3 text-[15px] text-ax-ink-soft leading-6">
@@ -195,11 +195,11 @@ export function OnboardingForm() {
 					className="flex flex-col gap-3.5"
 					aria-busy={isSubmitting}
 				>
-					<p className="font-semibold text-ax-ink-soft text-xs leading-4 tracking-[0.8px]">
+					<p className="font-medium text-ax-ink-soft text-xs leading-4 tracking-[0.8px]">
 						CONFIGURAÇÃO DO PERFIL
 					</p>
 
-					<h1 className="font-bold font-home-display text-[34px] leading-[1.1] sm:text-[40px] sm:leading-11">
+					<h1 className="font-home-display text-display-lg">
 						Vamos montar seu perfil
 					</h1>
 

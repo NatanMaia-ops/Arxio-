@@ -1,14 +1,14 @@
-import { Instrument_Sans, Newsreader } from "next/font/google";
+import { Familjen_Grotesk, Newsreader } from "next/font/google";
 
 export const displayFont = Newsreader({
-	variable: "--font-newsreader",
+	variable: "--font-display",
 	subsets: ["latin"],
 	style: ["normal", "italic"],
 	axes: ["opsz"],
 });
 
-export const interfaceFont = Instrument_Sans({
-	variable: "--font-instrument-sans",
+export const interfaceFont = Familjen_Grotesk({
+	variable: "--font-interface",
 	subsets: ["latin"],
 	style: ["normal", "italic"],
 });

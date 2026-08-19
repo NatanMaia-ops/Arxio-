@@ -16,7 +16,7 @@ export function LandingHero() {
 					</p>
 					<h1
 						{...reveal(1)}
-						className="max-w-[16ch] text-balance font-medium text-[72px] leading-[1.02] tracking-[-0.03em]"
+						className="max-w-[16ch] text-balance font-light text-[72px] leading-[1.02] tracking-[-0.03em]"
 					>
 						Toda ideia merece leitores.
 					</h1>

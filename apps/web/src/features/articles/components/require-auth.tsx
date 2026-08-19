@@ -34,7 +34,7 @@ export function RequireAuth({ children }: { children: ReactNode }) {
 
 	if (!isAuthenticated) {
 		return (
-			<div className="min-h-dvh bg-ax-surface" role="status">
+			<div className="min-h-dvh" role="status">
 				<span className="sr-only">Verificando sessão...</span>
 			</div>
 		);

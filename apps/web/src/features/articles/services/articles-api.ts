@@ -56,6 +56,7 @@ export async function fetchArticles(
 	const query = new URLSearchParams();
 
 	if (filters.authorId) query.set("authorId", filters.authorId);
+	if (filters.tagId) query.set("tagId", filters.tagId);
 
 	const queryString = query.toString();
 	const url = `${articlesUrl(serverUrl)}${queryString ? `?${queryString}` : ""}`;

@@ -1,14 +1,12 @@
 import Link from "next/link";
 
-import { SiteHeader } from "@/components/layout/site-header";
+import { AppShell } from "@/components/layout/app-shell";
 
 export default function ArticleNotFound() {
 	return (
-		<div className="min-h-dvh bg-ax-surface">
-			<SiteHeader />
-
-			<main className="mx-auto flex max-w-180 flex-col items-start gap-4 px-5 pt-20 pb-24 sm:px-6 sm:pt-30">
-				<h1 className="font-bold font-home-display text-[28px] text-ax-ink leading-9 sm:text-[40px] sm:leading-11">
+		<AppShell>
+			<div className="mx-auto flex max-w-180 flex-col items-start gap-4 px-5 pt-20 pb-24 sm:px-6 sm:pt-30">
+				<h1 className="font-home-display text-ax-ink text-display-lg">
 					Artigo não encontrado
 				</h1>
 				<p className="text-ax-ink-soft text-base leading-6">
@@ -20,7 +18,7 @@ export default function ArticleNotFound() {
 				>
 					Voltar para o feed
 				</Link>
-			</main>
-		</div>
+			</div>
+		</AppShell>
 	);
 }

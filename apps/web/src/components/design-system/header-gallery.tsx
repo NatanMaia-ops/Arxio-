@@ -106,7 +106,7 @@ export function HeaderGallery() {
 				<section key={variant.id} className="flex flex-col gap-5">
 					<div className="flex flex-col gap-2">
 						<div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-							<h2 className="font-home-display font-semibold text-[26px] text-ax-ink leading-8">
+							<h2 className="font-home-display font-normal text-[26px] text-ax-ink leading-8">
 								{variant.name}
 							</h2>
 							<p className="text-ax-meta text-sm">{variant.tagline}</p>

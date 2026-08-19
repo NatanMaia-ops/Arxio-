@@ -13,6 +13,9 @@ CPU="${CPU:-0.5 vCPU}"
 MEMORY="${MEMORY:-1 GB}"
 AUTH_GOOGLE_ID="${AUTH_GOOGLE_ID:-659214370882-3vgklr3r2fhdj6kt54kog2ukmd9ps00u.apps.googleusercontent.com}"
 PUBLIC_URL="${PUBLIC_URL:-https://placeholder.arxio.invalid}"
+MEDIA_BUCKET="${MEDIA_BUCKET:-arxio-media-${ACCOUNT_ID}}"
+MEDIA_REGION="${MEDIA_REGION:-$AWS_REGION}"
+MEDIA_PUBLIC_BASE_URL="${MEDIA_PUBLIC_BASE_URL:-https://${MEDIA_BUCKET}.s3.${MEDIA_REGION}.amazonaws.com}"
 
 secret_arn() {
 	aws secretsmanager describe-secret --region "$AWS_REGION" --secret-id "$1" --query ARN --output text
@@ -33,7 +36,10 @@ SOURCE_CONFIG=$(
         "NODE_ENV": "production",
         "AUTH_GOOGLE_ID": "${AUTH_GOOGLE_ID}",
         "CORS_ORIGIN": "${PUBLIC_URL}",
-        "AUTH_URL": "${PUBLIC_URL}"
+        "AUTH_URL": "${PUBLIC_URL}",
+        "MEDIA_BUCKET": "${MEDIA_BUCKET}",
+        "MEDIA_REGION": "${MEDIA_REGION}",
+        "MEDIA_PUBLIC_BASE_URL": "${MEDIA_PUBLIC_BASE_URL}"
       },
       "RuntimeEnvironmentSecrets": {
         "DATABASE_URL": "$(secret_arn arxio/database-url)",

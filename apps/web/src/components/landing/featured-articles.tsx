@@ -12,7 +12,7 @@ export function FeaturedArticles() {
 					{...reveal(0)}
 					className="flex flex-wrap items-baseline justify-between gap-6"
 				>
-					<h2 className="font-medium text-[48px] leading-[1.05] tracking-[-0.03em]">
+					<h2 className="font-light text-[48px] leading-[1.05] tracking-[-0.03em]">
 						Em destaque esta semana.
 					</h2>
 					<a
@@ -30,7 +30,7 @@ export function FeaturedArticles() {
 					<article className="flex flex-col items-start gap-[18px]">
 						<Kicker size={12}>Tecnologia</Kicker>
 						<a href="#artigos" className="group">
-							<h3 className="max-w-[20ch] text-balance font-medium text-[52px] leading-[1.06] tracking-[-0.025em] transition-colors group-hover:text-ax-ink-soft">
+							<h3 className="max-w-[20ch] text-balance font-light text-[52px] leading-[1.06] tracking-[-0.025em] transition-colors group-hover:text-ax-ink-soft">
 								O que 30 minutos de estudo por dia me ensinaram em um ano
 							</h3>
 						</a>

@@ -10,10 +10,8 @@ export function ArticlesUnavailable({
 			role="status"
 			className="flex flex-col items-start gap-3 rounded-2xl border border-ax-line bg-ax-surface p-10"
 		>
-			<h2 className="font-bold font-home-display text-[28px] text-ax-ink leading-8.5">
-				{title}
-			</h2>
-			<p className="text-ax-ink-soft text-base leading-6">{description}</p>
+			<h2 className="font-home-display text-ax-ink text-display-md">{title}</h2>
+			<p className="text-ax-ink-soft text-body">{description}</p>
 		</div>
 	);
 }

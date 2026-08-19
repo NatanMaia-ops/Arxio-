@@ -126,23 +126,40 @@ volta.
 ## Contrato externo para imagens
 
 O backend está preparado para upload direto do navegador ao S3 usando um
-presigned POST com validade de cinco minutos. O bucket, o CloudFront e as
-políticas não são criados por este repositório; precisam ser entregues pela
-pessoa responsável pela infraestrutura antes de habilitar o fluxo em produção.
+presigned POST com validade de cinco minutos.
 
-Requisitos do bucket:
+Provisionar o bucket:
 
-- aceitar via CORS o método `POST` vindo da origem pública da Arxio;
-- manter uma lifecycle rule que remova objetos do prefixo `pending/` depois de
-  um dia;
-- permitir apenas JPEG, PNG e WebP de até 5 MB por meio da policy assinada pelo
-  backend;
-- manter leitura pública pela origem informada em `MEDIA_PUBLIC_BASE_URL`. A
-  opção recomendada é bucket privado atrás de CloudFront com OAC;
-- entregar `X-Content-Type-Options: nosniff` na resposta pública das imagens.
+```bash
+bash deploy/aws/create-media-bucket.sh
+bash deploy/aws/attach-media-iam-policy.sh
+```
 
-A instance role `ArxioAppRunnerInstanceRole` precisa das ações abaixo limitadas
-ao bucket e aos prefixos `pending/`, `avatars/` e `article-covers/`:
+O primeiro script cria (ou atualiza) o bucket `MEDIA_BUCKET` com:
+
+- CORS liberando `POST` a partir de `PUBLIC_URL` (produção) e `DEV_ORIGIN`
+  (`http://localhost:3001` por padrão);
+- uma lifecycle rule que remove objetos do prefixo `pending/` depois de um dia;
+- leitura pública via bucket policy restrita aos prefixos `avatars/*` e
+  `article-covers/*` — `pending/*` nunca é público. Acesso público por ACL
+  continua bloqueado (`BlockPublicAcls`/`IgnorePublicAcls`); só a bucket
+  policy libera leitura.
+
+O tipo e o tamanho do arquivo (JPEG, PNG ou WebP até 5 MB) são impostos pela
+policy do presigned POST assinada pelo backend (`MediaService`), não pelo
+bucket.
+
+Desenho escolhido: bucket público direto, sem CloudFront/OAC. É mais simples
+de operar e suficiente para o volume atual do projeto, mas como
+consequência não há como anexar `X-Content-Type-Options: nosniff` nas
+respostas públicas do S3 — isso exigiria uma distribuição CloudFront com uma
+response headers policy na frente do bucket. Se isso se tornar necessário,
+revisar via ADR antes de introduzir CloudFront.
+
+O segundo script (`attach-media-iam-policy.sh`) cria/atualiza a policy IAM
+`arxio-media-s3-policy` e anexa na instance role `ArxioAppRunnerInstanceRole`
+as ações abaixo, limitadas ao bucket e aos prefixos `pending/`, `avatars/` e
+`article-covers/`:
 
 ```text
 s3:PutObject
@@ -153,6 +170,11 @@ s3:DeleteObject
 `HeadObject` utiliza `s3:GetObject`; a promoção do arquivo temporário usa
 `GetObject` na origem e `PutObject` no destino. As credenciais não são expostas
 ao frontend: o SDK usa a instance role do App Runner para assinar cada upload.
+
+Depois de rodar os dois scripts, `create-service.sh` já inclui `MEDIA_BUCKET`,
+`MEDIA_REGION` e `MEDIA_PUBLIC_BASE_URL` nas `RuntimeEnvironmentVariables` do
+serviço — rode-o de novo (ou `aws apprunner update-service`) para propagar as
+variáveis pro serviço já existente.
 
 Como o arquivo vai direto do navegador ao S3, esta versão valida tamanho e o
 `Content-Type` registrado no objeto, mas não inspeciona os bytes internos da

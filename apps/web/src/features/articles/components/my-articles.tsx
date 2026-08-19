@@ -43,7 +43,7 @@ export function MyArticles() {
 
 	if (error) {
 		return (
-			<div className="rounded-2xl border border-ax-line bg-ax-fill/40 p-6">
+			<div className="rounded-3xl bg-ax-surface p-6 shadow-ax-float">
 				<p role="alert" className="text-ax-ink-soft text-sm">
 					{error}
 				</p>
@@ -61,7 +61,7 @@ export function MyArticles() {
 
 	if (articles.length === 0) {
 		return (
-			<div className="flex flex-col items-start gap-4 rounded-2xl border border-ax-line border-dashed p-8">
+			<div className="flex flex-col items-start gap-4 rounded-3xl border border-ax-line border-dashed bg-ax-surface/70 p-10">
 				<p className="text-ax-ink-soft">
 					Você ainda não começou nenhum artigo.
 				</p>
@@ -75,11 +75,11 @@ export function MyArticles() {
 			{articles.map((article) => (
 				<article
 					key={article.id}
-					className="rounded-2xl border border-ax-line bg-ax-surface p-5"
+					className="rounded-3xl bg-ax-surface p-6 shadow-ax-float"
 				>
 					<div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
 						<div className="min-w-0">
-							<div className="mb-2 flex flex-wrap items-center gap-2 text-xs">
+							<div className="mb-2 flex flex-wrap items-center gap-2 text-meta">
 								<span
 									className={
 										article.status === "draft"
@@ -95,10 +95,10 @@ export function MyArticles() {
 								</span>
 							</div>
 
-							<h2 className="font-home-display font-semibold text-2xl text-ax-ink">
+							<h2 className="font-home-display text-ax-ink text-display-md">
 								{article.title}
 							</h2>
-							<p className="mt-2 line-clamp-2 text-ax-body text-sm leading-6">
+							<p className="mt-2 line-clamp-2 text-ax-body text-body-sm">
 								{extractExcerpt(article.content)}
 							</p>
 						</div>

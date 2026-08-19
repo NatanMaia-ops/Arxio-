@@ -10,7 +10,7 @@ export function CommunityRanking() {
 			<div className="mx-auto max-w-[1216px] px-8">
 				<div {...reveal(0)} className="flex flex-col items-start gap-5">
 					<Kicker>Comunidade</Kicker>
-					<h2 className="font-medium text-[48px] leading-[1.05] tracking-[-0.03em]">
+					<h2 className="font-light text-[48px] leading-[1.05] tracking-[-0.03em]">
 						Quem escreve, aparece.
 					</h2>
 					<p className="max-w-[52ch] text-[19px] text-ax-body leading-[1.5]">

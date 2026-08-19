@@ -65,7 +65,7 @@ export function ArticleCoverEditor({
 						Capa do artigo{" "}
 						<span className="font-normal text-ax-meta">(opcional)</span>
 					</h2>
-					<p id="article-cover-help" className="mt-1 text-ax-meta text-xs">
+					<p id="article-cover-help" className="mt-1 text-ax-meta text-meta">
 						JPEG, PNG ou WebP, até 5 MB. A imagem será enquadrada em 16:9.
 					</p>
 				</div>
@@ -125,7 +125,7 @@ export function ArticleCoverEditor({
 
 			{displayedUrl ? (
 				<fieldset className="mt-3" disabled={disabled}>
-					<legend className="text-ax-meta text-xs">
+					<legend className="text-ax-meta text-meta">
 						Enquadramento da capa
 					</legend>
 					<div className="mt-2 inline-flex rounded-full border border-ax-line bg-ax-surface p-1">
@@ -159,7 +159,7 @@ export function ArticleCoverEditor({
 							</label>
 						))}
 					</div>
-					<p className="mt-2 text-ax-meta text-xs">
+					<p className="mt-2 text-ax-meta text-meta">
 						{fit === "contain"
 							? "A imagem aparecerá completa, com respiro ao redor quando necessário."
 							: "A imagem ocupará todo o quadro e poderá ter as bordas recortadas."}

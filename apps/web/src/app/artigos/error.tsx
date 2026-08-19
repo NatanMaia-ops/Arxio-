@@ -2,9 +2,9 @@
 
 export default function ArticlesError({ reset }: { reset: () => void }) {
 	return (
-		<div className="min-h-dvh bg-ax-surface">
+		<div className="min-h-dvh">
 			<main className="mx-auto flex max-w-180 flex-col items-start gap-4 px-5 pt-20 sm:px-6 sm:pt-30">
-				<h1 className="font-bold font-home-display text-[28px] text-ax-ink leading-9 sm:text-[40px] sm:leading-11">
+				<h1 className="font-home-display text-ax-ink text-display-lg">
 					Não foi possível carregar os artigos
 				</h1>
 				<p className="text-ax-ink-soft text-base leading-6">

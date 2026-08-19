@@ -42,14 +42,10 @@ export function SearchCommand() {
 				id={triggerId}
 				ref={triggerRef}
 				aria-label="Buscar artigos"
-				className="flex h-9.5 min-w-9.5 cursor-pointer items-center gap-2.5 rounded-lg border border-ax-line bg-ax-fill px-2.5 text-ax-mute text-sm transition-colors hover:border-ax-line-3 hover:bg-ax-fill-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface sm:w-56 sm:px-3 lg:w-72"
+				className="flex h-10 min-w-10 cursor-pointer items-center gap-2.5 rounded-full bg-ax-fill/70 px-2.5 text-ax-mute text-sm transition-colors hover:bg-ax-fill-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface sm:w-56 sm:px-4 lg:w-72"
 			>
 				<Search className="size-4.5 shrink-0" aria-hidden="true" />
 				<span className="hidden truncate sm:inline">Buscar</span>
-				<span className="ml-auto hidden items-center gap-1 sm:flex">
-					<Kbd>⌘</Kbd>
-					<Kbd>K</Kbd>
-				</span>
 			</Dialog.Trigger>
 
 			{isOpen ? <SearchDialog onClose={close} triggerRef={triggerRef} /> : null}
@@ -196,7 +192,7 @@ function SearchDialog({ onClose, triggerRef }: SearchDialogProps) {
 
 					{status === "ready" ? (
 						<section>
-							<h2 className="px-3 py-2 font-medium text-ax-meta text-xs uppercase tracking-wide">
+							<h2 className="px-3 py-2 text-ax-meta text-label uppercase">
 								{query ? "Resultados" : "Publicados recentemente"}
 							</h2>
 
@@ -234,7 +230,7 @@ function SearchDialog({ onClose, triggerRef }: SearchDialogProps) {
 												{result.title}
 											</span>
 
-											<span className="shrink-0 text-ax-meta text-xs">
+											<span className="shrink-0 text-ax-meta text-meta">
 												{result.authorName}
 											</span>
 										</button>
@@ -245,7 +241,7 @@ function SearchDialog({ onClose, triggerRef }: SearchDialogProps) {
 					) : null}
 				</div>
 
-				<footer className="flex items-center gap-4 border-ax-line border-t bg-ax-fill/60 px-4 py-2.5 text-ax-meta text-xs">
+				<footer className="flex items-center gap-4 border-ax-line border-t bg-ax-fill/60 px-4 py-2.5 text-ax-meta text-meta">
 					<span className="flex items-center gap-1.5">
 						<Kbd>↑</Kbd>
 						<Kbd>↓</Kbd>

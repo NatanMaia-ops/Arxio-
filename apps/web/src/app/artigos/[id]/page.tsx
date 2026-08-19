@@ -3,7 +3,7 @@ import type { Metadata, Route } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { SiteHeader } from "@/components/layout/site-header";
+import { AppShell } from "@/components/layout/app-shell";
 import { UserAvatar } from "@/components/user-avatar";
 import {
 	estimateReadTimeMinutes,
@@ -12,6 +12,7 @@ import {
 import { ArticleOwnerActions } from "@/features/articles/components/article-owner-actions";
 import { ArticleViewer } from "@/features/articles/components/article-viewer";
 import { ArticlesUnavailable } from "@/features/articles/components/articles-unavailable";
+import { ReadingProgressTracker } from "@/features/articles/components/reading-progress-tracker";
 import { resolveAuthor } from "@/features/articles/services/article-listing";
 import { getArticleById } from "@/features/articles/services/articles";
 import { CommentsSection } from "@/features/comments/components/comments-section";
@@ -55,15 +56,14 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
 	if (!isAvailable) {
 		return (
-			<div className="min-h-dvh bg-ax-surface">
-				<SiteHeader />
-				<main className="mx-auto max-w-180 px-6 pt-13.5 pb-24">
+			<AppShell>
+				<div className="mx-auto max-w-180">
 					<ArticlesUnavailable
 						title="Não foi possível carregar o artigo"
 						description="O serviço de artigos não respondeu. Tente novamente em instantes."
 					/>
-				</main>
-			</div>
+				</div>
+			</AppShell>
 		);
 	}
 
@@ -73,11 +73,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 	const readTimeMinutes = estimateReadTimeMinutes(article.content);
 
 	return (
-		<div className="min-h-dvh bg-ax-surface">
-			<SiteHeader />
-
-			<main className="mx-auto max-w-180 px-5 pt-8 pb-24 sm:px-6 sm:pt-13.5">
-				<article>
+		<AppShell>
+			<div className="mx-auto max-w-190">
+				<article className="rounded-3xl bg-ax-surface px-5 py-8 shadow-ax-float sm:px-10 sm:py-12">
 					<Link
 						href={{ pathname: "/feed" }}
 						className="-mx-2 mb-4 inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 font-medium text-ax-ink-soft text-sm transition-colors hover:text-ax-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
@@ -86,11 +84,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 						Voltar para o feed
 					</Link>
 
-					<p className="font-medium text-[13px] text-ax-ink-soft leading-4.5">
+					<p className="text-ax-ink-soft text-meta">
 						{dateFormatter.format(article.createdAt)}
 					</p>
 
-					<h1 className="mt-3 font-bold font-home-display text-[32px] text-ax-ink leading-10 sm:text-[40px] sm:leading-12 lg:text-[48px] lg:leading-14">
+					<h1 className="mt-3 font-home-display text-ax-ink text-display-xl">
 						{article.title}
 					</h1>
 
@@ -103,7 +101,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 							/>
 							<Link
 								href={`/perfil/${article.authorId}` as Route}
-								className="rounded-sm font-semibold text-ax-ink transition-colors hover:text-ax-ink-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
+								className="rounded-sm font-medium text-ax-ink transition-colors hover:text-ax-ink-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
 							>
 								{author.name}
 							</Link>
@@ -148,7 +146,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
 					<CommentsSection articleId={article.id} />
 				</article>
-			</main>
-		</div>
+
+				<ReadingProgressTracker articleId={article.id} />
+			</div>
+		</AppShell>
 	);
 }

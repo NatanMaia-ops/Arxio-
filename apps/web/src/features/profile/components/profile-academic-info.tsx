@@ -46,7 +46,7 @@ export function ProfileAcademicInfo({
 		<section aria-labelledby="profile-academic-title">
 			<h2
 				id="profile-academic-title"
-				className="font-home-display font-semibold text-2xl text-ax-ink leading-8"
+				className="font-home-display text-ax-ink text-display-md"
 			>
 				Informações acadêmicas
 			</h2>
@@ -57,7 +57,7 @@ export function ProfileAcademicInfo({
 						key={item.label}
 						className="rounded-xl border border-ax-line bg-ax-surface p-4"
 					>
-						<dt className="font-medium text-ax-meta text-xs uppercase tracking-wide">
+						<dt className="font-medium text-ax-meta text-meta uppercase tracking-wide">
 							{item.label}
 						</dt>
 						<dd className="mt-1.5 text-ax-ink text-sm leading-5">

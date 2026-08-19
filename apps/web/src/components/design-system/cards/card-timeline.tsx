@@ -28,7 +28,7 @@ export function CardTimeline({ article }: { article: FeedArticle }) {
 				title={formatAbsoluteDate(article.publishedAt)}
 				className="@2xl:flex hidden w-12 shrink-0 flex-col items-center rounded-lg bg-ax-fill/60 py-2"
 			>
-				<span className="font-home-display font-semibold text-[20px] text-ax-ink tabular-nums leading-6">
+				<span className="font-home-display font-normal text-[20px] text-ax-ink tabular-nums leading-6">
 					{day}
 				</span>
 				<span className="font-medium text-[11px] text-ax-meta uppercase">
@@ -55,7 +55,7 @@ export function CardTimeline({ article }: { article: FeedArticle }) {
 					</time>
 				</header>
 
-				<h3 className="font-home-display font-semibold @2xl:text-[23px] text-[20px] text-ax-ink leading-7">
+				<h3 className="font-home-display font-normal @2xl:text-[23px] text-[20px] text-ax-ink leading-7">
 					<CardLink className="line-clamp-2 transition-colors after:rounded-lg group-hover:text-ax-ink-hover">
 						{article.title}
 					</CardLink>

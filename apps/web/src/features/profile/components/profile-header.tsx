@@ -22,8 +22,8 @@ export function ProfileHeader({ profile }: { profile: PublicProfile }) {
 			/>
 
 			<div className="min-w-0">
-				<p className="font-medium text-ax-meta text-sm">Perfil público</p>
-				<h1 className="mt-1 text-balance font-bold font-home-display text-[36px] text-ax-ink leading-10 sm:text-[46px] sm:leading-12">
+				<p className="text-ax-meta text-label uppercase">Perfil público</p>
+				<h1 className="mt-1 text-balance font-home-display text-ax-ink text-display-lg">
 					{profile.name}
 				</h1>
 

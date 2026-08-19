@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function DesignSystemHeaderPage() {
 	return (
 		<main className="pt-8">
-			<h1 className="font-bold font-home-display text-[36px] text-ax-ink leading-11">
+			<h1 className="font-home-display font-light text-[36px] text-ax-ink leading-11">
 				Header
 			</h1>
 

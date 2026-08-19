@@ -1,64 +1,152 @@
 @import "@arxio/ui/globals.css";
 
 @theme inline {
-	--font-home-display: var(--font-newsreader);
-	--font-home-interface: var(--font-instrument-sans);
+	--font-home-display: var(--font-display);
+	--font-home-interface: var(--font-interface);
+	--font-sans: var(--font-interface), ui-sans-serif, system-ui, sans-serif;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-	--color-ax-brand: #111111;
+	--color-ax-brand: #211c16;
+	--color-ax-canvas: #f8f5ef;
 	--color-ax-surface: #ffffff;
-	--color-ax-on-ink: #ffffff;
-	--color-ax-ink: #111111;
-	--color-ax-ink-soft: #616161;
-	--color-ax-ink-hover: #373737;
-	--color-ax-body: #555555;
-	--color-ax-meta: #6f6f6f;
-	--color-ax-placeholder: #767676;
-	--color-ax-mute: #767676;
-	--color-ax-rank: #767676;
-	--color-ax-line: #e3e3e3;
-	--color-ax-line-2: #e3e3e3;
-	--color-ax-line-3: #d8d8d8;
-	--color-ax-fill: #f2f2f2;
-	--color-ax-fill-hover: #e3e3e3;
-	--color-ax-cta: #111111;
+	--color-ax-on-ink: #fdfbf7;
+	--color-ax-ink: #211c16;
+	--color-ax-ink-soft: #6b6255;
+	--color-ax-ink-hover: #443c31;
+	--color-ax-body: #5e564c;
+	--color-ax-meta: #7d7466;
+	--color-ax-placeholder: #8a8173;
+	--color-ax-mute: #8a8173;
+	--color-ax-rank: #8a8173;
+	--color-ax-line: #eae3d7;
+	--color-ax-line-2: #eae3d7;
+	--color-ax-line-3: #ddd4c4;
+	--color-ax-fill: #f4efe5;
+	--color-ax-fill-hover: #eae3d7;
+	--color-ax-cta: #211c16;
 	--color-ax-accent: #c2255c;
 	--color-ax-on-accent: #ffffff;
+
+	--shadow-ax-float:
+		0 1px 2px rgb(33 28 22 / 0.04), 0 12px 32px -12px rgb(33 28 22 / 0.12);
+	--shadow-ax-float-lg:
+		0 2px 4px rgb(33 28 22 / 0.05), 0 24px 56px -20px rgb(33 28 22 / 0.18);
+
+	--text-display-xl: clamp(2.25rem, 1.6rem + 2vw, 3.25rem);
+	--text-display-xl--line-height: 1.12;
+	--text-display-xl--font-weight: 300;
+	--text-display-xl--letter-spacing: -0.015em;
+
+	--text-display-lg: clamp(2rem, 1.6rem + 1.3vw, 2.75rem);
+	--text-display-lg--line-height: 1.15;
+	--text-display-lg--font-weight: 300;
+	--text-display-lg--letter-spacing: -0.01em;
+
+	--text-display-md: clamp(1.375rem, 1.25rem + 0.5vw, 1.75rem);
+	--text-display-md--line-height: 1.25;
+	--text-display-md--font-weight: 500;
+	--text-display-md--letter-spacing: -0.005em;
+
+	--text-display-sm: 1.1875rem;
+	--text-display-sm--line-height: 1.4;
+	--text-display-sm--font-weight: 500;
+
+	--text-body: 1rem;
+	--text-body--line-height: 1.6;
+	--text-body--font-weight: 400;
+
+	--text-body-sm: 0.9375rem;
+	--text-body-sm--line-height: 1.6;
+	--text-body-sm--font-weight: 400;
+
+	--text-meta: 0.8125rem;
+	--text-meta--line-height: 1.45;
+	--text-meta--font-weight: 400;
+
+	--text-label: 0.75rem;
+	--text-label--line-height: 1.35;
+	--text-label--font-weight: 500;
+	--text-label--letter-spacing: 0.08em;
+}
+
+:root {
+	--ax-wash-study: rgb(126 162 209 / 0.26);
+	--ax-wash-social: rgb(228 141 134 / 0.2);
+	--ax-wash-glow: rgb(255 255 255 / 0.55);
 }
 
 .dark {
-	--color-ax-brand: #262626;
-	--color-ax-surface: #141414;
-	--color-ax-on-ink: #141414;
-	--color-ax-ink: #d1d1d1;
-	--color-ax-ink-soft: #a0a0a0;
-	--color-ax-ink-hover: #ededed;
-	--color-ax-body: #b6b6b6;
-	--color-ax-meta: #8d8d8d;
-	--color-ax-placeholder: #7e7e7e;
-	--color-ax-mute: #7e7e7e;
-	--color-ax-rank: #7e7e7e;
-	--color-ax-line: #2e2e2e;
-	--color-ax-line-2: #2e2e2e;
-	--color-ax-line-3: #3a3a3a;
-	--color-ax-fill: #1e1e1e;
-	--color-ax-fill-hover: #282828;
-	--color-ax-cta: #d1d1d1;
+	--color-ax-brand: #262019;
+	--color-ax-canvas: #14110b;
+	--color-ax-surface: #1d1913;
+	--color-ax-on-ink: #17130c;
+	--color-ax-ink: #ded7ca;
+	--color-ax-ink-soft: #a49b8c;
+	--color-ax-ink-hover: #f0e9dd;
+	--color-ax-body: #c2b9aa;
+	--color-ax-meta: #91887a;
+	--color-ax-placeholder: #82796b;
+	--color-ax-mute: #82796b;
+	--color-ax-rank: #82796b;
+	--color-ax-line: #322c22;
+	--color-ax-line-2: #322c22;
+	--color-ax-line-3: #403a2e;
+	--color-ax-fill: #262019;
+	--color-ax-fill-hover: #302a20;
+	--color-ax-cta: #ded7ca;
 	--color-ax-accent: #ff7aa5;
 	--color-ax-on-accent: #2b0a17;
+
+	--shadow-ax-float:
+		0 1px 2px rgb(0 0 0 / 0.4), 0 12px 32px -12px rgb(0 0 0 / 0.5);
+	--shadow-ax-float-lg:
+		0 2px 4px rgb(0 0 0 / 0.45), 0 24px 56px -20px rgb(0 0 0 / 0.6);
+
+	--ax-wash-study: rgb(96 132 184 / 0.14);
+	--ax-wash-social: rgb(196 110 102 / 0.1);
+	--ax-wash-glow: rgb(255 246 232 / 0.03);
 }
 
 html {
 	scroll-behavior: smooth;
-	background-color: var(--color-ax-surface);
+	background-color: var(--color-ax-canvas);
 	color-scheme: light;
 }
 
 html.dark {
 	color-scheme: dark;
+}
+
+body {
+	background-color: var(--color-ax-canvas);
+	background-image:
+		radial-gradient(
+			56rem 40rem at 8% -10%,
+			var(--ax-wash-study),
+			transparent 68%
+		),
+		radial-gradient(
+			52rem 38rem at 100% 14%,
+			var(--ax-wash-social),
+			transparent 70%
+		),
+		radial-gradient(46rem 30rem at 50% 0%, var(--ax-wash-glow), transparent 75%);
+	background-repeat: no-repeat;
+}
+
+.ax-canvas {
+	background-color: var(--color-ax-canvas);
+	background-image:
+		radial-gradient(120% 90% at 10% -10%, var(--ax-wash-study), transparent 68%),
+		radial-gradient(
+			110% 85% at 100% 18%,
+			var(--ax-wash-social),
+			transparent 70%
+		);
+	background-repeat: no-repeat;
 }
 
 ::selection {
