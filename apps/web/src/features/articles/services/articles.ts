@@ -3,6 +3,7 @@ import type {
 	ArticleInput,
 	ArticleListFilters,
 	AuthorSummary,
+	CreateArticleInput,
 } from "@/features/articles/types/article.types";
 import { apiBaseUrl as apiUrl } from "@/lib/api-base-url";
 
@@ -15,12 +16,20 @@ export function getArticles(
 	return articlesApi.fetchArticles(apiUrl(), filters);
 }
 
+export function getMyArticles(): Promise<Article[]> {
+	return articlesApi.fetchMyArticles(apiUrl());
+}
+
 export function getArticleById(id: string): Promise<Article | null> {
 	return articlesApi.fetchArticleById(apiUrl(), id);
 }
 
-export function createArticle(input: ArticleInput): Promise<Article> {
+export function createArticle(input: CreateArticleInput): Promise<Article> {
 	return articlesApi.createArticle(apiUrl(), input);
+}
+
+export function publishArticle(id: string): Promise<Article> {
+	return articlesApi.publishArticle(apiUrl(), id);
 }
 
 export function updateArticle(

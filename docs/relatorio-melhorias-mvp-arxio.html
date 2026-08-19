@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Relatório de melhorias para o MVP — Arxio</title>
+  <style>
+    @page { size: A4; margin: 18mm 17mm 18mm 17mm; }
+    * { box-sizing: border-box; }
+    body { font-family: "Liberation Sans", Arial, sans-serif; color: #202124; font-size: 10.5pt; line-height: 1.48; margin: 0; }
+    h1, h2, h3 { color: #17223b; page-break-after: avoid; }
+    h1 { font-size: 27pt; line-height: 1.1; margin: 0 0 8mm; }
+    h2 { font-size: 17pt; border-bottom: 1px solid #cfd6e4; padding-bottom: 2mm; margin: 10mm 0 4mm; }
+    h3 { font-size: 12.5pt; margin: 6mm 0 2mm; }
+    p { margin: 0 0 3mm; }
+    ul, ol { margin: 2mm 0 4mm 6mm; padding-left: 5mm; }
+    li { margin-bottom: 1.3mm; }
+    .cover { min-height: 245mm; display: flex; flex-direction: column; justify-content: center; page-break-after: always; }
+    .brand { color: #425b91; font-size: 13pt; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8mm; }
+    .subtitle { color: #4b5567; font-size: 15pt; line-height: 1.45; max-width: 145mm; }
+    .meta { margin-top: 22mm; color: #687184; font-size: 10pt; }
+    .notice { margin-top: 18mm; border-left: 4px solid #425b91; background: #f2f5fa; padding: 5mm; max-width: 150mm; }
+    .summary { background: #f4f6f9; border: 1px solid #dce1e9; border-radius: 5px; padding: 5mm; }
+    .feature { page-break-inside: avoid; margin-bottom: 5mm; }
+    .priority { display: inline-block; color: #fff; background: #425b91; font-size: 8.5pt; font-weight: bold; padding: 1mm 2.5mm; margin-right: 2mm; }
+    .medium { background: #697386; }
+    .later { background: #8b7355; }
+    table { width: 100%; border-collapse: collapse; margin: 4mm 0 6mm; font-size: 9.5pt; page-break-inside: avoid; }
+    th { background: #17223b; color: white; text-align: left; padding: 2.5mm; }
+    td { border: 1px solid #d5dae3; padding: 2.5mm; vertical-align: top; }
+    tr:nth-child(even) td { background: #f7f8fa; }
+    .small { color: #687184; font-size: 9pt; }
+    .footer-note { margin-top: 10mm; padding-top: 4mm; border-top: 1px solid #cfd6e4; color: #687184; font-size: 9pt; }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <div class="brand">Arxio</div>
+    <h1>Relatório de melhorias<br>para o MVP</h1>
+    <p class="subtitle">Análise funcional do estado atual e proposta de evolução para uma rede acadêmica voltada ao compartilhamento de estudos, projetos e conhecimento.</p>
+    <div class="notice"><strong>Contexto:</strong> projeto acadêmico independente, desenvolvido por estudantes da UEPB no contexto da disciplina de Engenharia de Software. A Arxio não é uma plataforma oficial da universidade.</div>
+    <p class="meta">Versão 1.0 · 18 de agosto de 2026</p>
+  </section>
+
+  <h2>1. Resumo executivo</h2>
+  <div class="summary">
+    <p>A Arxio já possui o núcleo de uma rede acadêmica funcional: autenticação, perfis, publicação de artigos, feed, busca, curtidas, comentários e upload de mídia. A recomendação é consolidar a experiência de produção e descoberta de conteúdo antes de investir em gamificação ou funcionalidades sociais mais complexas.</p>
+    <p><strong>Prioridade recomendada:</strong> rascunhos, paginação, tags, busca no backend e artigos salvos. Esse conjunto melhora diretamente a escrita, a organização do conhecimento e a capacidade de crescimento do produto.</p>
+  </div>
+
+  <h2>2. Estado atual do produto</h2>
+  <p>A análise do web, server e banco de dados identificou as seguintes capacidades já implementadas:</p>
+  <ul>
+    <li>Autenticação com Google e gerenciamento de sessão.</li>
+    <li>Onboarding acadêmico e perfil público.</li>
+    <li>Edição de dados pessoais, acadêmicos e avatar.</li>
+    <li>Criação, leitura, edição e exclusão de artigos.</li>
+    <li>Capa de artigo e avatar por armazenamento de mídia compatível com S3.</li>
+    <li>Feed ordenado de artigos e páginas individuais.</li>
+    <li>Busca inicial por título e autor.</li>
+    <li>Curtidas com prevenção de duplicidade.</li>
+    <li>Comentários, respostas em thread e controle de autoria.</li>
+    <li>Validações, testes unitários e testes de integração no server e web.</li>
+  </ul>
+  <p>Essa base permite concentrar as próximas entregas em valor de produto, sem precisar reestruturar os módulos centrais existentes.</p>
+
+  <h2>3. Melhorias propostas</h2>
+
+  <div class="feature">
+    <h3><span class="priority">ALTA</span>3.1 Rascunhos e publicação de artigos</h3>
+    <p><strong>Problema:</strong> o processo atual trata o artigo como publicado desde sua criação, o que dificulta escrever e revisar gradualmente.</p>
+    <p><strong>Proposta:</strong> adicionar estado de rascunho ou publicado, data de publicação, uma área “Meus artigos” e ações para publicar ou despublicar.</p>
+    <p><strong>Valor para o MVP:</strong> reduz a barreira de escrita e está diretamente ligado ao princípio de incentivar a produção acadêmica.</p>
+  </div>
+
+  <div class="feature">
+    <h3><span class="priority">ALTA</span>3.2 Paginação do feed</h3>
+    <p><strong>Problema:</strong> a listagem atual busca todos os artigos. O custo cresce junto com a base de conteúdo.</p>
+    <p><strong>Proposta:</strong> paginação por cursor utilizando data de criação e identificador, com limite de resultados e ação “Carregar mais”.</p>
+    <p><strong>Valor para o MVP:</strong> oferece crescimento previsível e evita retrabalho quando a plataforma receber mais publicações.</p>
+  </div>
+
+  <div class="feature">
+    <h3><span class="priority">ALTA</span>3.3 Tags e filtros acadêmicos</h3>
+    <p><strong>Problema:</strong> artigos não possuem categorização real, dificultando encontrar materiais de uma área específica.</p>
+    <p><strong>Proposta:</strong> permitir até três tags por artigo, exibi-las no feed e disponibilizar filtros. Exemplos: Algoritmos, Inteligência Artificial, Banco de Dados, Redes e Engenharia de Software.</p>
+    <p><strong>Valor para o MVP:</strong> melhora descoberta, organização e identidade acadêmica sem exigir uma taxonomia complexa.</p>
+  </div>
+
+  <div class="feature">
+    <h3><span class="priority">ALTA</span>3.4 Busca executada no backend</h3>
+    <p><strong>Problema:</strong> a busca inicial depende da obtenção da lista de artigos e não está preparada para maior volume.</p>
+    <p><strong>Proposta:</strong> criar endpoint com termo, limite e paginação, pesquisando título, autor, conteúdo e tags. Para o MVP, consultas PostgreSQL com busca textual simples são suficientes.</p>
+    <p><strong>Valor para o MVP:</strong> resultados mais completos, menor tráfego e evolução segura da base.</p>
+  </div>
+
+  <div class="feature">
+    <h3><span class="priority">ALTA</span>3.5 Artigos salvos</h3>
+    <p><strong>Problema:</strong> curtir e guardar um material para consulta posterior representam intenções diferentes.</p>
+    <p><strong>Proposta:</strong> salvar ou remover artigo, indicar o estado no card e oferecer uma página privada “Artigos salvos”.</p>
+    <p><strong>Valor para o MVP:</strong> especialmente útil para tutoriais, referências e materiais acadêmicos extensos.</p>
+  </div>
+
+  <div class="feature">
+    <h3><span class="priority medium">MÉDIA</span>3.6 Links e materiais complementares</h3>
+    <p><strong>Proposta:</strong> campos estruturados para GitHub, dataset, demonstração, referência e material externo. Upload de PDF pode ser avaliado posteriormente.</p>
+    <p><strong>Valor:</strong> conecta a publicação a projetos, código-fonte e evidências acadêmicas sem aumentar inicialmente o custo de armazenamento.</p>
+  </div>
+
+  <div class="feature">
+    <h3><span class="priority medium">MÉDIA</span>3.7 Denúncia e moderação básica</h3>
+    <p><strong>Proposta:</strong> denúncia de artigo ou comentário com motivo e estado de análise, além de uma listagem protegida para moderadores ocultarem conteúdo inadequado.</p>
+    <p><strong>Valor:</strong> estabelece uma camada mínima de segurança e governança para conteúdo produzido pelos usuários.</p>
+  </div>
+
+  <div class="feature">
+    <h3><span class="priority medium">MÉDIA</span>3.8 Notificações internas</h3>
+    <p><strong>Proposta:</strong> avisar quando um artigo recebe curtida ou comentário e quando uma resposta é publicada, com contador e marcação de leitura.</p>
+    <p><strong>Valor:</strong> incentiva retorno e interação. E-mail e tempo real podem permanecer fora do MVP.</p>
+  </div>
+
+  <div class="feature">
+    <h3><span class="priority later">POSTERIOR</span>3.9 Destaques e ranking reais</h3>
+    <p>A landing já apresenta artigos em destaque e ranking, porém com conteúdo demonstrativo. Os destaques podem ser ligados a dados reais primeiro. O ranking deve ser posterior, pois requer regras transparentes e proteção contra manipulação.</p>
+  </div>
+
+  <h2>4. Priorização sugerida</h2>
+  <table>
+    <thead><tr><th>Ordem</th><th>Funcionalidade</th><th>Impacto principal</th><th>Complexidade estimada</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Rascunhos e “Meus artigos”</td><td>Produção de conteúdo</td><td>Média</td></tr>
+      <tr><td>2</td><td>Paginação do feed</td><td>Escalabilidade</td><td>Baixa/Média</td></tr>
+      <tr><td>3</td><td>Tags e filtros</td><td>Descoberta e organização</td><td>Média</td></tr>
+      <tr><td>4</td><td>Busca no backend</td><td>Descoberta e desempenho</td><td>Média</td></tr>
+      <tr><td>5</td><td>Artigos salvos</td><td>Retenção e consulta</td><td>Média</td></tr>
+      <tr><td>6</td><td>Links acadêmicos</td><td>Qualidade das publicações</td><td>Baixa</td></tr>
+      <tr><td>7</td><td>Denúncia e moderação</td><td>Segurança e governança</td><td>Média</td></tr>
+      <tr><td>8</td><td>Notificações internas</td><td>Engajamento</td><td>Média/Alta</td></tr>
+      <tr><td>9</td><td>Destaques e ranking reais</td><td>Gamificação</td><td>Alta</td></tr>
+    </tbody>
+  </table>
+
+  <h2>5. Roadmap recomendado</h2>
+  <h3>Fase 1 — Consolidar escrita e leitura</h3>
+  <ul><li>Rascunhos e publicação.</li><li>Área “Meus artigos”.</li><li>Paginação do feed.</li><li>Correções de experiência e estados vazios.</li></ul>
+
+  <h3>Fase 2 — Melhorar descoberta e organização</h3>
+  <ul><li>Tags e filtros.</li><li>Busca no backend.</li><li>Artigos salvos.</li><li>Links e materiais complementares.</li></ul>
+
+  <h3>Fase 3 — Preparar comunidade e governança</h3>
+  <ul><li>Denúncias e moderação.</li><li>Notificações internas.</li><li>Destaques reais.</li><li>Avaliação futura de ranking e gamificação.</li></ul>
+
+  <h2>6. Critérios de sucesso do MVP</h2>
+  <ul>
+    <li>Um novo usuário consegue entrar, completar o perfil e publicar sem suporte externo.</li>
+    <li>Um autor consegue iniciar um texto, salvá-lo e publicá-lo posteriormente.</li>
+    <li>Um leitor encontra conteúdo por busca, autor ou área acadêmica.</li>
+    <li>Um leitor consegue interagir, comentar e guardar materiais para consulta.</li>
+    <li>O feed continua eficiente conforme a quantidade de artigos cresce.</li>
+    <li>A equipe possui um mecanismo mínimo para lidar com conteúdo inadequado.</li>
+  </ul>
+
+  <h2>7. Conclusão</h2>
+  <p>A Arxio já demonstra o ciclo central de uma rede acadêmica: identificar o usuário, publicar conhecimento e permitir interação. O próximo avanço deve fortalecer esse ciclo, principalmente a escrita gradual e a descoberta de conteúdo. Rascunhos, paginação, tags, busca e itens salvos formam o conjunto de maior retorno para a próxima versão do MVP.</p>
+  <p>Funcionalidades como ranking, gamificação avançada e notificações em tempo real podem gerar valor no futuro, mas devem vir depois que publicação, organização, recuperação e moderação do conteúdo estiverem consolidadas.</p>
+
+  <p class="footer-note">Relatório preparado a partir da análise da estrutura atual do monorepo Arxio, incluindo aplicações web e server, contratos de domínio e schemas PostgreSQL.</p>
+</body>
+</html>

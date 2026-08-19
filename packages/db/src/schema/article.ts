@@ -19,6 +19,7 @@ export const articles = pgTable(
 
 		title: varchar("title", { length: 200 }).notNull(),
 		content: text("content").notNull(),
+		status: varchar("status", { length: 20 }).notNull().default("published"),
 		coverObjectKey: varchar("cover_object_key", { length: 500 }),
 		coverFit: varchar("cover_fit", { length: 10 })
 			.$type<"cover" | "contain">()
@@ -28,7 +29,10 @@ export const articles = pgTable(
 		createdAt: timestamp("created_at").notNull().defaultNow(),
 		updatedAt: timestamp("updated_at").notNull().defaultNow(),
 	},
-	(table) => [index("articles_author_id_idx").on(table.authorId)],
+	(table) => [
+		index("articles_author_id_idx").on(table.authorId),
+		index("articles_status_idx").on(table.status),
+	],
 );
 
 export type Article = typeof articles.$inferSelect;

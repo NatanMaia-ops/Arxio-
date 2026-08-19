@@ -3,6 +3,7 @@ export type Article = {
 	authorId: string;
 	title: string;
 	content: string;
+	status: ArticleStatus;
 	coverUrl: string | null;
 	coverFit: CoverFit;
 	createdAt: Date;
@@ -15,7 +16,12 @@ export type ArticleInput = {
 	coverFit: CoverFit;
 };
 
+export type CreateArticleInput = ArticleInput & {
+	status?: ArticleStatus;
+};
+
 export type CoverFit = "cover" | "contain";
+export type ArticleStatus = "draft" | "published";
 
 export type ArticleListFilters = {
 	authorId?: string;
