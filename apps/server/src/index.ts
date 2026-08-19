@@ -71,7 +71,7 @@ app.use(
 app.use(
 	"/articles",
 	express.json({ limit: ARTICLE_REQUEST_BODY_LIMIT }),
-	createArticlesController(articlesService, requireAuth),
+	createArticlesController(articlesService, requireAuth, readSession),
 );
 
 app.use(

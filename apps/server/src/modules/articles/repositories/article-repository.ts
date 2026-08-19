@@ -4,17 +4,20 @@ export type CreateArticleInput = {
 	authorId: string;
 	title: string;
 	content: string;
+	status: "draft" | "published";
 	coverFit: "cover" | "contain";
 };
 
 export type UpdateArticleInput = {
 	title?: string;
 	content?: string;
+	status?: "draft" | "published";
 	coverFit?: "cover" | "contain";
 };
 
 export type ListArticlesFilters = {
 	authorId?: string;
+	status?: "draft" | "published";
 };
 
 export type ArticleRepository = {

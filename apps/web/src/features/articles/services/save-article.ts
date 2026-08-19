@@ -8,6 +8,7 @@ import type { MediaUploadStage } from "@/features/media/types/media.types";
 import {
 	createArticle,
 	deleteArticleCover,
+	publishArticle,
 	saveArticleCover,
 	updateArticle,
 } from "./articles";
@@ -23,6 +24,7 @@ type SaveArticleDependencies = {
 	upload: typeof uploadImage;
 	confirmCover: typeof saveArticleCover;
 	removeCover: typeof deleteArticleCover;
+	publish: typeof publishArticle;
 };
 
 const defaultDependencies: SaveArticleDependencies = {
@@ -31,6 +33,7 @@ const defaultDependencies: SaveArticleDependencies = {
 	upload: uploadImage,
 	confirmCover: saveArticleCover,
 	removeCover: deleteArticleCover,
+	publish: publishArticle,
 };
 
 export class ArticleCoverSaveError extends Error {
@@ -40,7 +43,7 @@ export class ArticleCoverSaveError extends Error {
 		options?: ErrorOptions,
 	) {
 		super(
-			wasCreated
+			wasCreated && article.status === "published"
 				? "O artigo foi publicado, mas a capa não foi enviada. Tente salvar novamente."
 				: "O artigo foi salvo, mas não foi possível concluir a alteração da capa. Tente novamente.",
 			options,
@@ -53,6 +56,7 @@ export async function saveArticleWithCover(
 	input: {
 		articleId: string | null;
 		article: ArticleInput;
+		intent: "draft" | "publish";
 		cover: CoverChange;
 		onArticlePersisted?: (article: Article) => void;
 		onStage?: (stage: MediaUploadStage) => void;
@@ -62,7 +66,10 @@ export async function saveArticleWithCover(
 	const wasCreated = input.articleId === null;
 	let article =
 		input.articleId === null
-			? await dependencies.create(input.article)
+			? await dependencies.create({
+					...input.article,
+					status: input.intent === "publish" ? "published" : "draft",
+				})
 			: await dependencies.update(input.articleId, input.article);
 
 	input.onArticlePersisted?.(article);
@@ -82,6 +89,10 @@ export async function saveArticleWithCover(
 		}
 	} catch (cause) {
 		throw new ArticleCoverSaveError(article, wasCreated, { cause });
+	}
+
+	if (input.intent === "publish" && article.status === "draft") {
+		article = await dependencies.publish(article.id);
 	}
 
 	return article;

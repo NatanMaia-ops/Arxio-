@@ -8,6 +8,7 @@ import {
 export const TITLE_MIN_LENGTH = 3;
 export const TITLE_MAX_LENGTH = 100;
 export const coverFitSchema = z.enum(["cover", "contain"]);
+export const articleStatusSchema = z.enum(["draft", "published"]);
 
 const articleContentSchema = z
 	.string()
@@ -35,6 +36,7 @@ export const articleSchema = z.object({
 	authorId: z.uuid(),
 	title: z.string(),
 	content: z.string(),
+	status: articleStatusSchema,
 	coverUrl: z.url().nullable(),
 	coverFit: coverFitSchema,
 	createdAt: z.coerce.date(),
@@ -60,6 +62,7 @@ export const articleInputSchema = z.object({
 		),
 	content: articleContentSchema,
 	coverFit: coverFitSchema,
+	status: articleStatusSchema.optional(),
 });
 
 export type ArticleInputSchema = z.infer<typeof articleInputSchema>;

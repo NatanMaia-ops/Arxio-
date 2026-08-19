@@ -39,6 +39,7 @@ export const createArticleSchema = z.object({
 			`O titulo deve ter no maximo ${ARTICLE_TITLE_MAX_LENGTH} caracteres`,
 		),
 	content: articleContentSchema,
+	status: z.enum(["draft", "published"]).optional(),
 	coverFit: coverFitSchema.default("cover"),
 });
 

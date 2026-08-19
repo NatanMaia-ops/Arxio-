@@ -7,6 +7,8 @@ import {
 	deleteArticle,
 	fetchArticleById,
 	fetchArticles,
+	fetchMyArticles,
+	publishArticle,
 	removeArticleCover,
 	updateArticle,
 } from "./articles-api";
@@ -21,6 +23,7 @@ const articlePayload = {
 	authorId: "b2c3d4e5-f6a7-4b5c-8d9e-0f1a2b3c4d5e",
 	title: "Como pequenas escolhas moldam produtos melhores",
 	content: '{"type":"doc","content":[]}',
+	status: "published",
 	coverUrl: null,
 	coverFit: "cover",
 	createdAt: "2026-07-20T12:00:00.000Z",
@@ -89,6 +92,23 @@ describe("Articles API", () => {
 		);
 	});
 
+	it("lists authenticated user's drafts and published articles", async () => {
+		const draftPayload = { ...articlePayload, status: "draft" };
+		const { requests, fetcher } = recorder(() =>
+			Response.json([draftPayload, articlePayload]),
+		);
+
+		const articles = await fetchMyArticles("http://localhost:3000", fetcher);
+
+		assert.deepEqual(
+			articles.map((article) => article.status),
+			["draft", "published"],
+		);
+		assert.equal(requests[0]?.input, "http://localhost:3000/articles/me");
+		assert.equal(requests[0]?.init?.credentials, "include");
+		assert.equal(requests[0]?.init?.cache, "no-store");
+	});
+
 	it("fetches one article by id", async () => {
 		const { requests, fetcher } = recorder(() => Response.json(articlePayload));
 
@@ -130,6 +150,7 @@ describe("Articles API", () => {
 				title: articlePayload.title,
 				content: articlePayload.content,
 				coverFit: "cover",
+				status: "published",
 			},
 			fetcher,
 		);
@@ -143,8 +164,29 @@ describe("Articles API", () => {
 				title: articlePayload.title,
 				content: articlePayload.content,
 				coverFit: "cover",
+				status: "published",
 			}),
 		);
+	});
+
+	it("publishes an existing draft through the dedicated endpoint", async () => {
+		const { requests, fetcher } = recorder(() =>
+			Response.json({ ...articlePayload, status: "published" }),
+		);
+
+		const published = await publishArticle(
+			"http://localhost:3000",
+			articlePayload.id,
+			fetcher,
+		);
+
+		assert.equal(published.status, "published");
+		assert.equal(
+			requests[0]?.input,
+			`http://localhost:3000/articles/${articlePayload.id}/publish`,
+		);
+		assert.equal(requests[0]?.init?.method, "PATCH");
+		assert.equal(requests[0]?.init?.credentials, "include");
 	});
 
 	it("surfaces the server message when creation fails", async () => {

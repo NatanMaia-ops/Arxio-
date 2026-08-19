@@ -2,7 +2,10 @@ import { type RequestHandler, type Response, Router } from "express";
 import { z } from "zod";
 
 import { ForbiddenError, NotFoundError } from "../../../shared/errors";
-import type { AuthenticatedLocals } from "../../auth/http/auth.middleware";
+import type {
+	AuthenticatedLocals,
+	SessionReader,
+} from "../../auth/http/auth.middleware";
 import { confirmMediaUploadSchema } from "../../media/http/dtos/confirm_media_upload.dto";
 import type { ArticleService } from "../services/articles.service";
 
@@ -18,6 +21,7 @@ const paramsWithIdSchema = z.object({
 export function createArticlesController(
 	articlesService: ArticleService,
 	requireAuth: RequestHandler,
+	readSession: SessionReader,
 ) {
 	const router = Router();
 
@@ -29,6 +33,7 @@ export function createArticlesController(
 				const input = createArticleSchema.parse(req.body);
 				const article = await articlesService.createArticle({
 					...input,
+					status: input.status,
 					authorId: res.locals.session.user.id,
 				});
 
@@ -41,14 +46,38 @@ export function createArticlesController(
 
 	router.get("/", async (req, res, next) => {
 		try {
-			const filters = listArticlesQuerySchema.parse(req.query);
-			const articles = await articlesService.listArticles(filters);
+			const { status: _ignoredStatus, ...query } = req.query;
+			const filters = listArticlesQuerySchema.parse(query);
+			const articles = await articlesService.listArticles({
+				...filters,
+				status: "published",
+			});
 
 			res.status(200).json(articles.map((a) => articleResponseSchema.parse(a)));
 		} catch (error) {
 			next(error);
 		}
 	});
+
+	router.get(
+		"/me",
+		requireAuth,
+		async (_req, res: Response<unknown, AuthenticatedLocals>, next) => {
+			try {
+				const articles = await articlesService.listArticles({
+					authorId: res.locals.session.user.id,
+				});
+
+				res
+					.status(200)
+					.json(
+						articles.map((article) => articleResponseSchema.parse(article)),
+					);
+			} catch (error) {
+				next(error);
+			}
+		},
+	);
 
 	router.get("/:id", async (req, res, next) => {
 		try {
@@ -59,11 +88,39 @@ export function createArticlesController(
 				throw new NotFoundError("Artigo nao encontrado");
 			}
 
+			if (article.status === "draft") {
+				const session = await readSession(req);
+				const userId =
+					typeof session?.user?.id === "string" ? session.user.id : undefined;
+
+				if (article.authorId !== userId) {
+					throw new NotFoundError("Artigo nao encontrado");
+				}
+			}
+
 			res.status(200).json(articleResponseSchema.parse(article));
 		} catch (error) {
 			next(error);
 		}
 	});
+
+	router.patch(
+		"/:id/publish",
+		requireAuth,
+		async (req, res: Response<unknown, AuthenticatedLocals>, next) => {
+			try {
+				const { id } = paramsWithIdSchema.parse(req.params);
+				const article = await articlesService.publishArticle(
+					id,
+					res.locals.session.user.id,
+				);
+
+				res.status(200).json(articleResponseSchema.parse(article));
+			} catch (error) {
+				next(error);
+			}
+		},
+	);
 
 	router.patch(
 		"/:id",

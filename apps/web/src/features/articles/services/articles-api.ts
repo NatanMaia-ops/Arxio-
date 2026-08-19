@@ -6,6 +6,7 @@ import type {
 	Article,
 	ArticleInput,
 	ArticleListFilters,
+	CreateArticleInput,
 } from "@/features/articles/types/article.types";
 
 export type ArticleFetch = (
@@ -72,6 +73,31 @@ export async function fetchArticles(
 	return result.data;
 }
 
+export async function fetchMyArticles(
+	serverUrl: string,
+	fetcher: ArticleFetch = fetch,
+): Promise<Article[]> {
+	const response = await fetcher(articlesUrl(serverUrl, "/me"), {
+		credentials: "include",
+		cache: "no-store",
+	});
+
+	if (!response.ok) {
+		throw new Error(
+			await readErrorMessage(
+				response,
+				"Não foi possível carregar seus artigos",
+			),
+		);
+	}
+
+	const result = articleListSchema.safeParse(await response.json());
+
+	if (!result.success) throw new Error("Invalid articles response");
+
+	return result.data;
+}
+
 export async function fetchArticleById(
 	serverUrl: string,
 	id: string,
@@ -90,7 +116,7 @@ export async function fetchArticleById(
 
 export async function createArticle(
 	serverUrl: string,
-	input: ArticleInput,
+	input: CreateArticleInput,
 	fetcher: ArticleFetch = fetch,
 ): Promise<Article> {
 	const response = await fetcher(articlesUrl(serverUrl), {
@@ -98,6 +124,25 @@ export async function createArticle(
 		credentials: "include",
 		headers: { "Content-Type": "application/json" },
 		body: JSON.stringify(input),
+	});
+
+	if (!response.ok) {
+		throw new Error(
+			await readErrorMessage(response, "Não foi possível publicar o artigo"),
+		);
+	}
+
+	return parseArticle(await response.json());
+}
+
+export async function publishArticle(
+	serverUrl: string,
+	id: string,
+	fetcher: ArticleFetch = fetch,
+): Promise<Article> {
+	const response = await fetcher(articlesUrl(serverUrl, `/${id}/publish`), {
+		method: "PATCH",
+		credentials: "include",
 	});
 
 	if (!response.ok) {
