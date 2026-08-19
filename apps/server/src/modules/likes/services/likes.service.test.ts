@@ -27,6 +27,7 @@ function createArticle(id: string): Article {
 		authorId: "44444444-4444-4444-8444-444444444444",
 		title: "Test article",
 		content: "Test content",
+		status: "published",
 		coverObjectKey: null,
 		coverUrl: null,
 		coverFit: "cover",

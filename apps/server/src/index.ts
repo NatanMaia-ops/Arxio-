@@ -25,6 +25,11 @@ import {
 	createOnboardingController,
 	onboardingService,
 } from "./modules/onboarding/onboarding.module";
+import {
+	createArticleTagsController,
+	createTagsController,
+} from "./modules/tags/http/tags.controller";
+import { tagsService } from "./modules/tags/tags.module";
 import { createUsersController } from "./modules/users/http/users.controller";
 import { usersService } from "./modules/users/users.module";
 import { errorHandler } from "./shared/http/error-handler";
@@ -71,7 +76,7 @@ app.use(
 app.use(
 	"/articles",
 	express.json({ limit: ARTICLE_REQUEST_BODY_LIMIT }),
-	createArticlesController(articlesService, requireAuth),
+	createArticlesController(articlesService, requireAuth, readSession),
 );
 
 app.use(
@@ -96,6 +101,18 @@ app.use(
 	"/comments",
 	express.json(),
 	createCommentsController(commentsService, requireAuth),
+);
+
+app.use(
+	"/tags",
+	express.json(),
+	createTagsController(tagsService, requireAuth),
+);
+
+app.use(
+	"/articles/:articleId/tags",
+	express.json(),
+	createArticleTagsController(tagsService, requireAuth),
 );
 
 app.use(createWebProxy(env.WEB_INTERNAL_URL));

@@ -7,6 +7,7 @@ export const articleResponseSchema = z.object({
 	authorId: z.string().uuid(),
 	title: z.string(),
 	content: z.string(),
+	status: z.enum(["draft", "published"]),
 	coverUrl: z.url().nullable(),
 	coverFit: coverFitSchema,
 	createdAt: z.coerce.date(),

@@ -64,6 +64,7 @@ export default function EditArticlePage() {
 			initialContent={article.content}
 			initialCoverUrl={article.coverUrl}
 			initialCoverFit={article.coverFit}
+			initialStatus={article.status}
 		/>
 	);
 }

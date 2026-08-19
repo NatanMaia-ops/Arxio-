@@ -25,6 +25,7 @@ function createFakeArticleRepository(): ArticleRepository {
 		authorId: otherUserId,
 		title: "Artigo existente",
 		content: "Conteudo",
+		status: "published",
 		coverObjectKey: null,
 		coverUrl: null,
 		coverFit: "cover",

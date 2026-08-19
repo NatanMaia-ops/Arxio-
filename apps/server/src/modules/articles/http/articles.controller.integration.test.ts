@@ -21,17 +21,21 @@ import { createArticlesController } from "./articles.controller";
 
 const fakeUserId = "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d";
 const otherUserId = "b2c3d4e5-f6a7-4b5c-8d9e-0f1a2b3c4d5e";
+const filterTagId = "c3d4e5f6-a7b8-4c5d-9e0f-1a2b3c4d5e6f";
+const tagWithoutArticlesId = "d4e5f6a7-b8c9-4d5e-9f0a-1b2c3d4e5f6a";
 
-function createFakeRepository(): ArticleRepository {
+function createFakeRepository() {
 	const store = new Map<string, Article>();
+	const articleTags = new Map<string, string[]>();
 
-	return {
+	const repository: ArticleRepository = {
 		async create(input) {
 			const article: Article = {
 				id: crypto.randomUUID(),
 				authorId: input.authorId,
 				title: input.title,
 				content: input.content,
+				status: input.status,
 				coverObjectKey: null,
 				coverUrl: null,
 				coverFit: input.coverFit,
@@ -49,11 +53,13 @@ function createFakeRepository(): ArticleRepository {
 		async findAll(filters = {}) {
 			const storedArticles = Array.from(store.values());
 
-			return filters.authorId
-				? storedArticles.filter(
-						(article) => article.authorId === filters.authorId,
-					)
-				: storedArticles;
+			return storedArticles.filter(
+				(article) =>
+					(!filters.authorId || article.authorId === filters.authorId) &&
+					(!filters.status || article.status === filters.status) &&
+					(!filters.tagId ||
+						(articleTags.get(article.id) ?? []).includes(filters.tagId)),
+			);
 		},
 		async update(id, input) {
 			const article = store.get(id);
@@ -64,6 +70,7 @@ function createFakeRepository(): ArticleRepository {
 				...article,
 				...(input.title !== undefined ? { title: input.title } : {}),
 				...(input.content !== undefined ? { content: input.content } : {}),
+				...(input.status !== undefined ? { status: input.status } : {}),
 				...(input.coverFit !== undefined ? { coverFit: input.coverFit } : {}),
 				updatedAt: new Date(),
 			};
@@ -84,6 +91,13 @@ function createFakeRepository(): ArticleRepository {
 			store.delete(id);
 		},
 	};
+
+	return {
+		repository,
+		setArticleTags(articleId: string, tagIds: string[]) {
+			articleTags.set(articleId, [...tagIds]);
+		},
+	};
 }
 
 const mediaStorage: ObjectStorage = {
@@ -100,7 +114,7 @@ const mediaStorage: ObjectStorage = {
 describe("Articles HTTP API", () => {
 	let origin = "";
 	let server: Server;
-	const repository = createFakeRepository();
+	const { repository, setArticleTags } = createFakeRepository();
 	const articlesService = new ArticleService(
 		repository,
 		new MediaService(mediaStorage, "https://media.example.com"),
@@ -119,6 +133,10 @@ describe("Articles HTTP API", () => {
 					user: { id: fakeUserId },
 					expires: new Date(Date.now() + 3600_000).toISOString(),
 				})),
+				async () => ({
+					user: { id: fakeUserId },
+					expires: new Date(Date.now() + 3600_000).toISOString(),
+				}),
 			),
 		);
 
@@ -130,6 +148,10 @@ describe("Articles HTTP API", () => {
 					user: { id: otherUserId },
 					expires: new Date(Date.now() + 3600_000).toISOString(),
 				})),
+				async () => ({
+					user: { id: otherUserId },
+					expires: new Date(Date.now() + 3600_000).toISOString(),
+				}),
 			),
 		);
 
@@ -138,6 +160,7 @@ describe("Articles HTTP API", () => {
 			createArticlesController(
 				articlesService,
 				createRequireAuth(async () => null),
+				async () => null,
 			),
 		);
 
@@ -193,6 +216,7 @@ describe("Articles HTTP API", () => {
 		assert.equal(body.authorId, fakeUserId);
 		assert.equal(body.title, "Meu primeiro artigo");
 		assert.equal(body.content, "Conteudo do artigo");
+		assert.equal(body.status, "draft");
 		assert.ok(body.createdAt);
 		assert.ok(body.updatedAt);
 	});
@@ -243,15 +267,36 @@ describe("Articles HTTP API", () => {
 		});
 	});
 
-	it("lists all articles on GET /", async () => {
+	it("lists only published articles on public GET /", async () => {
+		const createResponse = await fetch(`${origin}/articles`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				title: "Artigo publico",
+				content: "Disponivel no feed",
+				status: "published",
+			}),
+		});
+
+		assert.equal(createResponse.status, 201);
+
 		const response = await fetch(`${origin}/articles`);
 
 		assert.equal(response.status, 200);
 
-		const body = (await response.json()) as Array<unknown>;
+		const body = (await response.json()) as Array<{ status: string }>;
 
 		assert.equal(Array.isArray(body), true);
 		assert.ok(body.length >= 1);
+		assert.ok(body.every((article) => article.status === "published"));
+	});
+
+	it("ignores a draft status filter on public GET /", async () => {
+		const response = await fetch(`${origin}/articles?status=draft`);
+		const body = (await response.json()) as Array<{ status: string }>;
+
+		assert.equal(response.status, 200);
+		assert.ok(body.every((article) => article.status === "published"));
 	});
 
 	it("lists only articles from the requested author", async () => {
@@ -261,6 +306,7 @@ describe("Articles HTTP API", () => {
 			body: JSON.stringify({
 				title: "Artigo do autor principal",
 				content: "Conteudo principal",
+				status: "published",
 			}),
 		});
 		const otherArticleResponse = await fetch(`${origin}/articles-other`, {
@@ -269,6 +315,7 @@ describe("Articles HTTP API", () => {
 			body: JSON.stringify({
 				title: "Artigo de outro autor",
 				content: "Outro conteudo",
+				status: "published",
 			}),
 		});
 
@@ -281,6 +328,121 @@ describe("Articles HTTP API", () => {
 		assert.equal(response.status, 200);
 		assert.ok(body.length >= 1);
 		assert.ok(body.every((article) => article.authorId === otherUserId));
+	});
+
+	it("filters published articles by tag and combines the author filter", async () => {
+		async function createArticle(
+			basePath: string,
+			title: string,
+			status: "draft" | "published",
+		) {
+			const response = await fetch(`${origin}/${basePath}`, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ title, content: "Conteudo", status }),
+			});
+
+			assert.equal(response.status, 201);
+
+			return (await response.json()) as {
+				id: string;
+				authorId: string;
+				status: string;
+			};
+		}
+
+		const ownTagged = await createArticle(
+			"articles",
+			"Artigo principal com tag",
+			"published",
+		);
+		const otherTagged = await createArticle(
+			"articles-other",
+			"Artigo de outro autor com tag",
+			"published",
+		);
+		const ownUntagged = await createArticle(
+			"articles",
+			"Artigo sem a tag",
+			"published",
+		);
+		const taggedDraft = await createArticle(
+			"articles",
+			"Rascunho com tag",
+			"draft",
+		);
+
+		setArticleTags(ownTagged.id, [filterTagId]);
+		setArticleTags(otherTagged.id, [filterTagId]);
+		setArticleTags(taggedDraft.id, [filterTagId]);
+
+		const tagResponse = await fetch(`${origin}/articles?tagId=${filterTagId}`);
+		const tagBody = (await tagResponse.json()) as Array<{
+			id: string;
+			status: string;
+		}>;
+
+		assert.equal(tagResponse.status, 200);
+		assert.deepEqual(
+			tagBody.map((article) => article.id).sort(),
+			[ownTagged.id, otherTagged.id].sort(),
+		);
+		assert.ok(tagBody.every((article) => article.status === "published"));
+		assert.ok(!tagBody.some((article) => article.id === ownUntagged.id));
+		assert.ok(!tagBody.some((article) => article.id === taggedDraft.id));
+
+		const combinedResponse = await fetch(
+			`${origin}/articles?tagId=${filterTagId}&authorId=${fakeUserId}`,
+		);
+		const combinedBody = (await combinedResponse.json()) as Array<{
+			id: string;
+			authorId: string;
+		}>;
+
+		assert.equal(combinedResponse.status, 200);
+		assert.deepEqual(
+			combinedBody.map((article) => article.id),
+			[ownTagged.id],
+		);
+		assert.ok(combinedBody.every((article) => article.authorId === fakeUserId));
+	});
+
+	it("returns an empty list when no article has the requested tag", async () => {
+		const response = await fetch(
+			`${origin}/articles?tagId=${tagWithoutArticlesId}`,
+		);
+
+		assert.equal(response.status, 200);
+		assert.deepEqual(await response.json(), []);
+	});
+
+	it("returns 400 for an invalid tagId filter", async () => {
+		const response = await fetch(`${origin}/articles?tagId=invalid-id`);
+
+		assert.equal(response.status, 400);
+		assert.equal(
+			((await response.json()) as { code: string }).code,
+			"VALIDATION_ERROR",
+		);
+	});
+
+	it("lists draft and published articles owned by the authenticated user", async () => {
+		const response = await fetch(`${origin}/articles/me`);
+		const body = (await response.json()) as Array<{
+			authorId: string;
+			status: string;
+		}>;
+
+		assert.equal(response.status, 200);
+		assert.ok(body.some((article) => article.status === "draft"));
+		assert.ok(body.some((article) => article.status === "published"));
+		assert.ok(body.every((article) => article.authorId === fakeUserId));
+	});
+
+	it("returns 401 on GET /me without authentication", async () => {
+		const response = await fetch(`${origin}/articles-noauth/me`);
+
+		assert.equal(response.status, 401);
 	});
 
 	it("returns an empty list when the author has no articles", async () => {
@@ -328,6 +490,68 @@ describe("Articles HTTP API", () => {
 
 		assert.equal(response.status, 200);
 		assert.deepEqual(await response.json(), created);
+	});
+
+	it("hides a draft from anonymous users and other authors", async () => {
+		const createResponse = await fetch(`${origin}/articles`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ title: "Rascunho privado", content: "Segredo" }),
+		});
+		const created = (await createResponse.json()) as { id: string };
+
+		const anonymousResponse = await fetch(
+			`${origin}/articles-noauth/${created.id}`,
+		);
+		const otherAuthorResponse = await fetch(
+			`${origin}/articles-other/${created.id}`,
+		);
+
+		assert.equal(anonymousResponse.status, 404);
+		assert.equal(otherAuthorResponse.status, 404);
+		assert.equal((await anonymousResponse.json()).code, "NOT_FOUND");
+		assert.equal((await otherAuthorResponse.json()).code, "NOT_FOUND");
+	});
+
+	it("publishes an owned draft", async () => {
+		const createResponse = await fetch(`${origin}/articles`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				title: "Pronto para publicar",
+				content: "Pronto",
+			}),
+		});
+		const created = (await createResponse.json()) as {
+			id: string;
+			status: string;
+		};
+
+		const publishResponse = await fetch(
+			`${origin}/articles/${created.id}/publish`,
+			{ method: "PATCH" },
+		);
+		const published = (await publishResponse.json()) as { status: string };
+
+		assert.equal(created.status, "draft");
+		assert.equal(publishResponse.status, 200);
+		assert.equal(published.status, "published");
+	});
+
+	it("rejects publishing a draft owned by another author", async () => {
+		const createResponse = await fetch(`${origin}/articles`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ title: "Rascunho protegido", content: "Privado" }),
+		});
+		const created = (await createResponse.json()) as { id: string };
+
+		const response = await fetch(
+			`${origin}/articles-other/${created.id}/publish`,
+			{ method: "PATCH" },
+		);
+
+		assert.equal(response.status, 403);
 	});
 
 	it("returns 403 on PATCH /:id when caller is not the author", async () => {
@@ -476,6 +700,7 @@ describe("Articles HTTP API", () => {
 			authorId: fakeUserId,
 			title: "Artigo sumiu",
 			content: "Conteudo",
+			status: "draft",
 			coverObjectKey: null,
 			coverUrl: null,
 			coverFit: "cover",
@@ -512,6 +737,10 @@ describe("Articles HTTP API", () => {
 					user: { id: fakeUserId },
 					expires: new Date(Date.now() + 3600_000).toISOString(),
 				})),
+				async () => ({
+					user: { id: fakeUserId },
+					expires: new Date(Date.now() + 3600_000).toISOString(),
+				}),
 			),
 		);
 		app.use(errorHandler);

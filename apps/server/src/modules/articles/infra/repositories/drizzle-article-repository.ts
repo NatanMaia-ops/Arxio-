@@ -1,6 +1,7 @@
 import { db } from "@arxio/db";
 import { articles } from "@arxio/db/schema/article";
-import { eq } from "drizzle-orm";
+import { articleTags } from "@arxio/db/schema/article-tag";
+import { and, eq } from "drizzle-orm";
 
 import type { Article } from "../../entities/article.entity";
 import type {
@@ -16,6 +17,7 @@ function toArticle(row: typeof articles.$inferSelect): Article {
 		authorId: row.authorId,
 		title: row.title,
 		content: row.content,
+		status: row.status as Article["status"],
 		coverObjectKey: row.coverObjectKey,
 		coverUrl: null,
 		coverFit: row.coverFit,
@@ -32,6 +34,7 @@ export const drizzleArticleRepository: ArticleRepository = {
 				authorId: input.authorId,
 				title: input.title,
 				content: input.content,
+				status: input.status,
 				coverFit: input.coverFit,
 			})
 			.returning();
@@ -53,10 +56,24 @@ export const drizzleArticleRepository: ArticleRepository = {
 	},
 
 	async findAll(filters: ListArticlesFilters = {}) {
+		const condition = and(
+			filters.authorId ? eq(articles.authorId, filters.authorId) : undefined,
+			filters.status ? eq(articles.status, filters.status) : undefined,
+			filters.tagId ? eq(articleTags.tagId, filters.tagId) : undefined,
+		);
+
+		if (filters.tagId) {
+			const rows = await db
+				.select({ article: articles })
+				.from(articles)
+				.innerJoin(articleTags, eq(articles.id, articleTags.articleId))
+				.where(condition);
+
+			return rows.map(({ article }) => toArticle(article));
+		}
+
 		const query = db.select().from(articles);
-		const rows = filters.authorId
-			? await query.where(eq(articles.authorId, filters.authorId))
-			: await query;
+		const rows = condition ? await query.where(condition) : await query;
 
 		return rows.map(toArticle);
 	},
@@ -67,6 +84,7 @@ export const drizzleArticleRepository: ArticleRepository = {
 			.set({
 				title: input.title,
 				content: input.content,
+				status: input.status,
 				coverFit: input.coverFit,
 				updatedAt: new Date(),
 			})

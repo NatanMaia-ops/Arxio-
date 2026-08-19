@@ -8,14 +8,23 @@ import type {
 	UpdateArticleInput,
 } from "../repositories/article-repository";
 
+type CreateArticleServiceInput = Omit<CreateArticleInput, "status"> & {
+	status?: CreateArticleInput["status"];
+};
+
 export class ArticleService {
 	constructor(
 		private readonly articles: ArticleRepository,
 		private readonly media?: MediaService,
 	) {}
 
-	async createArticle(input: CreateArticleInput): Promise<Article> {
-		return this.withResolvedCover(await this.articles.create(input));
+	async createArticle(input: CreateArticleServiceInput): Promise<Article> {
+		return this.withResolvedCover(
+			await this.articles.create({
+				...input,
+				status: input.status ?? "draft",
+			}),
+		);
 	}
 
 	async getArticleById(id: string): Promise<Article | null> {
@@ -34,6 +43,17 @@ export class ArticleService {
 	): Promise<Article | null> {
 		const article = await this.articles.update(id, input);
 		return article ? this.withResolvedCover(article) : null;
+	}
+
+	async publishArticle(id: string, authorId: string): Promise<Article> {
+		await this.requireOwnedArticle(id, authorId);
+		const article = await this.articles.update(id, { status: "published" });
+
+		if (!article) {
+			throw new NotFoundError("Artigo nao encontrado");
+		}
+
+		return this.withResolvedCover(article);
 	}
 
 	async setCover(

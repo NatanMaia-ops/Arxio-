@@ -30,6 +30,7 @@ function createArticle(id: string): Article {
 		authorId,
 		title: "Article",
 		content: "Content",
+		status: "published",
 		coverObjectKey: null,
 		coverUrl: null,
 		coverFit: "cover",

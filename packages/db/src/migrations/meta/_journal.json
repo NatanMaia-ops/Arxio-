@@ -62,7 +62,21 @@
       "idx": 8,
       "version": "7",
       "when": 1787060772921,
-			"tag": "0008_add_article_cover_fit",
+      "tag": "0008_add_article_cover_fit",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1787157823001,
+      "tag": "0009_add_article_status",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1787163762610,
+      "tag": "0010_create_tags_article_tags",
       "breakpoints": true
     }
   ]

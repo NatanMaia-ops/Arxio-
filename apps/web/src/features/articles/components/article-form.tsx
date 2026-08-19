@@ -21,7 +21,10 @@ import {
 	ArticleCoverSaveError,
 	saveArticleWithCover,
 } from "@/features/articles/services/save-article";
-import type { CoverFit } from "@/features/articles/types/article.types";
+import type {
+	ArticleStatus,
+	CoverFit,
+} from "@/features/articles/types/article.types";
 import type { MediaUploadStage } from "@/features/media";
 
 import { ArticleCoverEditor } from "./article-cover-editor";
@@ -34,6 +37,7 @@ type ArticleFormProps = {
 	initialContent?: string;
 	initialCoverUrl?: string | null;
 	initialCoverFit?: CoverFit;
+	initialStatus?: ArticleStatus;
 };
 
 const EMPTY_CONTENT = JSON.stringify(EMPTY_DOCUMENT);
@@ -67,6 +71,7 @@ export function ArticleForm({
 	initialContent,
 	initialCoverUrl = null,
 	initialCoverFit = "cover",
+	initialStatus = "draft",
 }: ArticleFormProps) {
 	const router = useRouter();
 	const [title, setTitle] = useState(initialTitle);
@@ -81,10 +86,10 @@ export function ArticleForm({
 	const [coverFit, setCoverFit] = useState<CoverFit>(initialCoverFit);
 	const [stage, setStage] = useState<MediaUploadStage | null>(null);
 
-	const submitLabel =
-		mode === "create" && !persistedArticleId ? "Publicar" : "Salvar";
+	const isPublished = mode === "edit" && initialStatus === "published";
+	const submitLabel = isPublished ? "Salvar" : "Publicar";
 
-	async function handleSubmit() {
+	async function handleSubmit(intent: "draft" | "publish") {
 		const validationError = validate(title, content);
 
 		if (validationError) {
@@ -99,6 +104,7 @@ export function ArticleForm({
 			const article = await saveArticleWithCover({
 				articleId: persistedArticleId,
 				article: { title: title.trim(), content, coverFit },
+				intent,
 				cover: coverFile
 					? { type: "upload", file: coverFile }
 					: isCoverRemoved
@@ -116,7 +122,11 @@ export function ArticleForm({
 				},
 			});
 
-			router.push(`/artigos/${article.id}` as Route);
+			router.push(
+				(article.status === "draft"
+					? `/artigos/${article.id}/editar`
+					: `/artigos/${article.id}`) as Route,
+			);
 			router.refresh();
 		} catch (cause) {
 			const message =
@@ -151,9 +161,20 @@ export function ArticleForm({
 							Cancelar
 						</Link>
 
+						{!isPublished ? (
+							<button
+								type="button"
+								onClick={() => handleSubmit("draft")}
+								disabled={isSaving}
+								className="rounded-full border border-ax-line px-4.5 py-2.5 font-medium text-ax-ink-soft text-sm transition-colors hover:border-ax-ink hover:text-ax-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface disabled:opacity-50"
+							>
+								Salvar rascunho
+							</button>
+						) : null}
+
 						<button
 							type="button"
-							onClick={handleSubmit}
+							onClick={() => handleSubmit("publish")}
 							disabled={isSaving}
 							className="rounded-full bg-ax-ink px-4.5 py-2.5 font-medium text-ax-on-ink text-sm transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface disabled:opacity-50"
 						>

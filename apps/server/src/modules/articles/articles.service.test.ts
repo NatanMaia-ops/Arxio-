@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { ForbiddenError } from "../../shared/errors";
+import { ForbiddenError, NotFoundError } from "../../shared/errors";
 import { MediaService } from "../media/media.service";
 import type { ObjectStorage } from "../media/object-storage";
 
@@ -19,6 +19,7 @@ function createArticleRepository(initialCover: string | null = null) {
 		authorId,
 		title: "Artigo",
 		content: "Conteudo",
+		status: "draft",
 		coverObjectKey: initialCover,
 		coverUrl: null,
 		coverFit: "cover",
@@ -78,6 +79,68 @@ function createMedia() {
 		deleted,
 	};
 }
+
+describe("ArticleService drafts", () => {
+	it("creates an article as draft when status is omitted", async () => {
+		const { repository, current } = createArticleRepository();
+		const service = new ArticleService(repository);
+
+		const article = await service.createArticle({
+			authorId,
+			title: "Novo artigo",
+			content: "Em progresso",
+			coverFit: "cover",
+		});
+
+		assert.equal(article.status, "draft");
+		assert.equal(current().status, "draft");
+	});
+
+	it("creates an article as published when status is explicit", async () => {
+		const { repository } = createArticleRepository();
+		const service = new ArticleService(repository);
+
+		const article = await service.createArticle({
+			authorId,
+			title: "Novo artigo",
+			content: "Pronto para leitura",
+			coverFit: "cover",
+			status: "published",
+		});
+
+		assert.equal(article.status, "published");
+	});
+
+	it("publishes an article owned by the author", async () => {
+		const { repository, current } = createArticleRepository();
+		const service = new ArticleService(repository);
+
+		const article = await service.publishArticle(articleId, authorId);
+
+		assert.equal(article.status, "published");
+		assert.equal(current().status, "published");
+	});
+
+	it("rejects publishing an article owned by another author", async () => {
+		const { repository } = createArticleRepository();
+		const service = new ArticleService(repository);
+
+		await assert.rejects(
+			service.publishArticle(articleId, "44444444-4444-4444-8444-444444444444"),
+			ForbiddenError,
+		);
+	});
+
+	it("rejects publishing an article that does not exist", async () => {
+		const { repository } = createArticleRepository();
+		const service = new ArticleService(repository);
+
+		await assert.rejects(
+			service.publishArticle("00000000-0000-0000-0000-000000000000", authorId),
+			NotFoundError,
+		);
+	});
+});
 
 describe("ArticleService covers", () => {
 	it("resolves a stored cover key to the public media URL", async () => {
