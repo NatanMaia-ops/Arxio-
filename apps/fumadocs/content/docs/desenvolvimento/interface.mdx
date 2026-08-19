@@ -10,17 +10,30 @@ tamanho óptico, para títulos e para o corpo dos artigos. Familjen Grotesk,
 uma grotesca quente e arredondada, para a interface: navegação, botões,
 metadados e formulários.
 
-A serifada nunca aparece em negrito. O contraste de hierarquia vem do tamanho
-e do espaço em volta, não da espessura do traço:
+A hierarquia vive em tokens de tipo (`--text-*` no `index.css`), não em
+tamanhos avulsos. Cada token carrega tamanho, altura de linha e peso — uma
+classe (`text-display-lg`) aplica o papel inteiro.
 
-| Papel | Peso |
-| --- | --- |
-| Manchete de display, 24px ou mais | 300 |
-| Título de card, de seção e `h2` do artigo | 400 |
-| `h3` do artigo, perto demais do corpo para o tamanho sozinho separar | 500 |
+Trilho editorial (Newsreader), regra "maior = mais leve", tamanhos fluidos:
 
-O peso 300 nunca desce abaixo de 24px, onde o traço fino começa a prejudicar
-a leitura.
+| Token | Tamanho | Peso | Papel |
+| --- | --- | --- | --- |
+| `display-xl` | 34→48px | 300 | título do artigo aberto |
+| `display-lg` | 30→40px | 300 | títulos de página |
+| `display-md` | 21→26px | 400 | títulos de card, `h2` do artigo, seções |
+| `display-sm` | 19px | 500 | `h3` do artigo, título de comentários |
+
+Trilho utilitário (Familjen Grotesk), dois pesos: 400 lê, 500 age.
+
+| Token | Tamanho | Peso | Papel |
+| --- | --- | --- | --- |
+| `body` / `body-sm` | 16 / 15px | 400 | subtítulos, resumos, comentários |
+| `meta` | 13px | 400 | datas, contagens, autores |
+| `label` | 12px + tracking | 500 | eyebrows em caixa alta |
+
+Botões e inputs continuam em `text-sm` com peso 500. A serifada nunca aparece
+em negrito em títulos; `strong` dentro do artigo é a única exceção. Peso 300
+nunca desce abaixo de 24px, onde o traço fino prejudica a leitura.
 
 A divisão segue a ideia de que o texto do artigo é conteúdo de leitura longa
 e a interface é ferramenta. Serifada para ler, sem serifa para operar.

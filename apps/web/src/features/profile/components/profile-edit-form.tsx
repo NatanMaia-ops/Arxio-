@@ -143,7 +143,7 @@ export function ProfileEditForm() {
 	if (loadError) {
 		return (
 			<section role="alert" className="rounded-xl border border-ax-line p-5">
-				<h1 className="font-home-display font-normal text-2xl text-ax-ink">
+				<h1 className="font-home-display text-ax-ink text-display-md">
 					Não foi possível editar o perfil
 				</h1>
 				<p className="mt-2 text-ax-body text-sm">{loadError}</p>
@@ -161,8 +161,8 @@ export function ProfileEditForm() {
 	return (
 		<form onSubmit={handleSubmit} noValidate>
 			<div className="border-ax-line border-b pb-7">
-				<p className="font-medium text-ax-meta text-sm">Seu perfil</p>
-				<h1 className="mt-1 font-home-display font-light text-3xl text-ax-ink sm:text-4xl">
+				<p className="text-ax-meta text-label uppercase">Seu perfil</p>
+				<h1 className="mt-1 font-home-display text-ax-ink text-display-lg">
 					Editar perfil
 				</h1>
 				<p className="mt-3 max-w-2xl text-ax-body text-sm leading-6 sm:text-base">
@@ -216,7 +216,7 @@ export function ProfileEditForm() {
 				</Field>
 
 				<fieldset className="grid gap-5 rounded-xl border border-ax-line p-5 sm:grid-cols-2 sm:p-6">
-					<legend className="px-2 font-semibold text-ax-ink text-sm">
+					<legend className="px-2 font-medium text-ax-ink text-sm">
 						Informações acadêmicas (opcionais)
 					</legend>
 
@@ -343,7 +343,7 @@ function Field({
 				</p>
 			) : null}
 			{hint && !error ? (
-				<p id={`${name}-hint`} className="mt-1.5 text-ax-meta text-xs">
+				<p id={`${name}-hint`} className="mt-1.5 text-ax-meta text-meta">
 					{hint}
 				</p>
 			) : null}

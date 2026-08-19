@@ -201,7 +201,7 @@ export function ArticleForm({
 					onChange={(event) => setTitle(event.target.value)}
 					placeholder="Título"
 					maxLength={TITLE_MAX_LENGTH}
-					className="w-full font-home-display font-light text-[28px] text-ax-ink leading-9 placeholder:text-ax-placeholder focus:outline-none sm:text-[40px] sm:leading-12"
+					className="w-full font-home-display text-ax-ink text-display-xl placeholder:text-ax-placeholder focus:outline-none"
 				/>
 
 				<ArticleCoverEditor

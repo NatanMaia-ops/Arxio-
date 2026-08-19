@@ -108,7 +108,7 @@ function ProfileUnavailable() {
 		<AppShell>
 			<div className="mx-auto max-w-180 px-5 pt-20 pb-24 sm:px-6 sm:pt-30">
 				<section role="status" className="flex flex-col items-start gap-4">
-					<h1 className="font-home-display font-light text-[28px] text-ax-ink leading-9 sm:text-[40px] sm:leading-11">
+					<h1 className="font-home-display text-ax-ink text-display-lg">
 						Não foi possível carregar o perfil
 					</h1>
 					<p className="text-ax-ink-soft text-base leading-6">

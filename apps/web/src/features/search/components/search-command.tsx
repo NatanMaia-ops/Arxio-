@@ -192,7 +192,7 @@ function SearchDialog({ onClose, triggerRef }: SearchDialogProps) {
 
 					{status === "ready" ? (
 						<section>
-							<h2 className="px-3 py-2 font-medium text-ax-meta text-xs uppercase tracking-wide">
+							<h2 className="px-3 py-2 text-ax-meta text-label uppercase">
 								{query ? "Resultados" : "Publicados recentemente"}
 							</h2>
 
@@ -230,7 +230,7 @@ function SearchDialog({ onClose, triggerRef }: SearchDialogProps) {
 												{result.title}
 											</span>
 
-											<span className="shrink-0 text-ax-meta text-xs">
+											<span className="shrink-0 text-ax-meta text-meta">
 												{result.authorName}
 											</span>
 										</button>
@@ -241,7 +241,7 @@ function SearchDialog({ onClose, triggerRef }: SearchDialogProps) {
 					) : null}
 				</div>
 
-				<footer className="flex items-center gap-4 border-ax-line border-t bg-ax-fill/60 px-4 py-2.5 text-ax-meta text-xs">
+				<footer className="flex items-center gap-4 border-ax-line border-t bg-ax-fill/60 px-4 py-2.5 text-ax-meta text-meta">
 					<span className="flex items-center gap-1.5">
 						<Kbd>↑</Kbd>
 						<Kbd>↓</Kbd>

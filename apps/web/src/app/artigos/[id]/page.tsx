@@ -84,11 +84,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 						Voltar para o feed
 					</Link>
 
-					<p className="font-medium text-[13px] text-ax-ink-soft leading-4.5">
+					<p className="text-ax-ink-soft text-meta">
 						{dateFormatter.format(article.createdAt)}
 					</p>
 
-					<h1 className="mt-3 font-home-display font-light text-[32px] text-ax-ink leading-10 sm:text-[40px] sm:leading-12 lg:text-[48px] lg:leading-14">
+					<h1 className="mt-3 font-home-display text-ax-ink text-display-xl">
 						{article.title}
 					</h1>
 
@@ -101,7 +101,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 							/>
 							<Link
 								href={`/perfil/${article.authorId}` as Route}
-								className="rounded-sm font-semibold text-ax-ink transition-colors hover:text-ax-ink-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
+								className="rounded-sm font-medium text-ax-ink transition-colors hover:text-ax-ink-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
 							>
 								{author.name}
 							</Link>

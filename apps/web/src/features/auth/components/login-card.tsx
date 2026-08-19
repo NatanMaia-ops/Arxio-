@@ -24,7 +24,7 @@ export function LoginCard() {
 	return (
 		<div className="w-full max-w-md rounded-2xl border border-ax-line bg-ax-surface p-8 shadow-[0_1px_3px_rgba(28,26,23,0.04)] md:p-9">
 			<div className="flex flex-col gap-2.5">
-				<h2 className="font-semibold text-2xl text-ax-ink tracking-tight">
+				<h2 className="font-home-display text-ax-ink text-display-md">
 					Entre ou crie sua conta
 				</h2>
 

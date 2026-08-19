@@ -34,6 +34,41 @@
 		0 1px 2px rgb(33 28 22 / 0.04), 0 12px 32px -12px rgb(33 28 22 / 0.12);
 	--shadow-ax-float-lg:
 		0 2px 4px rgb(33 28 22 / 0.05), 0 24px 56px -20px rgb(33 28 22 / 0.18);
+
+	--text-display-xl: clamp(2.125rem, 1.5rem + 1.75vw, 3rem);
+	--text-display-xl--line-height: 1.15;
+	--text-display-xl--font-weight: 300;
+	--text-display-xl--letter-spacing: -0.015em;
+
+	--text-display-lg: clamp(1.875rem, 1.55rem + 1.1vw, 2.5rem);
+	--text-display-lg--line-height: 1.2;
+	--text-display-lg--font-weight: 300;
+	--text-display-lg--letter-spacing: -0.01em;
+
+	--text-display-md: clamp(1.3125rem, 1.2rem + 0.4vw, 1.625rem);
+	--text-display-md--line-height: 1.3;
+	--text-display-md--font-weight: 400;
+
+	--text-display-sm: 1.1875rem;
+	--text-display-sm--line-height: 1.4;
+	--text-display-sm--font-weight: 500;
+
+	--text-body: 1rem;
+	--text-body--line-height: 1.6;
+	--text-body--font-weight: 400;
+
+	--text-body-sm: 0.9375rem;
+	--text-body-sm--line-height: 1.6;
+	--text-body-sm--font-weight: 400;
+
+	--text-meta: 0.8125rem;
+	--text-meta--line-height: 1.45;
+	--text-meta--font-weight: 400;
+
+	--text-label: 0.75rem;
+	--text-label--line-height: 1.35;
+	--text-label--font-weight: 500;
+	--text-label--letter-spacing: 0.08em;
 }
 
 :root {

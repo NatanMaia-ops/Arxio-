@@ -19,7 +19,7 @@ export default function MyArticlesPage() {
 				heading={
 					<header className="flex flex-wrap items-end justify-between gap-4 border-ax-line border-b pb-6">
 						<div>
-							<h1 className="font-home-display font-light text-[32px] text-ax-ink leading-9 sm:text-[40px] sm:leading-11">
+							<h1 className="font-home-display text-ax-ink text-display-lg">
 								Meus artigos
 							</h1>
 							<p className="mt-2 text-ax-body">

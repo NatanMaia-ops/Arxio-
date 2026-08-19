@@ -79,7 +79,7 @@ export function MyArticles() {
 				>
 					<div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
 						<div className="min-w-0">
-							<div className="mb-2 flex flex-wrap items-center gap-2 text-xs">
+							<div className="mb-2 flex flex-wrap items-center gap-2 text-meta">
 								<span
 									className={
 										article.status === "draft"
@@ -95,10 +95,10 @@ export function MyArticles() {
 								</span>
 							</div>
 
-							<h2 className="font-home-display font-normal text-[25px] text-ax-ink">
+							<h2 className="font-home-display text-ax-ink text-display-md">
 								{article.title}
 							</h2>
-							<p className="mt-2 line-clamp-2 text-ax-body text-sm leading-6">
+							<p className="mt-2 line-clamp-2 text-ax-body text-body-sm">
 								{extractExcerpt(article.content)}
 							</p>
 						</div>

@@ -37,12 +37,12 @@ export default async function ArticlesPage({ searchParams }: FeedPageProps) {
 			heading={
 				<header className="flex flex-col gap-3 border-ax-line border-b pb-6">
 					<div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
-						<h1 className="font-home-display font-light text-[32px] text-ax-ink leading-9 sm:text-[40px] sm:leading-11">
+						<h1 className="font-home-display text-ax-ink text-display-lg">
 							Leituras recentes
 						</h1>
 
 						{articles?.length ? (
-							<span className="text-ax-meta text-sm tabular-nums">
+							<span className="text-ax-meta text-meta tabular-nums">
 								{articles.length}{" "}
 								{articles.length === 1
 									? "artigo publicado"
@@ -51,7 +51,7 @@ export default async function ArticlesPage({ searchParams }: FeedPageProps) {
 						) : null}
 					</div>
 
-					<p className="max-w-160 text-ax-body text-base leading-6">
+					<p className="max-w-160 text-ax-body text-body">
 						Estudos, notas e projetos publicados por quem faz parte da
 						comunidade da Arxio.
 					</p>
@@ -80,7 +80,7 @@ function EmptyState({ isFiltered }: { isFiltered: boolean }) {
 	if (isFiltered) {
 		return (
 			<div className="flex flex-col items-start gap-4 rounded-3xl border border-ax-line border-dashed bg-ax-surface/70 p-10">
-				<h2 className="font-home-display font-normal text-[28px] text-ax-ink leading-8.5">
+				<h2 className="font-home-display text-ax-ink text-display-md">
 					Nenhum artigo com esse tópico
 				</h2>
 				<p className="text-ax-ink-soft text-base leading-6">
@@ -98,7 +98,7 @@ function EmptyState({ isFiltered }: { isFiltered: boolean }) {
 
 	return (
 		<div className="flex flex-col items-start gap-4 rounded-3xl border border-ax-line border-dashed bg-ax-surface/70 p-10">
-			<h2 className="font-home-display font-normal text-[28px] text-ax-ink leading-8.5">
+			<h2 className="font-home-display text-ax-ink text-display-md">
 				Nenhum artigo por aqui ainda
 			</h2>
 			<p className="text-ax-ink-soft text-base leading-6">

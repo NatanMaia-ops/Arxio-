@@ -15,7 +15,7 @@ import { useAccount } from "@/features/auth/account-context";
 import { signOut } from "@/features/auth/services/sign-out";
 
 const ITEM_CLASS =
-	"flex h-11 shrink-0 items-center gap-3.5 overflow-hidden rounded-2xl px-3 font-medium text-[15px] tracking-[-0.01em] transition-[width,background-color,color] duration-300 ease-out motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-canvas";
+	"flex h-11 shrink-0 items-center gap-3.5 overflow-hidden rounded-2xl px-3 font-medium text-body-sm tracking-[-0.01em] transition-[width,background-color,color] duration-300 ease-out motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-canvas";
 
 const LABEL_CLASS =
 	"truncate transition-opacity duration-200 ease-out motion-reduce:transition-none";

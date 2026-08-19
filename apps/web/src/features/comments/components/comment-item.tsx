@@ -59,7 +59,7 @@ export function CommentItem({
 				/>
 
 				<div className="min-w-0 flex-1">
-					<div className="flex flex-wrap items-center gap-x-2 text-[13px]">
+					<div className="flex flex-wrap items-center gap-x-2 text-meta">
 						<Link
 							href={`/perfil/${node.authorId}` as Route}
 							className="font-medium text-ax-ink-soft transition-colors hover:text-ax-ink"
@@ -89,13 +89,13 @@ export function CommentItem({
 							/>
 						</div>
 					) : (
-						<p className="mt-1 whitespace-pre-wrap break-words text-ax-body text-sm leading-6">
+						<p className="mt-1 whitespace-pre-wrap break-words text-ax-body text-body-sm">
 							{node.content}
 						</p>
 					)}
 
 					{!isEditing ? (
-						<div className="mt-2 flex items-center gap-3 text-ax-ink-soft text-xs">
+						<div className="mt-2 flex items-center gap-3 text-ax-ink-soft text-meta">
 							{currentUserId ? (
 								<button
 									type="button"

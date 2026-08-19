@@ -182,7 +182,7 @@ export function ArticleEditor({
 
 			<p
 				className={cn(
-					"text-right text-ax-meta text-xs",
+					"text-right text-ax-meta text-meta",
 					currentCharacterCount >= ARTICLE_CONTENT_MAX_LENGTH &&
 						"text-destructive",
 				)}

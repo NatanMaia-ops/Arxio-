@@ -21,13 +21,13 @@ export function ProfileArticleList({
 			<header className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2 border-ax-line border-b pb-4">
 				<h2
 					id="profile-articles-title"
-					className="font-home-display font-normal text-[28px] text-ax-ink leading-9 sm:text-[32px] sm:leading-10"
+					className="font-home-display text-ax-ink text-display-md"
 				>
 					Artigos publicados
 				</h2>
 
 				{articles ? (
-					<span className="text-ax-meta text-sm tabular-nums">
+					<span className="text-ax-meta text-meta tabular-nums">
 						{articles.length} {articles.length === 1 ? "artigo" : "artigos"}
 					</span>
 				) : null}

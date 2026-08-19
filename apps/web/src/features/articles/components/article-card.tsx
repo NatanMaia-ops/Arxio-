@@ -37,7 +37,7 @@ export function ArticleCard({
 			<ArticleCover article={article} />
 
 			<div className="flex min-w-0 flex-1 flex-col gap-3">
-				<header className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-ax-meta">
+				<header className="flex flex-wrap items-center gap-x-2 gap-y-1 text-ax-meta text-meta">
 					<Link
 						href={`/perfil/${author.id}` as Route}
 						className="relative z-10 inline-flex min-w-0 max-w-full items-center gap-2 rounded-md font-medium text-ax-ink-soft transition-colors hover:text-ax-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
@@ -63,7 +63,7 @@ export function ArticleCard({
 				</header>
 
 				<div className="flex flex-col gap-2">
-					<h3 className="font-home-display font-normal text-[23px] text-ax-ink leading-8 sm:text-[27px] sm:leading-9">
+					<h3 className="font-home-display text-ax-ink text-display-md">
 						<Link
 							href={`/artigos/${article.id}` as Route}
 							className="line-clamp-2 transition-colors after:absolute after:inset-0 after:rounded-3xl after:content-[''] hover:text-ax-ink-hover focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-ax-ink focus-visible:after:ring-offset-2 focus-visible:after:ring-offset-ax-surface"
@@ -72,12 +72,12 @@ export function ArticleCard({
 						</Link>
 					</h3>
 
-					<p className="line-clamp-2 text-[15px] text-ax-body leading-6">
+					<p className="line-clamp-2 text-ax-body text-body-sm">
 						{extractExcerpt(article.content)}
 					</p>
 				</div>
 
-				<footer className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-2 border-ax-line border-t pt-4 text-ax-meta text-xs">
+				<footer className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-2 border-ax-line border-t pt-4 text-ax-meta text-meta">
 					<span className="flex items-center gap-1.5">
 						<Clock3 className="size-3.5 shrink-0" aria-hidden="true" />
 						{readTimeMinutes} min de leitura
