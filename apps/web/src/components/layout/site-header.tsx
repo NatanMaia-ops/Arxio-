@@ -8,13 +8,13 @@ import { SearchCommand } from "@/features/search/components/search-command";
 
 export function SiteHeader() {
 	return (
-		<header className="sticky top-0 z-10 bg-ax-canvas/70 backdrop-blur-md">
+		<header className="sticky top-0 z-10">
 			<div className="mx-auto flex h-16 max-w-336 items-center gap-4 px-5 sm:h-18 sm:gap-7 sm:px-8 lg:px-10">
 				<span className="lg:hidden">
 					<Logo />
 				</span>
 
-				<div className="ml-auto flex items-center gap-1.5 sm:gap-2">
+				<div className="ml-auto flex items-center gap-1.5 rounded-full bg-ax-surface/85 p-1.5 shadow-ax-float backdrop-blur-md sm:gap-2">
 					<SearchCommand />
 
 					<ThemeToggle />

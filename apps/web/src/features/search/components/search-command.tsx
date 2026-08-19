@@ -42,7 +42,7 @@ export function SearchCommand() {
 				id={triggerId}
 				ref={triggerRef}
 				aria-label="Buscar artigos"
-				className="flex h-10 min-w-10 cursor-pointer items-center gap-2.5 rounded-full border border-ax-line bg-ax-fill px-2.5 text-ax-mute text-sm transition-colors hover:border-ax-line-3 hover:bg-ax-fill-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface sm:w-56 sm:px-4 lg:w-72"
+				className="flex h-10 min-w-10 cursor-pointer items-center gap-2.5 rounded-full bg-ax-fill/70 px-2.5 text-ax-mute text-sm transition-colors hover:bg-ax-fill-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface sm:w-56 sm:px-4 lg:w-72"
 			>
 				<Search className="size-4.5 shrink-0" aria-hidden="true" />
 				<span className="hidden truncate sm:inline">Buscar</span>

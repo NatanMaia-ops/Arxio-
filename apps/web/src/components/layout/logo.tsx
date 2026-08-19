@@ -5,7 +5,7 @@ export function Logo() {
 		<Link
 			href={{ pathname: "/feed" }}
 			aria-label="Arxio — ir para o feed"
-			className="flex shrink-0 items-center rounded-md text-ax-ink transition-opacity hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
+			className="flex shrink-0 items-center rounded-md text-ax-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-canvas"
 		>
 			<ArxioWordmark className="h-7 w-auto sm:h-9" />
 		</Link>
@@ -39,6 +39,19 @@ export function ArxioWordmark({ className }: { className?: string }) {
 				height="626.25"
 			/>
 			<polygon points="780.17,4149.37 2817.41,4149.37 2817.41,5409.08 344.94,5409.08" />
+		</svg>
+	);
+}
+
+export function ArxioMark({ className }: { className?: string }) {
+	return (
+		<svg
+			viewBox="0 0 4280.66 6841.77"
+			fill="currentColor"
+			aria-hidden="true"
+			className={className}
+		>
+			<polygon points="2690.39,6841.77 4280.66,6841.77 1948.6,0 358.34,0 1770.16,4142 434.45,4142 -0,5399.45 2198.77,5399.45" />
 		</svg>
 	);
 }
