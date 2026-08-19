@@ -25,6 +25,7 @@ export type ArticleStatus = "draft" | "published";
 
 export type ArticleListFilters = {
 	authorId?: string;
+	tagId?: string;
 };
 
 export type AuthorSummary = {

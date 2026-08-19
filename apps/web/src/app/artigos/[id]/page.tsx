@@ -3,7 +3,7 @@ import type { Metadata, Route } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { SiteHeader } from "@/components/layout/site-header";
+import { AppShell } from "@/components/layout/app-shell";
 import { UserAvatar } from "@/components/user-avatar";
 import {
 	estimateReadTimeMinutes,
@@ -56,15 +56,14 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
 	if (!isAvailable) {
 		return (
-			<div className="min-h-dvh">
-				<SiteHeader />
-				<main className="mx-auto max-w-180 px-6 pt-13.5 pb-24">
+			<AppShell>
+				<div className="mx-auto max-w-180">
 					<ArticlesUnavailable
 						title="Não foi possível carregar o artigo"
 						description="O serviço de artigos não respondeu. Tente novamente em instantes."
 					/>
-				</main>
-			</div>
+				</div>
+			</AppShell>
 		);
 	}
 
@@ -74,10 +73,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 	const readTimeMinutes = estimateReadTimeMinutes(article.content);
 
 	return (
-		<div className="min-h-dvh">
-			<SiteHeader />
-
-			<main className="mx-auto max-w-190 px-4 pt-6 pb-24 sm:px-6 sm:pt-10">
+		<AppShell>
+			<div className="mx-auto max-w-190">
 				<article className="rounded-3xl bg-ax-surface px-5 py-8 shadow-ax-float sm:px-10 sm:py-12">
 					<Link
 						href={{ pathname: "/feed" }}
@@ -151,7 +148,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 				</article>
 
 				<ReadingProgressTracker articleId={article.id} />
-			</main>
-		</div>
+			</div>
+		</AppShell>
 	);
 }

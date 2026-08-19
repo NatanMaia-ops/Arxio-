@@ -9,22 +9,36 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { ArxioWordmark } from "@/components/layout/logo";
 import { UserAvatar } from "@/components/user-avatar";
 import { useAccount } from "@/features/auth/account-context";
 import { signOut } from "@/features/auth/services/sign-out";
 
 const ITEM_CLASS =
-	"flex min-h-11 items-center gap-3 rounded-2xl px-3 font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface";
+	"flex min-h-11 items-center gap-3 rounded-2xl px-3 font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-canvas";
+
+const INACTIVE_CLASS =
+	"text-ax-ink-soft hover:bg-ax-surface/70 hover:text-ax-ink";
+
+const ACTIVE_CLASS = "bg-ax-surface text-ax-ink shadow-ax-float";
 
 export function SiteSidebar() {
 	const account = useAccount();
 	const pathname = usePathname();
 
 	return (
-		<aside className="hidden w-60 shrink-0 lg:block">
+		<aside className="fixed inset-y-0 left-0 z-20 hidden w-64 flex-col gap-9 px-5 py-6 lg:flex">
+			<Link
+				href={{ pathname: "/feed" }}
+				aria-label="Arxio — ir para o feed"
+				className="flex shrink-0 items-center rounded-md px-3 text-ax-ink transition-opacity hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-canvas"
+			>
+				<ArxioWordmark className="h-9 w-auto" />
+			</Link>
+
 			<nav
 				aria-label="Atalhos da conta"
-				className="sticky top-24 flex flex-col gap-1 rounded-3xl bg-ax-surface p-3 shadow-ax-float"
+				className="flex min-h-0 flex-1 flex-col gap-1"
 			>
 				<SidebarLink
 					href="/feed"
@@ -57,12 +71,9 @@ export function SiteSidebar() {
 							}
 						/>
 
-						<span
-							aria-hidden="true"
-							className="my-1 h-px shrink-0 bg-ax-line"
-						/>
-
-						<SignOutButton />
+						<div className="mt-auto pt-4">
+							<SignOutButton />
+						</div>
 					</>
 				) : null}
 
@@ -94,12 +105,7 @@ function SidebarLink({
 		<Link
 			href={href as Route}
 			aria-current={isActive ? "page" : undefined}
-			className={cn(
-				ITEM_CLASS,
-				isActive
-					? "bg-ax-fill text-ax-ink"
-					: "text-ax-ink-soft hover:bg-ax-fill/70 hover:text-ax-ink",
-			)}
+			className={cn(ITEM_CLASS, isActive ? ACTIVE_CLASS : INACTIVE_CLASS)}
 		>
 			{icon}
 			{label}
@@ -110,10 +116,10 @@ function SidebarLink({
 function SidebarPlaceholder() {
 	return (
 		<div aria-hidden="true" className="flex flex-col gap-1">
-			{[0, 1, 2].map((index) => (
+			{[0, 1].map((index) => (
 				<div key={index} className="flex min-h-11 items-center gap-3 px-3">
-					<span className="size-5 shrink-0 animate-pulse rounded-full bg-ax-fill" />
-					<span className="h-3 w-24 animate-pulse rounded bg-ax-fill" />
+					<span className="size-5 shrink-0 animate-pulse rounded-full bg-ax-surface/70" />
+					<span className="h-3 w-24 animate-pulse rounded bg-ax-surface/70" />
 				</div>
 			))}
 		</div>
@@ -145,7 +151,8 @@ function SignOutButton() {
 			disabled={isSigningOut}
 			className={cn(
 				ITEM_CLASS,
-				"cursor-pointer text-ax-ink-soft hover:bg-ax-fill/70 hover:text-ax-ink disabled:cursor-wait",
+				INACTIVE_CLASS,
+				"w-full cursor-pointer disabled:cursor-wait",
 			)}
 		>
 			{isSigningOut ? (

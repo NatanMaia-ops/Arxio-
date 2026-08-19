@@ -1,5 +1,6 @@
 import type {
 	Article,
+	ArticleListFilters,
 	AuthorSummary,
 } from "@/features/articles/types/article.types";
 import { getComments } from "@/features/comments/services/comments";
@@ -72,8 +73,10 @@ export async function listEngagement(
 	return new Map(entries);
 }
 
-export async function listArticlesWithAuthors(): Promise<ArticleWithAuthor[]> {
-	const articles = sortByNewest(await getArticles());
+export async function listArticlesWithAuthors(
+	filters: ArticleListFilters = {},
+): Promise<ArticleWithAuthor[]> {
+	const articles = sortByNewest(await getArticles(filters));
 	const authorIds = [...new Set(articles.map((article) => article.authorId))];
 	const authors = new Map<string, AuthorSummary>();
 

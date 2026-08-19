@@ -1,11 +1,9 @@
-import { SiteHeader } from "@/components/layout/site-header";
+import { AppShell } from "@/components/layout/app-shell";
 
 export default function ProfileLoading() {
 	return (
-		<div className="min-h-dvh">
-			<SiteHeader />
-
-			<main className="mx-auto max-w-5xl px-5 pt-8 pb-16 sm:px-8 sm:pt-12 lg:px-10">
+		<AppShell>
+			<div className="mx-auto max-w-5xl px-5 pt-8 pb-16 sm:px-8 sm:pt-12 lg:px-10">
 				<div role="status">
 					<span className="sr-only">Carregando perfil...</span>
 
@@ -44,7 +42,7 @@ export default function ProfileLoading() {
 						</div>
 					</div>
 				</div>
-			</main>
-		</div>
+			</div>
+		</AppShell>
 	);
 }

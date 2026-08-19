@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 
-import { SiteHeader } from "@/components/layout/site-header";
+import { AppShell } from "@/components/layout/app-shell";
 import {
 	listEngagement,
 	sortByNewest,
@@ -79,10 +79,8 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 	}
 
 	return (
-		<div className="min-h-dvh">
-			<SiteHeader />
-
-			<main className="mx-auto max-w-5xl px-5 pt-8 pb-16 sm:px-8 sm:pt-12 lg:px-10">
+		<AppShell>
+			<div className="mx-auto max-w-5xl px-5 pt-8 pb-16 sm:px-8 sm:pt-12 lg:px-10">
 				<ProfileHeader profile={profileResult.profile} />
 
 				<div className="mt-8 flex flex-col gap-10 sm:mt-10 sm:gap-12">
@@ -100,17 +98,15 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 						}}
 					/>
 				</div>
-			</main>
-		</div>
+			</div>
+		</AppShell>
 	);
 }
 
 function ProfileUnavailable() {
 	return (
-		<div className="min-h-dvh">
-			<SiteHeader />
-
-			<main className="mx-auto max-w-180 px-5 pt-20 pb-24 sm:px-6 sm:pt-30">
+		<AppShell>
+			<div className="mx-auto max-w-180 px-5 pt-20 pb-24 sm:px-6 sm:pt-30">
 				<section role="status" className="flex flex-col items-start gap-4">
 					<h1 className="font-home-display font-light text-[28px] text-ax-ink leading-9 sm:text-[40px] sm:leading-11">
 						Não foi possível carregar o perfil
@@ -126,7 +122,7 @@ function ProfileUnavailable() {
 						Voltar para o feed
 					</Link>
 				</section>
-			</main>
-		</div>
+			</div>
+		</AppShell>
 	);
 }
