@@ -8,7 +8,7 @@
 		"compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server",
 		"dev": "tsx watch src/index.ts",
 		"start": "node dist/index.mjs",
-		"test": "tsx --test src/modules/auth/*.test.ts src/modules/media/*.test.ts src/modules/media/http/*.test.ts src/modules/users/*.test.ts src/modules/users/http/*.test.ts src/modules/users/http/dtos/*.test.ts src/modules/users/infra/repositories/*.test.ts src/modules/articles/*.test.ts src/modules/articles/http/*.test.ts src/modules/onboarding/*.test.ts src/modules/onboarding/http/*.test.ts src/modules/likes/services/*.test.ts src/modules/likes/http/*.test.ts src/modules/comments/services/*.test.ts src/modules/comments/http/*.test.ts"
+		"test": "tsx --test src/modules/auth/*.test.ts src/modules/media/*.test.ts src/modules/media/http/*.test.ts src/modules/users/*.test.ts src/modules/users/http/*.test.ts src/modules/users/http/dtos/*.test.ts src/modules/users/infra/repositories/*.test.ts src/modules/articles/*.test.ts src/modules/articles/http/*.test.ts src/modules/onboarding/*.test.ts src/modules/onboarding/http/*.test.ts src/modules/likes/services/*.test.ts src/modules/likes/http/*.test.ts src/modules/tags/services/*.test.ts src/modules/tags/http/*.test.ts src/modules/comments/services/*.test.ts src/modules/comments/http/*.test.ts"
 	},
 	"dependencies": {
 		"@arxio/db": "*",

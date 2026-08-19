@@ -1,5 +1,6 @@
 import { db } from "@arxio/db";
 import { articles } from "@arxio/db/schema/article";
+import { articleTags } from "@arxio/db/schema/article-tag";
 import { and, eq } from "drizzle-orm";
 
 import type { Article } from "../../entities/article.entity";
@@ -55,17 +56,23 @@ export const drizzleArticleRepository: ArticleRepository = {
 	},
 
 	async findAll(filters: ListArticlesFilters = {}) {
+		const condition = and(
+			filters.authorId ? eq(articles.authorId, filters.authorId) : undefined,
+			filters.status ? eq(articles.status, filters.status) : undefined,
+			filters.tagId ? eq(articleTags.tagId, filters.tagId) : undefined,
+		);
+
+		if (filters.tagId) {
+			const rows = await db
+				.select({ article: articles })
+				.from(articles)
+				.innerJoin(articleTags, eq(articles.id, articleTags.articleId))
+				.where(condition);
+
+			return rows.map(({ article }) => toArticle(article));
+		}
+
 		const query = db.select().from(articles);
-		const authorCondition = filters.authorId
-			? eq(articles.authorId, filters.authorId)
-			: undefined;
-		const statusCondition = filters.status
-			? eq(articles.status, filters.status)
-			: undefined;
-		const condition =
-			authorCondition && statusCondition
-				? and(authorCondition, statusCondition)
-				: (authorCondition ?? statusCondition);
 		const rows = condition ? await query.where(condition) : await query;
 
 		return rows.map(toArticle);
