@@ -143,7 +143,7 @@ export function ProfileEditForm() {
 	if (loadError) {
 		return (
 			<section role="alert" className="rounded-xl border border-ax-line p-5">
-				<h1 className="font-bold font-home-display text-2xl text-ax-ink">
+				<h1 className="font-home-display font-normal text-2xl text-ax-ink">
 					Não foi possível editar o perfil
 				</h1>
 				<p className="mt-2 text-ax-body text-sm">{loadError}</p>
@@ -162,7 +162,7 @@ export function ProfileEditForm() {
 		<form onSubmit={handleSubmit} noValidate>
 			<div className="border-ax-line border-b pb-7">
 				<p className="font-medium text-ax-meta text-sm">Seu perfil</p>
-				<h1 className="mt-1 font-bold font-home-display text-3xl text-ax-ink sm:text-4xl">
+				<h1 className="mt-1 font-home-display font-light text-3xl text-ax-ink sm:text-4xl">
 					Editar perfil
 				</h1>
 				<p className="mt-3 max-w-2xl text-ax-body text-sm leading-6 sm:text-base">

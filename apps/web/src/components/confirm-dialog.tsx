@@ -36,7 +36,7 @@ export function ConfirmDialog({
 			<AlertDialogPrimitive.Portal>
 				<AlertDialogPrimitive.Backdrop className="fixed inset-0 z-50 bg-black/50" />
 				<AlertDialogPrimitive.Popup className="fixed top-1/2 left-1/2 z-50 flex w-[calc(100vw-2.5rem)] max-w-md -translate-x-1/2 -translate-y-1/2 flex-col gap-3 rounded-2xl border border-ax-line bg-ax-surface p-6 shadow-lg">
-					<AlertDialogPrimitive.Title className="font-home-display font-semibold text-[22px] text-ax-ink leading-7">
+					<AlertDialogPrimitive.Title className="font-home-display font-normal text-[22px] text-ax-ink leading-7">
 						{title}
 					</AlertDialogPrimitive.Title>
 					<AlertDialogPrimitive.Description className="text-ax-ink-soft text-base leading-6">

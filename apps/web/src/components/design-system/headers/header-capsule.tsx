@@ -27,7 +27,7 @@ export function HeaderCapsule() {
 
 	return (
 		<div className="@container sticky top-0 z-20 @2xl:px-6 px-3 @2xl:pt-4 pt-3 pb-1">
-			<header className="mx-auto flex @2xl:h-16 h-14 max-w-300 items-center @2xl:gap-3 gap-1.5 @2xl:rounded-full rounded-2xl border border-ax-line bg-ax-surface/80 @2xl:px-3.5 px-2 shadow-[0_10px_40px_-16px_rgb(0_0_0/0.35)] backdrop-blur-xl">
+			<header className="mx-auto flex @2xl:h-16 h-14 max-w-300 items-center @2xl:gap-3 gap-1.5 @2xl:rounded-full rounded-2xl border border-ax-line bg-ax-surface/80 @2xl:px-3.5 px-2 shadow-ax-float-lg backdrop-blur-xl">
 				<BrandMark className="ml-1" />
 
 				<span className="@4xl:block hidden h-6 w-px bg-ax-line" />
@@ -112,7 +112,7 @@ export function HeaderCapsule() {
 			</header>
 
 			{isSearchOpen ? (
-				<div className="mx-auto mt-2 flex @2xl:hidden h-12 max-w-300 items-center gap-2 rounded-2xl border border-ax-line bg-ax-surface/95 px-4 shadow-[0_10px_40px_-16px_rgb(0_0_0/0.35)] backdrop-blur-xl">
+				<div className="mx-auto mt-2 flex @2xl:hidden h-12 max-w-300 items-center gap-2 rounded-2xl border border-ax-line bg-ax-surface/95 px-4 shadow-ax-float-lg backdrop-blur-xl">
 					<Search
 						className="size-4.5 shrink-0 text-ax-mute"
 						aria-hidden="true"

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { SiteHeader } from "@/components/layout/site-header";
+import { SiteSidebar } from "@/components/layout/site-sidebar";
 import { ArticleCard } from "@/features/articles/components/article-card";
 import { ArticlesUnavailable } from "@/features/articles/components/articles-unavailable";
 import {
@@ -26,50 +27,59 @@ export default async function ArticlesPage() {
 	}
 
 	return (
-		<div className="min-h-dvh bg-ax-surface">
+		<div className="min-h-dvh">
 			<SiteHeader />
 
-			<main className="mx-auto max-w-5xl px-5 pt-8 pb-16 sm:px-8 sm:pt-12 lg:px-10">
-				<header className="flex flex-col gap-3 border-ax-line border-b pb-6">
-					<div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
-						<h1 className="font-bold font-home-display text-[32px] text-ax-ink leading-9 sm:text-[40px] sm:leading-11">
-							Leituras recentes
-						</h1>
+			<div className="mx-auto flex w-full max-w-400 gap-8 px-5 pt-8 pb-16 sm:px-8 sm:pt-12 lg:px-10">
+				<SiteSidebar />
 
-						{articles?.length ? (
-							<span className="text-ax-meta text-sm tabular-nums">
-								{articles.length}{" "}
-								{articles.length === 1
-									? "artigo publicado"
-									: "artigos publicados"}
-							</span>
-						) : null}
-					</div>
+				<main className="w-full min-w-0">
+					<header className="flex flex-col gap-3 border-ax-line border-b pb-6">
+						<div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
+							<h1 className="font-home-display font-light text-[32px] text-ax-ink leading-9 sm:text-[40px] sm:leading-11">
+								Leituras recentes
+							</h1>
 
-					<p className="max-w-160 text-ax-body text-base leading-6">
-						Estudos, notas e projetos publicados por quem faz parte da
-						comunidade da Arxio.
-					</p>
-				</header>
+							{articles?.length ? (
+								<span className="text-ax-meta text-sm tabular-nums">
+									{articles.length}{" "}
+									{articles.length === 1
+										? "artigo publicado"
+										: "artigos publicados"}
+								</span>
+							) : null}
+						</div>
 
-				<section className="mt-6 flex flex-col gap-4">
-					{articles === null && <ArticlesUnavailable />}
+						<p className="max-w-160 text-ax-body text-base leading-6">
+							Estudos, notas e projetos publicados por quem faz parte da
+							comunidade da Arxio.
+						</p>
+					</header>
 
-					{articles?.length === 0 && <EmptyState />}
+					<section className="mt-6 flex flex-col gap-4">
+						{articles === null && <ArticlesUnavailable />}
 
-					{articles?.map(({ article, author }) => (
-						<ArticleCard key={article.id} article={article} author={author} />
-					))}
-				</section>
-			</main>
+						{articles?.length === 0 && <EmptyState />}
+
+						{articles?.map(({ article, author, engagement }) => (
+							<ArticleCard
+								key={article.id}
+								article={article}
+								author={author}
+								engagement={engagement}
+							/>
+						))}
+					</section>
+				</main>
+			</div>
 		</div>
 	);
 }
 
 function EmptyState() {
 	return (
-		<div className="flex flex-col items-start gap-4 rounded-2xl border border-ax-line border-dashed bg-ax-surface p-10">
-			<h2 className="font-home-display font-semibold text-[28px] text-ax-ink leading-8.5">
+		<div className="flex flex-col items-start gap-4 rounded-3xl border border-ax-line border-dashed bg-ax-surface/70 p-10">
+			<h2 className="font-home-display font-normal text-[28px] text-ax-ink leading-8.5">
 				Nenhum artigo por aqui ainda
 			</h2>
 			<p className="text-ax-ink-soft text-base leading-6">

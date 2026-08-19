@@ -3,22 +3,25 @@ import {
 	ArticleCard,
 	ArticlesUnavailable,
 } from "@/features/articles";
+import type { ArticleEngagement } from "@/features/articles/services/article-listing";
 import type { AuthorSummary } from "@/features/articles/types/article.types";
 import { ProfileEmptyState } from "@/features/profile/components/profile-empty-state";
 
 export function ProfileArticleList({
 	articles,
 	author,
+	engagement,
 }: {
 	articles: Article[] | null;
 	author: AuthorSummary;
+	engagement: Map<string, ArticleEngagement>;
 }) {
 	return (
 		<section aria-labelledby="profile-articles-title">
 			<header className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2 border-ax-line border-b pb-4">
 				<h2
 					id="profile-articles-title"
-					className="font-home-display font-semibold text-[28px] text-ax-ink leading-9 sm:text-[32px] sm:leading-10"
+					className="font-home-display font-normal text-[28px] text-ax-ink leading-9 sm:text-[32px] sm:leading-10"
 				>
 					Artigos publicados
 				</h2>
@@ -41,7 +44,12 @@ export function ProfileArticleList({
 				{articles?.length === 0 ? <ProfileEmptyState /> : null}
 
 				{articles?.map((article) => (
-					<ArticleCard key={article.id} article={article} author={author} />
+					<ArticleCard
+						key={article.id}
+						article={article}
+						author={author}
+						engagement={engagement.get(article.id)}
+					/>
 				))}
 			</div>
 		</section>

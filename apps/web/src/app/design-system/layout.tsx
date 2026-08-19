@@ -4,7 +4,7 @@ export default function DesignSystemLayout({
 	children,
 }: Readonly<{ children: React.ReactNode }>) {
 	return (
-		<div className="min-h-dvh bg-ax-surface">
+		<div className="min-h-dvh">
 			<div className="mx-auto max-w-320 px-5 pb-20 sm:px-8 lg:px-12">
 				<div className="flex min-h-14 items-center gap-3 text-sm">
 					<Link

@@ -12,6 +12,7 @@ import {
 import { ArticleOwnerActions } from "@/features/articles/components/article-owner-actions";
 import { ArticleViewer } from "@/features/articles/components/article-viewer";
 import { ArticlesUnavailable } from "@/features/articles/components/articles-unavailable";
+import { ReadingProgressTracker } from "@/features/articles/components/reading-progress-tracker";
 import { resolveAuthor } from "@/features/articles/services/article-listing";
 import { getArticleById } from "@/features/articles/services/articles";
 import { CommentsSection } from "@/features/comments/components/comments-section";
@@ -55,7 +56,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
 	if (!isAvailable) {
 		return (
-			<div className="min-h-dvh bg-ax-surface">
+			<div className="min-h-dvh">
 				<SiteHeader />
 				<main className="mx-auto max-w-180 px-6 pt-13.5 pb-24">
 					<ArticlesUnavailable
@@ -73,11 +74,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 	const readTimeMinutes = estimateReadTimeMinutes(article.content);
 
 	return (
-		<div className="min-h-dvh bg-ax-surface">
+		<div className="min-h-dvh">
 			<SiteHeader />
 
-			<main className="mx-auto max-w-180 px-5 pt-8 pb-24 sm:px-6 sm:pt-13.5">
-				<article>
+			<main className="mx-auto max-w-190 px-4 pt-6 pb-24 sm:px-6 sm:pt-10">
+				<article className="rounded-3xl bg-ax-surface px-5 py-8 shadow-ax-float sm:px-10 sm:py-12">
 					<Link
 						href={{ pathname: "/feed" }}
 						className="-mx-2 mb-4 inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 font-medium text-ax-ink-soft text-sm transition-colors hover:text-ax-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
@@ -90,7 +91,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 						{dateFormatter.format(article.createdAt)}
 					</p>
 
-					<h1 className="mt-3 font-bold font-home-display text-[32px] text-ax-ink leading-10 sm:text-[40px] sm:leading-12 lg:text-[48px] lg:leading-14">
+					<h1 className="mt-3 font-home-display font-light text-[32px] text-ax-ink leading-10 sm:text-[40px] sm:leading-12 lg:text-[48px] lg:leading-14">
 						{article.title}
 					</h1>
 
@@ -148,6 +149,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
 					<CommentsSection articleId={article.id} />
 				</article>
+
+				<ReadingProgressTracker articleId={article.id} />
 			</main>
 		</div>
 	);

@@ -139,7 +139,7 @@ export function CommentsSection({ articleId }: { articleId: string }) {
 
 	return (
 		<section className="mt-12 border-ax-line border-t pt-8">
-			<h2 className="font-home-display font-semibold text-[22px] text-ax-ink leading-7">
+			<h2 className="font-home-display font-normal text-[22px] text-ax-ink leading-7">
 				Comentários{comments ? ` (${comments.length})` : ""}
 			</h2>
 

@@ -46,7 +46,7 @@ export function ProfileAcademicInfo({
 		<section aria-labelledby="profile-academic-title">
 			<h2
 				id="profile-academic-title"
-				className="font-home-display font-semibold text-2xl text-ax-ink leading-8"
+				className="font-home-display font-normal text-2xl text-ax-ink leading-8"
 			>
 				Informações acadêmicas
 			</h2>

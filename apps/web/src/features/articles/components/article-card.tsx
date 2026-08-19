@@ -1,4 +1,4 @@
-import { Clock3 } from "lucide-react";
+import { Clock3, Heart, Image as ImageIcon, MessageCircle } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
 import { UserAvatar } from "@/components/user-avatar";
@@ -10,6 +10,12 @@ import {
 	formatAbsoluteDate,
 	formatPublishedDate,
 } from "@/features/articles/article-date";
+import { formatCount } from "@/features/articles/article-stats";
+import { ArticleCardProgress } from "@/features/articles/components/article-card-progress";
+import {
+	type ArticleEngagement,
+	EMPTY_ENGAGEMENT,
+} from "@/features/articles/services/article-listing";
 import type {
 	Article,
 	AuthorSummary,
@@ -18,29 +24,17 @@ import type {
 export function ArticleCard({
 	article,
 	author,
+	engagement = EMPTY_ENGAGEMENT,
 }: {
 	article: Article;
 	author: AuthorSummary;
+	engagement?: ArticleEngagement;
 }) {
 	const readTimeMinutes = estimateReadTimeMinutes(article.content);
 
 	return (
-		<article className="relative flex flex-col gap-4 rounded-2xl border border-ax-line bg-ax-surface p-4 transition-colors hover:border-ax-line-3 sm:flex-row-reverse sm:items-stretch sm:gap-5 sm:p-5">
-			{article.coverUrl ? (
-				<div className="aspect-video w-full shrink-0 overflow-hidden rounded-xl bg-ax-fill sm:h-auto sm:w-56 lg:w-72">
-					{/* biome-ignore lint/performance/noImgElement: capas usam hosts de mídia configurados fora do build. */}
-					<img
-						src={article.coverUrl}
-						alt=""
-						loading="lazy"
-						className={
-							article.coverFit === "contain"
-								? "size-full object-contain p-4"
-								: "size-full object-cover"
-						}
-					/>
-				</div>
-			) : null}
+		<article className="group relative flex flex-col gap-5 rounded-3xl bg-ax-surface p-5 shadow-ax-float transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-ax-float-lg motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:min-h-60 sm:flex-row-reverse sm:items-stretch sm:gap-6 sm:p-6">
+			<ArticleCover article={article} />
 
 			<div className="flex min-w-0 flex-1 flex-col gap-3">
 				<header className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-ax-meta">
@@ -69,10 +63,10 @@ export function ArticleCard({
 				</header>
 
 				<div className="flex flex-col gap-2">
-					<h3 className="font-home-display font-semibold text-[21px] text-ax-ink leading-7 sm:text-[25px] sm:leading-8">
+					<h3 className="font-home-display font-normal text-[23px] text-ax-ink leading-8 sm:text-[27px] sm:leading-9">
 						<Link
 							href={`/artigos/${article.id}` as Route}
-							className="line-clamp-2 transition-colors after:absolute after:inset-0 after:rounded-2xl after:content-[''] hover:text-ax-ink-hover focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-ax-ink focus-visible:after:ring-offset-2 focus-visible:after:ring-offset-ax-surface"
+							className="line-clamp-2 transition-colors after:absolute after:inset-0 after:rounded-3xl after:content-[''] hover:text-ax-ink-hover focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-ax-ink focus-visible:after:ring-offset-2 focus-visible:after:ring-offset-ax-surface"
 						>
 							{article.title}
 						</Link>
@@ -83,13 +77,69 @@ export function ArticleCard({
 					</p>
 				</div>
 
-				<footer className="mt-auto flex items-center gap-3 border-ax-line border-t pt-3 text-ax-meta text-xs">
+				<footer className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-2 border-ax-line border-t pt-4 text-ax-meta text-xs">
 					<span className="flex items-center gap-1.5">
 						<Clock3 className="size-3.5 shrink-0" aria-hidden="true" />
 						{readTimeMinutes} min de leitura
 					</span>
+
+					<ArticleCardProgress articleId={article.id} />
+
+					<div className="ml-auto flex items-center gap-4">
+						<span className="flex items-center gap-1.5">
+							<Heart className="size-4 shrink-0" aria-hidden="true" />
+							<span className="tabular-nums">
+								{formatCount(engagement.likes)}
+							</span>
+							<span className="sr-only">
+								{engagement.likes === 1 ? "curtida" : "curtidas"}
+							</span>
+						</span>
+
+						<span className="flex items-center gap-1.5">
+							<MessageCircle className="size-4 shrink-0" aria-hidden="true" />
+							<span className="tabular-nums">
+								{formatCount(engagement.comments)}
+							</span>
+							<span className="sr-only">
+								{engagement.comments === 1 ? "comentário" : "comentários"}
+							</span>
+						</span>
+					</div>
 				</footer>
 			</div>
 		</article>
+	);
+}
+
+function ArticleCover({ article }: { article: Article }) {
+	const shape =
+		"aspect-video w-full shrink-0 overflow-hidden rounded-2xl bg-ax-fill sm:aspect-auto sm:h-auto sm:w-64 lg:w-80";
+
+	if (!article.coverUrl) {
+		return (
+			<div
+				aria-hidden="true"
+				className={`${shape} flex items-center justify-center bg-gradient-to-br from-ax-fill via-ax-fill-hover to-ax-accent/15`}
+			>
+				<ImageIcon className="size-7 text-ax-line-3" />
+			</div>
+		);
+	}
+
+	return (
+		<div className={shape}>
+			{/* biome-ignore lint/performance/noImgElement: capas usam hosts de mídia configurados fora do build. */}
+			<img
+				src={article.coverUrl}
+				alt=""
+				loading="lazy"
+				className={
+					article.coverFit === "contain"
+						? "size-full object-contain p-4"
+						: "size-full object-cover"
+				}
+			/>
+		</div>
 	);
 }

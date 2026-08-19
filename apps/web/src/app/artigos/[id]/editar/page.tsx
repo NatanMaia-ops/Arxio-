@@ -50,7 +50,7 @@ export default function EditArticlePage() {
 
 	if (!article) {
 		return (
-			<div className="min-h-dvh bg-ax-surface" role="status">
+			<div className="min-h-dvh" role="status">
 				<span className="sr-only">Carregando artigo...</span>
 			</div>
 		);

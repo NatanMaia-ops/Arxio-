@@ -2,10 +2,11 @@
 
 import { cn } from "@arxio/ui/lib/utils";
 import { Moon, Sun } from "lucide-react";
-import Image from "next/image";
 import { useTheme } from "next-themes";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
+
+import { ArxioWordmark } from "@/components/layout/logo";
 
 type BrandMarkProps = {
 	className?: string;
@@ -15,18 +16,11 @@ type BrandMarkProps = {
 export function BrandMark({ className, label = "Arxio" }: BrandMarkProps) {
 	return (
 		<span
-			className={cn(
-				"flex h-6.75 w-20 shrink-0 items-center justify-center rounded-[10px] bg-ax-brand px-2.5 py-1.5",
-				className,
-			)}
+			role="img"
+			aria-label={label}
+			className={cn("flex shrink-0 items-center text-ax-ink", className)}
 		>
-			<Image
-				src="/icons/logo-arxio-mark.png"
-				alt={label}
-				width={753}
-				height={256}
-				className="h-full w-full object-contain"
-			/>
+			<ArxioWordmark className="h-5.5 w-auto" />
 		</span>
 	);
 }

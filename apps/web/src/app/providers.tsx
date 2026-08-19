@@ -4,6 +4,8 @@ import { Toaster } from "@arxio/ui/components/sonner";
 import { ThemeProvider } from "next-themes";
 import type { ReactNode } from "react";
 
+import { AccountProvider } from "@/features/auth/account-context";
+
 export function Providers({ children }: { children: ReactNode }) {
 	return (
 		<ThemeProvider
@@ -12,7 +14,7 @@ export function Providers({ children }: { children: ReactNode }) {
 			disableTransitionOnChange
 			enableSystem
 		>
-			{children}
+			<AccountProvider>{children}</AccountProvider>
 			<Toaster richColors />
 		</ThemeProvider>
 	);

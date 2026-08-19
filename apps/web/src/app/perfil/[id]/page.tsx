@@ -4,7 +4,10 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 
 import { SiteHeader } from "@/components/layout/site-header";
-import { sortByNewest } from "@/features/articles/services/article-listing";
+import {
+	listEngagement,
+	sortByNewest,
+} from "@/features/articles/services/article-listing";
 import { getArticles } from "@/features/articles/services/articles";
 import { ProfileAcademicInfo } from "@/features/profile/components/profile-academic-info";
 import { ProfileArticleList } from "@/features/profile/components/profile-article-list";
@@ -65,6 +68,9 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 		profileRequest,
 		articlesRequest,
 	]);
+	const engagement = await listEngagement(
+		(articles ?? []).map((article) => article.id),
+	);
 
 	if (profileResult.status === "not_found") notFound();
 
@@ -73,7 +79,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 	}
 
 	return (
-		<div className="min-h-dvh bg-ax-surface">
+		<div className="min-h-dvh">
 			<SiteHeader />
 
 			<main className="mx-auto max-w-5xl px-5 pt-8 pb-16 sm:px-8 sm:pt-12 lg:px-10">
@@ -86,6 +92,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 
 					<ProfileArticleList
 						articles={articles}
+						engagement={engagement}
 						author={{
 							id: profileResult.profile.id,
 							name: profileResult.profile.name,
@@ -100,12 +107,12 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 
 function ProfileUnavailable() {
 	return (
-		<div className="min-h-dvh bg-ax-surface">
+		<div className="min-h-dvh">
 			<SiteHeader />
 
 			<main className="mx-auto max-w-180 px-5 pt-20 pb-24 sm:px-6 sm:pt-30">
 				<section role="status" className="flex flex-col items-start gap-4">
-					<h1 className="font-bold font-home-display text-[28px] text-ax-ink leading-9 sm:text-[40px] sm:leading-11">
+					<h1 className="font-home-display font-light text-[28px] text-ax-ink leading-9 sm:text-[40px] sm:leading-11">
 						Não foi possível carregar o perfil
 					</h1>
 					<p className="text-ax-ink-soft text-base leading-6">
