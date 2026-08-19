@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 
 import { SiteSidebar } from "@/components/layout/site-sidebar";
+import { useAccount } from "@/features/auth/account-context";
 
 const STORAGE_KEY = "arxio:sidebar-open";
 
@@ -27,7 +28,10 @@ export function AppShellFrame({
 	rail?: ReactNode;
 	children: ReactNode;
 }) {
+	const account = useAccount();
 	const [isOpen, setIsOpen] = useState(true);
+
+	const hasSidebar = account.status === "authenticated";
 
 	useEffect(() => {
 		setIsOpen(readStoredPreference());
@@ -47,12 +51,12 @@ export function AppShellFrame({
 
 	return (
 		<div className="min-h-dvh">
-			<SiteSidebar isOpen={isOpen} onToggle={toggle} />
+			{hasSidebar ? <SiteSidebar isOpen={isOpen} onToggle={toggle} /> : null}
 
 			<div
 				className={cn(
 					"transition-[padding] duration-300 ease-out motion-reduce:transition-none",
-					isOpen ? "lg:pl-64" : "lg:pl-19",
+					hasSidebar && (isOpen ? "lg:pl-64" : "lg:pl-19"),
 				)}
 			>
 				{header}

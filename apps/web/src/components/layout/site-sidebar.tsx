@@ -1,13 +1,7 @@
 "use client";
 
 import { cn } from "@arxio/ui/lib/utils";
-import {
-	LoaderCircle,
-	LogIn,
-	LogOut,
-	Newspaper,
-	NotebookPen,
-} from "lucide-react";
+import { LoaderCircle, LogOut, Newspaper, NotebookPen } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -42,6 +36,8 @@ export function SiteSidebar({
 }) {
 	const account = useAccount();
 	const pathname = usePathname();
+
+	if (account.status !== "authenticated") return null;
 
 	return (
 		<aside
@@ -84,47 +80,31 @@ export function SiteSidebar({
 					isOpen={isOpen}
 				/>
 
-				{account.status === "loading" ? <SidebarPlaceholder /> : null}
+				<SidebarLink
+					href="/meus-artigos"
+					label="Meus artigos"
+					isActive={pathname === "/meus-artigos"}
+					icon={<NotebookPen {...ICON_PROPS} />}
+					isOpen={isOpen}
+				/>
 
-				{account.status === "authenticated" ? (
-					<>
-						<SidebarLink
-							href="/meus-artigos"
-							label="Meus artigos"
-							isActive={pathname === "/meus-artigos"}
-							icon={<NotebookPen {...ICON_PROPS} />}
-							isOpen={isOpen}
+				<SidebarLink
+					href={`/perfil/${account.userId}` as Route}
+					label="Meu perfil"
+					isActive={pathname === `/perfil/${account.userId}`}
+					icon={
+						<UserAvatar
+							name={account.name}
+							src={account.avatarUrl}
+							className="size-5 shrink-0 text-[9px] ring-0"
 						/>
+					}
+					isOpen={isOpen}
+				/>
 
-						<SidebarLink
-							href={`/perfil/${account.userId}` as Route}
-							label="Meu perfil"
-							isActive={pathname === `/perfil/${account.userId}`}
-							icon={
-								<UserAvatar
-									name={account.name}
-									src={account.avatarUrl}
-									className="size-5 shrink-0 text-[9px] ring-0"
-								/>
-							}
-							isOpen={isOpen}
-						/>
-
-						<div className="mt-auto pt-4">
-							<SignOutButton isOpen={isOpen} />
-						</div>
-					</>
-				) : null}
-
-				{account.status === "unauthenticated" ? (
-					<SidebarLink
-						href="/login"
-						label="Entrar"
-						isActive={pathname === "/login"}
-						icon={<LogIn {...ICON_PROPS} />}
-						isOpen={isOpen}
-					/>
-				) : null}
+				<div className="mt-auto pt-4">
+					<SignOutButton isOpen={isOpen} />
+				</div>
 			</nav>
 		</aside>
 	);
@@ -159,19 +139,6 @@ function SidebarLink({
 				{label}
 			</span>
 		</Link>
-	);
-}
-
-function SidebarPlaceholder() {
-	return (
-		<div aria-hidden="true" className="flex flex-col gap-1">
-			{[0, 1].map((index) => (
-				<div key={index} className="flex h-11 w-56 items-center gap-3.5 px-3">
-					<span className="size-5 shrink-0 animate-pulse rounded-full bg-ax-surface/70" />
-					<span className="h-3 w-24 animate-pulse rounded bg-ax-surface/70" />
-				</div>
-			))}
-		</div>
 	);
 }
 
