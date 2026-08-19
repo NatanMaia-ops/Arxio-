@@ -17,6 +17,7 @@ export type UpdateArticleInput = {
 
 export type ListArticlesFilters = {
 	authorId?: string;
+	tagId?: string;
 	status?: "draft" | "published";
 };
 

@@ -21,11 +21,14 @@ import { createArticlesController } from "./articles.controller";
 
 const fakeUserId = "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d";
 const otherUserId = "b2c3d4e5-f6a7-4b5c-8d9e-0f1a2b3c4d5e";
+const filterTagId = "c3d4e5f6-a7b8-4c5d-9e0f-1a2b3c4d5e6f";
+const tagWithoutArticlesId = "d4e5f6a7-b8c9-4d5e-9f0a-1b2c3d4e5f6a";
 
-function createFakeRepository(): ArticleRepository {
+function createFakeRepository() {
 	const store = new Map<string, Article>();
+	const articleTags = new Map<string, string[]>();
 
-	return {
+	const repository: ArticleRepository = {
 		async create(input) {
 			const article: Article = {
 				id: crypto.randomUUID(),
@@ -53,7 +56,9 @@ function createFakeRepository(): ArticleRepository {
 			return storedArticles.filter(
 				(article) =>
 					(!filters.authorId || article.authorId === filters.authorId) &&
-					(!filters.status || article.status === filters.status),
+					(!filters.status || article.status === filters.status) &&
+					(!filters.tagId ||
+						(articleTags.get(article.id) ?? []).includes(filters.tagId)),
 			);
 		},
 		async update(id, input) {
@@ -86,6 +91,13 @@ function createFakeRepository(): ArticleRepository {
 			store.delete(id);
 		},
 	};
+
+	return {
+		repository,
+		setArticleTags(articleId: string, tagIds: string[]) {
+			articleTags.set(articleId, [...tagIds]);
+		},
+	};
 }
 
 const mediaStorage: ObjectStorage = {
@@ -102,7 +114,7 @@ const mediaStorage: ObjectStorage = {
 describe("Articles HTTP API", () => {
 	let origin = "";
 	let server: Server;
-	const repository = createFakeRepository();
+	const { repository, setArticleTags } = createFakeRepository();
 	const articlesService = new ArticleService(
 		repository,
 		new MediaService(mediaStorage, "https://media.example.com"),
@@ -316,6 +328,102 @@ describe("Articles HTTP API", () => {
 		assert.equal(response.status, 200);
 		assert.ok(body.length >= 1);
 		assert.ok(body.every((article) => article.authorId === otherUserId));
+	});
+
+	it("filters published articles by tag and combines the author filter", async () => {
+		async function createArticle(
+			basePath: string,
+			title: string,
+			status: "draft" | "published",
+		) {
+			const response = await fetch(`${origin}/${basePath}`, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ title, content: "Conteudo", status }),
+			});
+
+			assert.equal(response.status, 201);
+
+			return (await response.json()) as {
+				id: string;
+				authorId: string;
+				status: string;
+			};
+		}
+
+		const ownTagged = await createArticle(
+			"articles",
+			"Artigo principal com tag",
+			"published",
+		);
+		const otherTagged = await createArticle(
+			"articles-other",
+			"Artigo de outro autor com tag",
+			"published",
+		);
+		const ownUntagged = await createArticle(
+			"articles",
+			"Artigo sem a tag",
+			"published",
+		);
+		const taggedDraft = await createArticle(
+			"articles",
+			"Rascunho com tag",
+			"draft",
+		);
+
+		setArticleTags(ownTagged.id, [filterTagId]);
+		setArticleTags(otherTagged.id, [filterTagId]);
+		setArticleTags(taggedDraft.id, [filterTagId]);
+
+		const tagResponse = await fetch(`${origin}/articles?tagId=${filterTagId}`);
+		const tagBody = (await tagResponse.json()) as Array<{
+			id: string;
+			status: string;
+		}>;
+
+		assert.equal(tagResponse.status, 200);
+		assert.deepEqual(
+			tagBody.map((article) => article.id).sort(),
+			[ownTagged.id, otherTagged.id].sort(),
+		);
+		assert.ok(tagBody.every((article) => article.status === "published"));
+		assert.ok(!tagBody.some((article) => article.id === ownUntagged.id));
+		assert.ok(!tagBody.some((article) => article.id === taggedDraft.id));
+
+		const combinedResponse = await fetch(
+			`${origin}/articles?tagId=${filterTagId}&authorId=${fakeUserId}`,
+		);
+		const combinedBody = (await combinedResponse.json()) as Array<{
+			id: string;
+			authorId: string;
+		}>;
+
+		assert.equal(combinedResponse.status, 200);
+		assert.deepEqual(
+			combinedBody.map((article) => article.id),
+			[ownTagged.id],
+		);
+		assert.ok(combinedBody.every((article) => article.authorId === fakeUserId));
+	});
+
+	it("returns an empty list when no article has the requested tag", async () => {
+		const response = await fetch(
+			`${origin}/articles?tagId=${tagWithoutArticlesId}`,
+		);
+
+		assert.equal(response.status, 200);
+		assert.deepEqual(await response.json(), []);
+	});
+
+	it("returns 400 for an invalid tagId filter", async () => {
+		const response = await fetch(`${origin}/articles?tagId=invalid-id`);
+
+		assert.equal(response.status, 400);
+		assert.equal(
+			((await response.json()) as { code: string }).code,
+			"VALIDATION_ERROR",
+		);
 	});
 
 	it("lists draft and published articles owned by the authenticated user", async () => {
