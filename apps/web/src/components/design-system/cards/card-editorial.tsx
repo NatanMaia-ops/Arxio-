@@ -20,7 +20,7 @@ import {
 
 export function CardEditorial({ article }: { article: FeedArticle }) {
 	return (
-		<article className="@container group relative flex @2xl:flex-row-reverse flex-col @2xl:items-stretch @2xl:gap-5 gap-4 rounded-3xl bg-ax-surface @2xl:p-5 p-4 shadow-ax-float transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-ax-float-lg motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+		<article className="@container group relative flex @2xl:flex-row-reverse flex-col @2xl:items-stretch @2xl:gap-5 gap-4 rounded-3xl bg-ax-surface @2xl:p-5 p-4 shadow-ax-float transition-[box-shadow] hover:shadow-ax-float-lg motion-reduce:transition-none">
 			<CoverPlaceholder
 				tone={article.coverTone}
 				className="@2xl:aspect-auto aspect-16/9 @2xl:h-auto @2xl:w-56 @4xl:w-64 w-full shrink-0 rounded-xl"

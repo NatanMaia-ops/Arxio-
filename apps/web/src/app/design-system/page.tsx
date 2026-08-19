@@ -42,7 +42,7 @@ export default function DesignSystemPage() {
 					<li key={section.href}>
 						<Link
 							href={{ pathname: section.href }}
-							className="flex h-full flex-col gap-2 rounded-3xl bg-ax-surface p-6 shadow-ax-float transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-ax-float-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+							className="flex h-full flex-col gap-2 rounded-3xl bg-ax-surface p-6 shadow-ax-float transition-[box-shadow] hover:shadow-ax-float-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface motion-reduce:transition-none"
 						>
 							<span className="font-medium text-ax-meta text-xs uppercase tracking-wide">
 								{section.status}

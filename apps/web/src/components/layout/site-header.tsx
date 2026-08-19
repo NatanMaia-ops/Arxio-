@@ -19,7 +19,7 @@ export function SiteHeader() {
 	const isScrolled = useHasScrolled();
 
 	return (
-		<header className="sticky top-0 z-10">
+		<header className="sticky top-0 z-30">
 			<div
 				aria-hidden="true"
 				className={cn(

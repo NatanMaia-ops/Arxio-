@@ -33,7 +33,7 @@ export function ArticleCard({
 	const readTimeMinutes = estimateReadTimeMinutes(article.content);
 
 	return (
-		<article className="group relative flex flex-col gap-5 rounded-3xl bg-ax-surface p-5 shadow-ax-float transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-ax-float-lg motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:min-h-60 sm:flex-row-reverse sm:items-stretch sm:gap-6 sm:p-6">
+		<article className="group relative flex flex-col gap-5 rounded-3xl bg-ax-surface p-5 shadow-ax-float transition-[box-shadow] hover:shadow-ax-float-lg motion-reduce:transition-none sm:min-h-60 sm:flex-row-reverse sm:items-stretch sm:gap-6 sm:p-6">
 			<ArticleCover article={article} />
 
 			<div className="flex min-w-0 flex-1 flex-col gap-3">

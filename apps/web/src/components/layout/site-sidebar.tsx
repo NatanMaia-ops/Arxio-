@@ -42,7 +42,7 @@ export function SiteSidebar({
 	return (
 		<aside
 			className={cn(
-				"fixed inset-y-0 left-0 z-20 hidden flex-col gap-4 overflow-hidden px-4 pt-0 pb-6 transition-[width] duration-300 ease-out motion-reduce:transition-none lg:flex",
+				"fixed inset-y-0 left-0 z-40 hidden flex-col gap-4 overflow-hidden px-4 pt-0 pb-6 transition-[width] duration-300 ease-out motion-reduce:transition-none lg:flex",
 				isOpen ? "w-64" : "w-19",
 			)}
 		>

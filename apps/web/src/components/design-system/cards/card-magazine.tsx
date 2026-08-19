@@ -19,7 +19,7 @@ import {
 
 export function CardMagazine({ article }: { article: FeedArticle }) {
 	return (
-		<article className="@container group relative flex h-full flex-col overflow-hidden rounded-3xl bg-ax-surface shadow-ax-float transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-ax-float-lg motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+		<article className="@container group relative flex h-full flex-col overflow-hidden rounded-3xl bg-ax-surface shadow-ax-float transition-[box-shadow] hover:shadow-ax-float-lg motion-reduce:transition-none">
 			<CoverPlaceholder
 				tone={article.coverTone}
 				className="aspect-16/10 w-full shrink-0"

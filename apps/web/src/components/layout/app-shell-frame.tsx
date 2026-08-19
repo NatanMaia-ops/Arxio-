@@ -61,7 +61,7 @@ export function AppShellFrame({
 			>
 				{header}
 
-				<div className="px-6 pt-8 pb-16 sm:px-10 sm:pt-12 lg:px-12">
+				<div className="px-6 pt-12 pb-16 sm:px-10 sm:pt-20 lg:px-12">
 					{heading}
 
 					<div className="mt-6 flex gap-10">
