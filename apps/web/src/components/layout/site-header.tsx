@@ -1,7 +1,9 @@
 "use client";
 
+import { cn } from "@arxio/ui/lib/utils";
 import { PenLine } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 import { Logo } from "@/components/layout/logo";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
@@ -9,13 +11,24 @@ import { useAccount } from "@/features/auth/account-context";
 import { UserMenu } from "@/features/auth/components/user-menu";
 import { SearchCommand } from "@/features/search/components/search-command";
 
+const SCROLL_THRESHOLD = 12;
+
 export function SiteHeader() {
 	const account = useAccount();
 	const isAuthenticated = account.status === "authenticated";
+	const isScrolled = useHasScrolled();
 
 	return (
 		<header className="sticky top-0 z-10">
-			<div className="flex h-20 items-center gap-4 px-6 sm:h-24 sm:gap-7 sm:px-10 lg:px-12">
+			<div
+				aria-hidden="true"
+				className={cn(
+					"pointer-events-none fixed inset-x-0 top-0 h-20 border-ax-line/50 border-b bg-ax-canvas/75 backdrop-blur-lg transition-opacity duration-300 ease-out motion-reduce:transition-none sm:h-24",
+					isScrolled ? "opacity-100" : "opacity-0",
+				)}
+			/>
+
+			<div className="relative flex h-20 items-center gap-4 px-6 sm:h-24 sm:gap-7 sm:px-10 lg:px-12">
 				<span className={isAuthenticated ? "lg:hidden" : undefined}>
 					<Logo />
 				</span>
@@ -58,4 +71,21 @@ export function SiteHeader() {
 			</div>
 		</header>
 	);
+}
+
+function useHasScrolled(): boolean {
+	const [isScrolled, setIsScrolled] = useState(false);
+
+	useEffect(() => {
+		function handleScroll() {
+			setIsScrolled(window.scrollY > SCROLL_THRESHOLD);
+		}
+
+		handleScroll();
+
+		window.addEventListener("scroll", handleScroll, { passive: true });
+		return () => window.removeEventListener("scroll", handleScroll);
+	}, []);
+
+	return isScrolled;
 }
