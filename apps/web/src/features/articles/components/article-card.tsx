@@ -88,7 +88,7 @@ export function ArticleCard({
 					<div className="ml-auto flex items-center gap-4">
 						<span className="flex items-center gap-1.5">
 							<Heart className="size-4 shrink-0" aria-hidden="true" />
-							<span className="tabular-nums">
+							<span className="font-medium text-ax-ink-soft tabular-nums">
 								{formatCount(engagement.likes)}
 							</span>
 							<span className="sr-only">
@@ -98,7 +98,7 @@ export function ArticleCard({
 
 						<span className="flex items-center gap-1.5">
 							<MessageCircle className="size-4 shrink-0" aria-hidden="true" />
-							<span className="tabular-nums">
+							<span className="font-medium text-ax-ink-soft tabular-nums">
 								{formatCount(engagement.comments)}
 							</span>
 							<span className="sr-only">
