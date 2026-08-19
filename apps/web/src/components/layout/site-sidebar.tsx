@@ -46,7 +46,7 @@ export function SiteSidebar({
 	return (
 		<aside
 			className={cn(
-				"fixed inset-y-0 left-0 z-20 hidden flex-col gap-8 overflow-hidden px-4 py-6 transition-[width] duration-300 ease-out motion-reduce:transition-none lg:flex",
+				"fixed inset-y-0 left-0 z-20 hidden flex-col gap-4 overflow-hidden px-4 pt-0 pb-6 transition-[width] duration-300 ease-out motion-reduce:transition-none lg:flex",
 				isOpen ? "w-64" : "w-19",
 			)}
 		>
@@ -55,7 +55,7 @@ export function SiteSidebar({
 				onClick={onToggle}
 				aria-expanded={isOpen}
 				aria-label={isOpen ? "Recolher menu" : "Expandir menu"}
-				className="relative flex h-9 w-56 shrink-0 cursor-pointer items-center px-3 text-ax-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-canvas"
+				className="relative flex h-20 w-56 shrink-0 cursor-pointer items-center px-3 text-ax-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-canvas sm:h-24"
 			>
 				<ArxioMark
 					className={cn(
@@ -66,7 +66,7 @@ export function SiteSidebar({
 
 				<ArxioWordmark
 					className={cn(
-						"absolute left-3 h-8 w-auto transition-opacity duration-200 motion-reduce:transition-none",
+						"absolute top-1/2 left-3 h-8 w-auto -translate-y-1/2 transition-opacity duration-200 motion-reduce:transition-none",
 						isOpen ? "opacity-100" : "opacity-0",
 					)}
 				/>

@@ -15,19 +15,21 @@ export const metadata: Metadata = {
 export default function MyArticlesPage() {
 	return (
 		<RequireAuth>
-			<AppShell>
-				<header className="mb-6 flex flex-wrap items-end justify-between gap-4 border-ax-line border-b pb-6">
-					<div>
-						<h1 className="font-home-display font-light text-[32px] text-ax-ink leading-9 sm:text-[40px] sm:leading-11">
-							Meus artigos
-						</h1>
-						<p className="mt-2 text-ax-body">
-							Continue seus rascunhos ou gerencie o que já publicou.
-						</p>
-					</div>
-					<NewArticleLink />
-				</header>
-
+			<AppShell
+				heading={
+					<header className="flex flex-wrap items-end justify-between gap-4 border-ax-line border-b pb-6">
+						<div>
+							<h1 className="font-home-display font-light text-[32px] text-ax-ink leading-9 sm:text-[40px] sm:leading-11">
+								Meus artigos
+							</h1>
+							<p className="mt-2 text-ax-body">
+								Continue seus rascunhos ou gerencie o que já publicou.
+							</p>
+						</div>
+						<NewArticleLink />
+					</header>
+				}
+			>
 				<MyArticles />
 			</AppShell>
 		</RequireAuth>

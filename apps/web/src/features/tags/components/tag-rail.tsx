@@ -18,7 +18,7 @@ export async function TagRail({ activeTagId }: { activeTagId?: string }) {
 
 	return (
 		<aside className="hidden w-72 shrink-0 xl:block">
-			<div className="sticky top-24 rounded-3xl bg-ax-surface p-5 shadow-ax-float">
+			<div className="sticky top-28 rounded-3xl bg-ax-surface p-5 shadow-ax-float">
 				<div className="flex items-center gap-2">
 					<Hash
 						className="size-4 shrink-0 text-ax-mute"

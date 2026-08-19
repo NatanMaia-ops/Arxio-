@@ -32,30 +32,33 @@ export default async function ArticlesPage({ searchParams }: FeedPageProps) {
 	}
 
 	return (
-		<AppShell rail={<TagRail activeTagId={tagId} />}>
-			<header className="flex flex-col gap-3 border-ax-line border-b pb-6">
-				<div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
-					<h1 className="font-home-display font-light text-[32px] text-ax-ink leading-9 sm:text-[40px] sm:leading-11">
-						Leituras recentes
-					</h1>
+		<AppShell
+			rail={<TagRail activeTagId={tagId} />}
+			heading={
+				<header className="flex flex-col gap-3 border-ax-line border-b pb-6">
+					<div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
+						<h1 className="font-home-display font-light text-[32px] text-ax-ink leading-9 sm:text-[40px] sm:leading-11">
+							Leituras recentes
+						</h1>
 
-					{articles?.length ? (
-						<span className="text-ax-meta text-sm tabular-nums">
-							{articles.length}{" "}
-							{articles.length === 1
-								? "artigo publicado"
-								: "artigos publicados"}
-						</span>
-					) : null}
-				</div>
+						{articles?.length ? (
+							<span className="text-ax-meta text-sm tabular-nums">
+								{articles.length}{" "}
+								{articles.length === 1
+									? "artigo publicado"
+									: "artigos publicados"}
+							</span>
+						) : null}
+					</div>
 
-				<p className="max-w-160 text-ax-body text-base leading-6">
-					Estudos, notas e projetos publicados por quem faz parte da comunidade
-					da Arxio.
-				</p>
-			</header>
-
-			<section className="mt-6 flex flex-col gap-4">
+					<p className="max-w-160 text-ax-body text-base leading-6">
+						Estudos, notas e projetos publicados por quem faz parte da
+						comunidade da Arxio.
+					</p>
+				</header>
+			}
+		>
+			<section className="flex flex-col gap-4">
 				{articles === null && <ArticlesUnavailable />}
 
 				{articles?.length === 0 && <EmptyState isFiltered={Boolean(tagId)} />}

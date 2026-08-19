@@ -18,10 +18,12 @@ function readStoredPreference(): boolean {
 
 export function AppShellFrame({
 	header,
+	heading,
 	rail,
 	children,
 }: {
 	header: ReactNode;
+	heading?: ReactNode;
 	rail?: ReactNode;
 	children: ReactNode;
 }) {
@@ -32,17 +34,15 @@ export function AppShellFrame({
 	}, []);
 
 	function toggle() {
-		setIsOpen((current) => {
-			const next = !current;
+		const next = !isOpen;
 
-			try {
-				window.localStorage.setItem(STORAGE_KEY, String(next));
-			} catch {
-				// Sem localStorage a preferencia so vale para esta navegacao.
-			}
+		setIsOpen(next);
 
-			return next;
-		});
+		try {
+			window.localStorage.setItem(STORAGE_KEY, String(next));
+		} catch {
+			// Sem localStorage a preferencia so vale para esta navegacao.
+		}
 	}
 
 	return (
@@ -57,10 +57,14 @@ export function AppShellFrame({
 			>
 				{header}
 
-				<div className="mx-auto flex w-full max-w-336 gap-10 px-5 pt-4 pb-16 sm:px-8 sm:pt-6 lg:px-10">
-					<main className="w-full min-w-0">{children}</main>
+				<div className="px-6 pb-16 sm:px-10 lg:px-12">
+					{heading}
 
-					{rail}
+					<div className="mt-6 flex gap-10">
+						<main className="w-full min-w-0">{children}</main>
+
+						{rail}
+					</div>
 				</div>
 			</div>
 		</div>
