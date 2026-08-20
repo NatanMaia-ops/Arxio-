@@ -7,13 +7,20 @@ export function AppShell({
 	children,
 	heading,
 	rail,
+	bleed = false,
 }: {
 	children: ReactNode;
 	heading?: ReactNode;
 	rail?: ReactNode;
+	bleed?: boolean;
 }) {
 	return (
-		<AppShellFrame header={<SiteHeader />} heading={heading} rail={rail}>
+		<AppShellFrame
+			header={<SiteHeader />}
+			heading={heading}
+			rail={rail}
+			bleed={bleed}
+		>
 			{children}
 		</AppShellFrame>
 	);

@@ -57,7 +57,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 	if (!isAvailable) {
 		return (
 			<AppShell>
-				<div className="mx-auto max-w-180">
+				<div className="w-full max-w-180">
 					<ArticlesUnavailable
 						title="Não foi possível carregar o artigo"
 						description="O serviço de artigos não respondeu. Tente novamente em instantes."
@@ -73,9 +73,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 	const readTimeMinutes = estimateReadTimeMinutes(article.content);
 
 	return (
-		<AppShell>
-			<div className="mx-auto max-w-190">
-				<article className="rounded-3xl bg-ax-surface px-5 py-8 shadow-ax-float sm:px-10 sm:py-12">
+		<AppShell bleed>
+			<div className="w-full">
+				<article className="min-h-[calc(100dvh-5rem)] bg-ax-surface px-6 py-12 shadow-ax-float sm:min-h-[calc(100dvh-6rem)] sm:px-10 sm:py-20 lg:px-12">
 					<Link
 						href={{ pathname: "/feed" }}
 						className="-mx-2 mb-4 inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 font-medium text-ax-ink-soft text-sm transition-colors hover:text-ax-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
