@@ -51,18 +51,11 @@ export function ProfileAcademicInfo({
 				Informações acadêmicas
 			</h2>
 
-			<dl className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+			<dl className="mt-5 grid gap-6 rounded-3xl bg-ax-surface p-6 shadow-ax-float sm:grid-cols-2 sm:gap-8 sm:p-7 lg:grid-cols-3">
 				{items.map((item) => (
-					<div
-						key={item.label}
-						className="rounded-xl border border-ax-line bg-ax-surface p-4"
-					>
-						<dt className="font-medium text-ax-meta text-meta uppercase tracking-wide">
-							{item.label}
-						</dt>
-						<dd className="mt-1.5 text-ax-ink text-sm leading-5">
-							{item.value}
-						</dd>
+					<div key={item.label} className="min-w-0">
+						<dt className="text-ax-meta text-label uppercase">{item.label}</dt>
+						<dd className="mt-2 text-ax-ink text-body-sm">{item.value}</dd>
 					</div>
 				))}
 			</dl>

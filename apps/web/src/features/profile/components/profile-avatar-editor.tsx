@@ -117,7 +117,7 @@ export function ProfileAvatarEditor({
 
 	return (
 		<section
-			className="mt-8 border-ax-line border-b pb-8"
+			className="border-ax-line border-b pb-8"
 			aria-labelledby="avatar-title"
 		>
 			<div className="flex flex-col gap-5 sm:flex-row sm:items-center">
