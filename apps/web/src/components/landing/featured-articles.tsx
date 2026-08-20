@@ -5,14 +5,14 @@ export function FeaturedArticles() {
 	return (
 		<section
 			id="artigos"
-			className="scroll-mt-[72px] border-ax-line border-t py-[128px]"
+			className="scroll-mt-[72px] border-ax-line border-t py-20 sm:py-[128px]"
 		>
-			<div className="mx-auto max-w-[1216px] px-8">
+			<div className="mx-auto max-w-[1216px] px-5 sm:px-8">
 				<div
 					{...reveal(0)}
 					className="flex flex-wrap items-baseline justify-between gap-6"
 				>
-					<h2 className="font-light text-[48px] leading-[1.05] tracking-[-0.03em]">
+					<h2 className="font-light text-[32px] leading-[1.08] tracking-[-0.03em] sm:text-[40px] lg:text-[48px] lg:leading-[1.05]">
 						Em destaque esta semana.
 					</h2>
 					<a
@@ -25,16 +25,16 @@ export function FeaturedArticles() {
 
 				<div
 					{...reveal(1)}
-					className="mt-16 grid grid-cols-[8fr_4fr] items-start gap-14 border-ax-ink border-t-2 pt-10"
+					className="mt-10 grid grid-cols-1 items-start gap-10 border-ax-ink border-t-2 pt-8 sm:mt-16 sm:pt-10 lg:grid-cols-[8fr_4fr] lg:gap-14"
 				>
 					<article className="flex flex-col items-start gap-[18px]">
 						<Kicker size={12}>Tecnologia</Kicker>
 						<a href="#artigos" className="group">
-							<h3 className="max-w-[20ch] text-balance font-light text-[52px] leading-[1.06] tracking-[-0.025em] transition-colors group-hover:text-ax-ink-soft">
+							<h3 className="max-w-[20ch] text-balance font-light text-[32px] leading-[1.12] tracking-[-0.025em] transition-colors group-hover:text-ax-ink-soft sm:text-[42px] lg:text-[52px] lg:leading-[1.06]">
 								O que 30 minutos de estudo por dia me ensinaram em um ano
 							</h3>
 						</a>
-						<p className="max-w-[50ch] text-[19px] text-ax-body leading-[1.5]">
+						<p className="max-w-[50ch] text-[17px] text-ax-body leading-[1.5] sm:text-[19px]">
 							Sem maratonas, sem cursos caros — um caderno, uma rotina e a
 							decisão de escrever sobre tudo.
 						</p>
@@ -43,9 +43,9 @@ export function FeaturedArticles() {
 						</p>
 					</article>
 
-					<div className="flex h-full flex-col items-start justify-center gap-4 self-stretch border-ax-line border-l pl-10">
+					<div className="flex h-full flex-col items-start justify-center gap-4 self-stretch border-ax-line border-t pt-8 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-10">
 						<Kicker size={12}>Início do artigo</Kicker>
-						<p className="text-[21px] text-ax-ink-soft italic leading-[1.5]">
+						<p className="text-[19px] text-ax-ink-soft italic leading-[1.5] sm:text-[21px]">
 							“Eu não comecei escrevendo bem. Comecei escrevendo todo dia — dez
 							linhas, no fim da manhã, sobre o que eu tinha acabado de estudar.”
 						</p>
@@ -60,19 +60,21 @@ export function FeaturedArticles() {
 
 				<div
 					{...reveal(2)}
-					className="mt-14 grid grid-cols-4 border-ax-line border-t"
+					className="mt-10 grid grid-cols-1 border-ax-line border-t sm:mt-14 sm:grid-cols-2 lg:grid-cols-4"
 				>
 					{secondaryArticles.map((article, index) => (
 						<article
 							key={article.title}
-							className={`flex flex-col items-start gap-3 pt-9 pr-8 pb-1 ${
-								index === 0 ? "pl-0" : "border-ax-line border-l pl-8"
+							className={`flex flex-col items-start gap-3 border-ax-line pt-6 pb-1 sm:pr-8 lg:pt-9 ${
+								index === 0
+									? "lg:pl-0"
+									: "border-t sm:border-t-0 lg:border-l lg:pl-8"
 							}`}
 						>
 							<Kicker size={12}>{article.category}</Kicker>
 							<a
 								href="#artigos"
-								className="font-medium text-[22px] leading-[1.22] tracking-[-0.01em] transition-colors hover:text-ax-ink-soft"
+								className="font-medium text-[20px] leading-[1.22] tracking-[-0.01em] transition-colors hover:text-ax-ink-soft sm:text-[22px]"
 							>
 								{article.title}
 							</a>
@@ -82,7 +84,7 @@ export function FeaturedArticles() {
 						</article>
 					))}
 
-					<div className="flex flex-col gap-5 bg-ax-fill px-7 pt-9 pb-7">
+					<div className="mt-6 flex flex-col gap-5 bg-ax-fill px-5 pt-8 pb-7 sm:px-7 lg:mt-0 lg:pt-9">
 						<Kicker size={12}>Em alta</Kicker>
 						{trending.map((item, index) => (
 							<div

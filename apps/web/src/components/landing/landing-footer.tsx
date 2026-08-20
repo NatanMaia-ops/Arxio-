@@ -5,7 +5,7 @@ import { navLinks } from "./data";
 export function LandingFooter() {
 	return (
 		<footer className="border-ax-line border-t">
-			<div className="mx-auto flex max-w-[1216px] flex-wrap items-center justify-between gap-6 px-8 py-9">
+			<div className="mx-auto flex max-w-[1216px] flex-wrap items-center justify-between gap-x-6 gap-y-5 px-5 py-8 sm:px-8 sm:py-9">
 				<a
 					href="#topo"
 					aria-label="Arxio — início"
@@ -19,7 +19,10 @@ export function LandingFooter() {
 						className="h-[22px] w-auto"
 					/>
 				</a>
-				<nav aria-label="Rodapé" className="flex items-center gap-7">
+				<nav
+					aria-label="Rodapé"
+					className="flex flex-wrap items-center gap-x-5 gap-y-2 sm:gap-7"
+				>
 					{navLinks.map((link) => (
 						<a
 							key={link.href}
