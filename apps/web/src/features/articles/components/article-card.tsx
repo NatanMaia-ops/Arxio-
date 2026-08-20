@@ -33,7 +33,7 @@ export function ArticleCard({
 	const readTimeMinutes = estimateReadTimeMinutes(article.content);
 
 	return (
-		<article className="group relative flex flex-col gap-5 rounded-3xl bg-ax-surface p-5 shadow-ax-float transition-[box-shadow] hover:shadow-ax-float-lg motion-reduce:transition-none sm:min-h-60 sm:flex-row-reverse sm:items-stretch sm:gap-6 sm:p-6">
+		<article className="group relative flex flex-col gap-5 rounded-3xl bg-ax-surface p-5 shadow-ax-float transition-[box-shadow] hover:shadow-ax-float-lg motion-reduce:transition-none sm:flex-row-reverse sm:items-start sm:gap-6 sm:p-6">
 			<ArticleCover article={article} />
 
 			<div className="flex min-w-0 flex-1 flex-col gap-3">
@@ -114,7 +114,7 @@ export function ArticleCard({
 
 function ArticleCover({ article }: { article: Article }) {
 	const shape =
-		"aspect-video w-full shrink-0 overflow-hidden rounded-2xl bg-ax-fill sm:aspect-auto sm:h-auto sm:w-64 lg:w-80";
+		"aspect-video w-full shrink-0 overflow-hidden rounded-2xl bg-ax-fill sm:w-44 lg:w-52";
 
 	if (!article.coverUrl) {
 		return (
@@ -122,7 +122,7 @@ function ArticleCover({ article }: { article: Article }) {
 				aria-hidden="true"
 				className={`${shape} flex items-center justify-center bg-gradient-to-br from-ax-fill via-ax-fill-hover to-ax-accent/15`}
 			>
-				<ImageIcon className="size-7 text-ax-line-3" />
+				<ImageIcon className="size-6 text-ax-line-3" />
 			</div>
 		);
 	}

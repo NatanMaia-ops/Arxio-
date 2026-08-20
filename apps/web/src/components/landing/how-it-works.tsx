@@ -94,20 +94,20 @@ export function HowItWorks() {
 	return (
 		<section
 			id="como-funciona"
-			className="scroll-mt-[72px] border-ax-line border-t py-[128px]"
+			className="scroll-mt-[72px] border-ax-line border-t py-20 sm:py-[128px]"
 		>
-			<div className="mx-auto max-w-[1216px] px-8">
+			<div className="mx-auto max-w-[1216px] px-5 sm:px-8">
 				<div
 					{...reveal(0)}
 					className="flex flex-wrap items-end justify-between gap-6"
 				>
 					<div className="flex flex-col items-start gap-5">
 						<Kicker>Como funciona</Kicker>
-						<h2 className="text-balance font-light text-[48px] leading-[1.05] tracking-[-0.03em]">
+						<h2 className="text-balance font-light text-[32px] leading-[1.08] tracking-[-0.03em] sm:text-[40px] lg:text-[48px] lg:leading-[1.05]">
 							Do rascunho à reputação.
 						</h2>
 					</div>
-					<p className="max-w-[36ch] text-[19px] text-ax-body leading-[1.5]">
+					<p className="max-w-[36ch] text-[17px] text-ax-body leading-[1.5] sm:text-[19px]">
 						Quatro passos, sem fricção. Acompanhe ao lado o que acontece em cada
 						um.
 					</p>
@@ -115,7 +115,7 @@ export function HowItWorks() {
 
 				<div
 					{...reveal(1)}
-					className="mt-16 grid grid-cols-[5fr_7fr] items-stretch gap-16"
+					className="mt-10 grid grid-cols-1 items-stretch gap-10 sm:mt-16 lg:grid-cols-[5fr_7fr] lg:gap-16"
 				>
 					<div className="flex flex-col justify-center border-ax-line border-t">
 						{steps.map((item, index) => {
@@ -125,14 +125,14 @@ export function HowItWorks() {
 									key={item.title}
 									type="button"
 									onClick={() => select(index)}
-									className={`flex flex-col items-start gap-1.5 border-b border-l-2 px-7 py-[26px] text-left transition-[background-color,border-color] duration-300 ${
+									className={`flex flex-col items-start gap-1.5 border-b border-l-2 px-5 py-5 text-left transition-[background-color,border-color] duration-300 sm:px-7 sm:py-[26px] ${
 										active
 											? "border-b-ax-line border-l-ax-ink bg-ax-fill"
 											: "border-b-ax-line border-l-transparent"
 									}`}
 								>
 									<span
-										className={`font-medium text-[25px] tracking-[-0.01em] transition-colors duration-300 ${
+										className={`font-medium text-[20px] tracking-[-0.01em] transition-colors duration-300 sm:text-[25px] ${
 											active ? "text-ax-ink" : "text-ax-faint"
 										}`}
 									>
@@ -150,13 +150,13 @@ export function HowItWorks() {
 						})}
 					</div>
 
-					<div className="relative min-h-[460px] overflow-hidden border border-ax-line-2 bg-ax-fill">
+					<div className="relative min-h-[440px] overflow-hidden border border-ax-line-2 bg-ax-fill sm:min-h-[460px]">
 						<div
 							style={panelStyle(0)}
-							className="absolute inset-0 flex flex-col items-start gap-[18px] p-[52px_56px] transition-[opacity,transform] duration-500 ease-in-out"
+							className="absolute inset-0 flex flex-col items-start gap-4 p-6 transition-[opacity,transform] duration-500 ease-in-out sm:gap-[18px] sm:p-[52px_56px]"
 						>
 							<Kicker size={12}>Rascunho · salvo agora</Kicker>
-							<h3 className="max-w-[20ch] font-light text-[36px] leading-[1.12] tracking-[-0.02em]">
+							<h3 className="max-w-[20ch] font-light text-[26px] leading-[1.15] tracking-[-0.02em] sm:text-[36px] sm:leading-[1.12]">
 								Por que escrever me faz estudar melhor
 								<span className="ml-2 inline-block h-[0.85em] w-[2px] translate-y-[0.08em] animate-[ax-blink_1.1s_infinite] bg-ax-ink align-[-0.08em]" />
 							</h3>
@@ -172,7 +172,7 @@ export function HowItWorks() {
 
 						<div
 							style={panelStyle(1)}
-							className="absolute inset-0 flex flex-col items-start gap-[18px] p-[52px_56px] transition-[opacity,transform] duration-500 ease-in-out"
+							className="absolute inset-0 flex flex-col items-start gap-4 p-6 transition-[opacity,transform] duration-500 ease-in-out sm:gap-[18px] sm:p-[52px_56px]"
 						>
 							<div className="flex items-center gap-[10px]">
 								<span className="h-1.5 w-1.5 bg-ax-ink" />
@@ -180,14 +180,14 @@ export function HowItWorks() {
 									Publicado agora
 								</Kicker>
 							</div>
-							<h3 className="max-w-[20ch] font-light text-[36px] leading-[1.12] tracking-[-0.02em]">
+							<h3 className="max-w-[20ch] font-light text-[26px] leading-[1.15] tracking-[-0.02em] sm:text-[36px] sm:leading-[1.12]">
 								Por que escrever me faz estudar melhor
 							</h3>
 							<p className="font-home-interface text-[14px] text-ax-meta">
 								Você · 4 min de leitura · Tecnologia
 							</p>
 							<div className="mt-3 w-full border-ax-line border-t pt-5">
-								<p className="max-w-[40ch] text-[17px] text-ax-ink-soft leading-[1.5]">
+								<p className="max-w-[40ch] text-[16px] text-ax-ink-soft leading-[1.5] sm:text-[17px]">
 									No feed de 312 leitores que acompanham Tecnologia — na hora,
 									sem fila de aprovação.
 								</p>
@@ -199,24 +199,24 @@ export function HowItWorks() {
 
 						<div
 							style={panelStyle(2)}
-							className="absolute inset-0 flex flex-col items-start gap-[18px] p-[52px_56px] transition-[opacity,transform] duration-500 ease-in-out"
+							className="absolute inset-0 flex flex-col items-start gap-4 p-6 transition-[opacity,transform] duration-500 ease-in-out sm:gap-[18px] sm:p-[52px_56px]"
 						>
 							<Kicker size={12}>Primeiras 48 horas</Kicker>
-							<div className="mt-3 flex flex-wrap gap-[72px]">
+							<div className="mt-3 flex flex-wrap gap-8 sm:gap-[72px]">
 								<div className="flex flex-col gap-1.5">
-									<span className="font-home-interface font-light text-[56px] leading-none tracking-[-0.02em]">
+									<span className="font-home-interface font-light text-[40px] leading-none tracking-[-0.02em] sm:text-[56px]">
 										{counts.reads}
 									</span>
 									<Kicker size={12}>Leituras</Kicker>
 								</div>
 								<div className="flex flex-col gap-1.5">
-									<span className="font-home-interface font-light text-[56px] leading-none tracking-[-0.02em]">
+									<span className="font-home-interface font-light text-[40px] leading-none tracking-[-0.02em] sm:text-[56px]">
 										{counts.claps}
 									</span>
 									<Kicker size={12}>Aplausos</Kicker>
 								</div>
 								<div className="flex flex-col gap-1.5">
-									<span className="font-home-interface font-light text-[56px] leading-none tracking-[-0.02em]">
+									<span className="font-home-interface font-light text-[40px] leading-none tracking-[-0.02em] sm:text-[56px]">
 										{counts.comments}
 									</span>
 									<Kicker size={12}>Comentários</Kicker>
@@ -229,10 +229,10 @@ export function HowItWorks() {
 
 						<div
 							style={panelStyle(3)}
-							className="absolute inset-0 flex flex-col items-start gap-[18px] p-[52px_56px] transition-[opacity,transform] duration-500 ease-in-out"
+							className="absolute inset-0 flex flex-col items-start gap-4 p-6 transition-[opacity,transform] duration-500 ease-in-out sm:gap-[18px] sm:p-[52px_56px]"
 						>
 							<Kicker size={12}>Sua reputação</Kicker>
-							<h3 className="font-light text-[40px] leading-[1.1] tracking-[-0.02em]">
+							<h3 className="font-light text-[30px] leading-[1.1] tracking-[-0.02em] sm:text-[40px]">
 								Nível 4 · Autor
 							</h3>
 							<div className="mt-3 h-[3px] w-full bg-ax-surface">
@@ -244,7 +244,7 @@ export function HowItWorks() {
 									}}
 								/>
 							</div>
-							<div className="flex w-full justify-between font-home-interface text-[14px] text-ax-meta">
+							<div className="flex w-full flex-col gap-1 font-home-interface text-[14px] text-ax-meta sm:flex-row sm:justify-between sm:gap-0">
 								<span>+462 pts esta semana</span>
 								<span>faltam 138 pts para o Nível 5</span>
 							</div>
