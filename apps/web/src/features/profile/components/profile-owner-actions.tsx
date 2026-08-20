@@ -29,7 +29,7 @@ export function ProfileOwnerActions({ profileId }: { profileId: string }) {
 	return (
 		<Link
 			href="/perfil/editar"
-			className="mt-5 inline-flex rounded-full border border-ax-line px-4 py-2 font-medium text-ax-ink-soft text-sm transition-colors hover:border-ax-ink hover:text-ax-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-surface"
+			className="inline-flex shrink-0 items-center rounded-full border border-ax-line px-4 py-2 font-medium text-ax-ink-soft text-sm transition-colors hover:border-ax-ink hover:text-ax-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ax-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ax-canvas sm:ml-auto"
 		>
 			Editar perfil
 		</Link>

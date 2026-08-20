@@ -14,32 +14,33 @@ export function ProfileHeader({ profile }: { profile: PublicProfile }) {
 	const bio = profile.bio?.trim();
 
 	return (
-		<header className="flex flex-col gap-6 border-ax-line border-b pb-8 sm:flex-row sm:items-center sm:gap-8 sm:pb-10">
+		<header className="flex flex-col gap-6 border-ax-line border-b pb-6 sm:flex-row sm:items-start sm:gap-8">
 			<UserAvatar
 				name={profile.name}
 				src={profile.avatarUrl}
-				className="size-24 font-home-display text-3xl sm:size-30 sm:text-4xl"
+				className="size-24 shrink-0 font-home-display text-3xl sm:size-28 sm:text-4xl"
 			/>
 
-			<div className="min-w-0">
+			<div className="min-w-0 flex-1">
 				<p className="text-ax-meta text-label uppercase">Perfil público</p>
-				<h1 className="mt-1 text-balance font-home-display text-ax-ink text-display-lg">
+
+				<h1 className="mt-1.5 text-balance font-home-display text-ax-ink text-display-lg">
 					{profile.name}
 				</h1>
 
 				{bio ? (
-					<p className="mt-3 max-w-2xl whitespace-pre-line text-ax-body text-base leading-6 sm:text-lg sm:leading-7">
+					<p className="mt-3 max-w-160 whitespace-pre-line text-ax-body text-body">
 						{bio}
 					</p>
 				) : null}
 
-				<p className="mt-4 flex items-center gap-2 text-ax-meta text-sm">
+				<p className="mt-4 flex items-center gap-2 text-ax-meta text-meta">
 					<CalendarDays className="size-4 shrink-0" aria-hidden="true" />
 					Na Arxio desde {joinedAtFormatter.format(profile.createdAt)}
 				</p>
-
-				<ProfileOwnerActions profileId={profile.id} />
 			</div>
+
+			<ProfileOwnerActions profileId={profile.id} />
 		</header>
 	);
 }

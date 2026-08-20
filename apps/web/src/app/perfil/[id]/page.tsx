@@ -79,25 +79,21 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 	}
 
 	return (
-		<AppShell>
-			<div className="mx-auto max-w-5xl px-5 pt-8 pb-16 sm:px-8 sm:pt-12 lg:px-10">
-				<ProfileHeader profile={profileResult.profile} />
+		<AppShell heading={<ProfileHeader profile={profileResult.profile} />}>
+			<div className="flex flex-col gap-12 pt-2 sm:gap-14">
+				<ProfileAcademicInfo
+					academicProfile={profileResult.profile.academicProfile}
+				/>
 
-				<div className="mt-8 flex flex-col gap-10 sm:mt-10 sm:gap-12">
-					<ProfileAcademicInfo
-						academicProfile={profileResult.profile.academicProfile}
-					/>
-
-					<ProfileArticleList
-						articles={articles}
-						engagement={engagement}
-						author={{
-							id: profileResult.profile.id,
-							name: profileResult.profile.name,
-							avatarUrl: profileResult.profile.avatarUrl,
-						}}
-					/>
-				</div>
+				<ProfileArticleList
+					articles={articles}
+					engagement={engagement}
+					author={{
+						id: profileResult.profile.id,
+						name: profileResult.profile.name,
+						avatarUrl: profileResult.profile.avatarUrl,
+					}}
+				/>
 			</div>
 		</AppShell>
 	);
@@ -106,12 +102,15 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 function ProfileUnavailable() {
 	return (
 		<AppShell>
-			<div className="mx-auto max-w-180 px-5 pt-20 pb-24 sm:px-6 sm:pt-30">
-				<section role="status" className="flex flex-col items-start gap-4">
+			<div className="max-w-180">
+				<section
+					role="status"
+					className="flex flex-col items-start gap-4 rounded-3xl bg-ax-surface p-10 shadow-ax-float"
+				>
 					<h1 className="font-home-display text-ax-ink text-display-lg">
 						Não foi possível carregar o perfil
 					</h1>
-					<p className="text-ax-ink-soft text-base leading-6">
+					<p className="text-ax-body text-body">
 						O serviço de perfis não respondeu. Tente novamente em instantes.
 					</p>
 

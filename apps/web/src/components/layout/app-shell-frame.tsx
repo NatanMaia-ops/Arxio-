@@ -21,11 +21,13 @@ export function AppShellFrame({
 	header,
 	heading,
 	rail,
+	bleed = false,
 	children,
 }: {
 	header: ReactNode;
 	heading?: ReactNode;
 	rail?: ReactNode;
+	bleed?: boolean;
 	children: ReactNode;
 }) {
 	const account = useAccount();
@@ -61,10 +63,14 @@ export function AppShellFrame({
 			>
 				{header}
 
-				<div className="px-6 pt-12 pb-16 sm:px-10 sm:pt-20 lg:px-12">
+				<div
+					className={
+						bleed ? undefined : "px-6 pt-12 pb-16 sm:px-10 sm:pt-20 lg:px-12"
+					}
+				>
 					{heading}
 
-					<div className="mt-6 flex gap-10">
+					<div className={cn("flex gap-10", !bleed && "mt-6")}>
 						<main className="w-full min-w-0">{children}</main>
 
 						{rail}

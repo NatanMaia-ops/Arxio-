@@ -18,7 +18,7 @@ export function ProfileArticleList({
 }) {
 	return (
 		<section aria-labelledby="profile-articles-title">
-			<header className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2 border-ax-line border-b pb-4">
+			<header className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
 				<h2
 					id="profile-articles-title"
 					className="font-home-display text-ax-ink text-display-md"

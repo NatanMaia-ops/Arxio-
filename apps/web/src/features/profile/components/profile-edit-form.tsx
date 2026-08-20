@@ -142,15 +142,18 @@ export function ProfileEditForm() {
 
 	if (loadError) {
 		return (
-			<section role="alert" className="rounded-xl border border-ax-line p-5">
-				<h1 className="font-home-display text-ax-ink text-display-md">
+			<section
+				role="alert"
+				className="rounded-3xl bg-ax-surface p-6 shadow-ax-float sm:p-8"
+			>
+				<h2 className="font-home-display text-ax-ink text-display-md">
 					Não foi possível editar o perfil
-				</h1>
-				<p className="mt-2 text-ax-body text-sm">{loadError}</p>
+				</h2>
+				<p className="mt-2 text-ax-body text-body-sm">{loadError}</p>
 				<button
 					type="button"
 					onClick={() => window.location.reload()}
-					className="mt-5 rounded-full bg-ax-ink px-4 py-2 font-medium text-ax-on-ink text-sm"
+					className="mt-5 rounded-full bg-ax-ink px-4 py-2 font-medium text-ax-on-ink text-sm transition-opacity hover:opacity-85"
 				>
 					Tentar novamente
 				</button>
@@ -159,17 +162,11 @@ export function ProfileEditForm() {
 	}
 
 	return (
-		<form onSubmit={handleSubmit} noValidate>
-			<div className="border-ax-line border-b pb-7">
-				<p className="text-ax-meta text-label uppercase">Seu perfil</p>
-				<h1 className="mt-1 font-home-display text-ax-ink text-display-lg">
-					Editar perfil
-				</h1>
-				<p className="mt-3 max-w-2xl text-ax-body text-sm leading-6 sm:text-base">
-					Atualize como você se apresenta e suas informações acadêmicas.
-				</p>
-			</div>
-
+		<form
+			onSubmit={handleSubmit}
+			noValidate
+			className="rounded-3xl bg-ax-surface p-6 shadow-ax-float sm:p-8"
+		>
 			{account ? (
 				<ProfileAvatarEditor
 					account={account}
@@ -215,7 +212,7 @@ export function ProfileEditForm() {
 					/>
 				</Field>
 
-				<fieldset className="grid gap-5 rounded-xl border border-ax-line p-5 sm:grid-cols-2 sm:p-6">
+				<fieldset className="grid gap-5 rounded-2xl bg-ax-fill/60 p-5 sm:grid-cols-2 sm:p-6">
 					<legend className="px-2 font-medium text-ax-ink text-sm">
 						Informações acadêmicas (opcionais)
 					</legend>
@@ -353,12 +350,16 @@ function Field({
 
 function ProfileEditLoading() {
 	return (
-		<div role="status" aria-label="Carregando dados do perfil">
-			<div className="h-10 w-52 animate-pulse rounded-lg bg-ax-fill" />
+		<div
+			role="status"
+			aria-label="Carregando dados do perfil"
+			className="rounded-3xl bg-ax-surface p-6 shadow-ax-float sm:p-8"
+		>
+			<div className="h-20 w-full animate-pulse rounded-lg bg-ax-fill" />
 			<div className="mt-8 grid gap-6">
 				<div className="h-18 animate-pulse rounded-lg bg-ax-fill" />
 				<div className="h-36 animate-pulse rounded-lg bg-ax-fill" />
-				<div className="h-48 animate-pulse rounded-xl bg-ax-fill" />
+				<div className="h-48 animate-pulse rounded-2xl bg-ax-fill" />
 			</div>
 		</div>
 	);
